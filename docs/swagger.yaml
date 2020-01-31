@@ -2,15 +2,13 @@ swagger: "2.0"
 
 info:
   version: '1'
-  description: "Chkl school navigation"
-  title: "Humble-School"
+  description: "Chkl Self-Learning"
+  title: "Self-Learning"
 externalDocs:
   description: "Github"
-  url: "https://github.com/MechFroG88/Humble-School/"
+  url: "https://github.com/MechFroG88/Self-learning"
 host:
   mechfrog88.ddns.net
-basePath:
-  /api
 schemes:
 - "http"
 - "https"
@@ -27,13 +25,18 @@ paths:
         schema:
           type: "object"
           properties:
-            username:
+            id:
               type: "string"
-              example: "admin"
-            password:
+              example: "150142"
+            cn_name:
               type: "string"
-              format: "password"
-              example: "edrtfyuihgfdtser"
+              example: "常常"
+            ic:
+              type: "string"
+              example: "123456-78-1234"
+            class:
+              type: "integer"
+              example: 1
 
       responses:
         200:
@@ -46,21 +49,85 @@ paths:
     get:
       tags:
       - "Users"
+      summary: "Returns current user data"
+      responses:
+        200:
+          description: "Successful operation<br>If is_submit value is <br>0 means the user has not submitted<br> 1 means the user has submitted<br><br> For object in lessons and forced_lessons, <br> key is period <br> value is lessons_id <br>i.e. { period => lesson_id } "
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "string"
+                example: "140123"
+              cn_name:
+                type: "string"
+                example: "和恶"
+              class:
+                type: "string"
+                example: "高三理忠"
+              is_submit:
+                type: "boolean"
+                example : 0
+              lessons:
+                  type: "object"
+                  properties:
+                    1:
+                      type: "integer"
+                      example: "2"
+              forced_lessons:
+                  type: "object"
+                  properties:
+                    3:
+                      type: "integer"
+                      example: "10"
+
+                  
+                  
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+          
+  /users:
+    get:
+      tags:
+      - "Users"
       summary: "Returns all users data"
       responses:
         200:
-          description: "Successful operation"
+          description: "Successful operation<br>If is_submit value is <br>0 means the user has not submitted<br> 1 means the user has submitted<br><br> For object in lessons and forced_lessons, <br> key is period <br> value is lessons_id <br>i.e. { period => lesson_id } "
           schema:
             type: "array"
             items:
               type: "object"
               properties:
                 id:
-                  type: "integer"
-                  example: "1"
-                username:
                   type: "string"
-                  example: "admin"
+                  example: "140123"
+                cn_name:
+                  type: "string"
+                  example: "和恶"
+                class:
+                  type: "string"
+                  example: "高三理忠"
+                is_submit:
+                  type: "boolean"
+                  example : 0
+                lessons:
+                    type: "object"
+                    properties:
+                      1:
+                        type: "integer"
+                        example: "2"
+                forced_lessons:
+                    type: "object"
+                    properties:
+                      3:
+                        type: "integer"
+                        example: "10"
+
+                  
+                  
         401:
           description: "Unauthorized"
         400:
@@ -78,12 +145,12 @@ paths:
         schema:
           type: "object"
           properties:
-            username:
+            id:
               type: "string"
               example: "hello"
-            password:
+            ic:
               type: "string"
-              example: "asdyughsakjdn"
+              example: "123456-78-1234"
 
       responses:
         200:
@@ -106,9 +173,68 @@ paths:
           description: "Unauthorized"
         400:
           description: "Validation Error"
-
-  /user/delete/{userId}:
+          
+  /user/submit:
     post:
+      tags:
+      - "Users"
+      summary : "submit lessons selection"
+      parameters:
+      - in: "body"
+        name: "Body"
+        description: "Edit user <br> provide lesson_id in the array"
+        schema:
+          type: "array"
+          items:
+            type: "integer"
+          example : [4,5,8]
+          
+          
+      responses:
+        200:
+          description: "Successful operation"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+
+  /user/{userId}:
+    put:
+      tags:
+      - "Users"
+      summary: "Edit user"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "ID of user to edit"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "Body"
+        description: "Edit user"
+        schema:
+          type: "object"
+          properties:
+            id:
+              type: "string"
+              example: "150142"
+            cn_name:
+              type: "string"
+              example: "常常"
+            ic:
+              type: "string"
+              example: "123456-78-1234"
+            class:
+              type: "integer"
+              example: 1
+      responses:
+        200:
+          description: "Successful operation"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+    delete:
       tags:
       - "Users"
       summary: "Delete user"
@@ -137,24 +263,13 @@ paths:
         schema:
           type: "object"
           properties:
-            cn_class:
+            cn_name:
               type: "string"
               example: "2慧"
-            en_class:
+            en_name:
               type: "string"
               example: "2hui"
-            theme:
-              type: "string"
-              example: "VR WORLD"
-            society:
-              type: "string"
-              example: "computer society"
-            picture:
-              type: "string"
-              example: "vr.jpg/potato"
-            detail:
-              type: "string"
-              example: "Welcome to VR World!"
+  
       responses:
         200:
           description: "Successful operation"
@@ -171,118 +286,56 @@ paths:
         200:
           description: "Successful operation"
           schema:
-            type: "object"
-            properties:
-              cn_class:
-                type: "string"
-                example: "2慧"
-              en_class:
-                type: "string"
-                example: "2hui"
-              theme:
-                type: "string"
-                example: "VR WORLD"
-              society:
-                type: "string"
-                example: "computer society"
-              picture:
-                type: "string"
-                example: "vr.jpg"
-              detail:
-                type: "string"
-                example: "welcome!"
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                id:
+                  type: "integer"
+                  example: 1
+                cn_name:
+                  type: "string"
+                  example: "2慧"
+                en_name:
+                  type: "string"
+                  example: "2hui"
         401:  
           description: "Unauthorized"
         400:
           description: "Validation Error"
 
   /class/{classId}:
-    get:
+    put:
       tags:
       - "Class"
-      summary : "Get single class data"
+      summary: "Edit class"
       parameters:
       - name: "classId"
         in: "path"
+        description: "ID of user to edit"
+        required: true
         type: "integer"
-        description: "ID of class to get"
-        required: true
-
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            type: "object"
-            properties:
-              cn_class:
-                type: "string"
-                example: "2慧"
-              en_class:
-                type: "string"
-                example: "2hui"
-              theme:
-                type: "string"
-                example: "VR WORLD"
-              society:
-                type: "string"
-                example: "computer society"
-              picture:
-                type: "string"
-                example: "vr.jpg/potato"
-              detail:
-                type: "string"
-                example: "Welcome to VR World!"
-
-        401:  
-          description: "Unauthorized"
-        400:
-          description: "Validation Error"
-    
-    post:
-      tags: 
-      - "Class"
-      summary: "Update class data"
-      parameters:
-      - name: "classId"
-        in: "path"
-        description: "ID of class to delete"
-        required: true
-        type: "integer"     
-      - name: "Body"
-        in: "body"
-        description: "Update class data"
+      - in: "body"
+        name: "Body"
         schema:
           type: "object"
           properties:
-            cn_class:
+            cn_name:
               type: "string"
               example: "2慧"
-            en_class:
+            en_name:
               type: "string"
               example: "2hui"
-            theme:
-              type: "string"
-              example: "VR WORLD"
-            society:
-              type: "string"
-              example: "computer society"
-            picture:
-              type: "string"
-              example: "vr.jpg/potato"
-            detail: 
-              type: "string"
-              example: "welkum to vp world"
-
+  
       responses:
         200:
           description: "Successful operation"
         401:
           description: "Unauthorized"
         400:
-          description: "Validation Error"     
-
-  /class/delete/{classId}:
-    post:
+          description: "Validation Error"
+      
+    delete:
       tags:
       - "Class"
       summary: "Delete class"
@@ -290,6 +343,191 @@ paths:
       - name: "classId"
         in: "path"
         description: "ID of class to delete"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Successful operation"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+          
+  /lesson:
+    post:
+      tags:
+      - "Lessons"
+      summary: "Create new lesson"
+      parameters:
+      - in: "body"
+        name: "Body"
+        description: "Create new lesson"
+        schema:
+          type: "object"
+          properties:
+            name:
+              type: "string"
+              example: "啊实打实的"
+            location:
+              type: "string"
+              example: "光驱的"
+            subject:
+              type: "string"
+              example: "体育处"
+            limit:
+              type: "integer"
+              example: 30
+            period:
+              type: "array"
+              items:
+                type: "integer"
+              example : [1,2,3]
+            year:
+              type: "array"
+              items:
+                type: "integer"
+              example : [1,4,5]
+              
+      responses:
+        200:
+          description: "Successful operation"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+
+    get:
+      tags:
+      - "Lessons"
+      summary: "Returns all lessons data"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                id:
+                  type: "integer"
+                  example: "1"
+                name:
+                  type: "string"
+                  example: "啊实打实的"
+                location:
+                  type: "string"
+                  example: "光驱的"
+                subject:
+                  type: "string"
+                  example: "体育处"
+                current:
+                  type: "string"
+                  example: 12
+                limit:
+                  type: "integer"
+                  example: 30
+                period:
+                  type: "array"
+                  items:
+                    type: "integer"
+                  example : [1,2,3]
+                year:
+                  type: "array"
+                  items:
+                    type: "integer"
+                  example : [1,4,5]
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+  
+  /lesson/{lessonId}:
+    get:
+      tags:
+      - "Lessons"
+      summary: "Returns all user associated with the lesson"
+      parameters:
+      - name: "lessonId"
+        in: "path"
+        description: "ID of lesson to get"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                id:
+                  type: "string"
+                  example: "140123"
+                cn_name:
+                  type: "string"
+                  example: "和恶"
+                class:
+                  type: "string"
+                  example: "高三理忠"
+                
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+    put:
+      tags:
+      - "Lessons"
+      summary: "Edit lesson"
+      parameters:
+      - name: "lessonId"
+        in: "path"
+        description: "ID of lesson to edit"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "Body"
+        description: "Create new lesson"
+        schema:
+          type: "object"
+          properties:
+            name:
+              type: "string"
+              example: "啊实打实的"
+            location:
+              type: "string"
+              example: "光驱的"
+            subject:
+              type: "string"
+              example: "体育处"
+            limit:
+              type: "integer"
+              example: 30
+            period:
+              type: "array"
+              items:
+                type: "integer"
+              example : [1,2,3]
+            year:
+              type: "array"
+              items:
+                type: "integer"
+              example : [1,4,5]
+      responses:
+        200:
+          description: "Successful operation"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+          
+    delete:
+      tags:
+      - "Lessons"
+      summary: "Delete lesson"
+      parameters:
+      - name: "lessonId"
+        in: "path"
+        description: "ID of lesson to delete"
         required: true
         type: "integer"
       responses:
