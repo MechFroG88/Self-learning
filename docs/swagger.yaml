@@ -1,0 +1,301 @@
+swagger: "2.0"
+
+info:
+  version: '1'
+  description: "Chkl school navigation"
+  title: "Humble-School"
+externalDocs:
+  description: "Github"
+  url: "https://github.com/MechFroG88/Humble-School/"
+host:
+  mechfrog88.ddns.net
+basePath:
+  /api
+schemes:
+- "http"
+- "https"
+paths:
+  /user:
+    post:
+      tags:
+      - "Users"
+      summary: "Create new user"
+      parameters:
+      - in: "body"
+        name: "Body"
+        description: "Create new user"
+        schema:
+          type: "object"
+          properties:
+            username:
+              type: "string"
+              example: "admin"
+            password:
+              type: "string"
+              format: "password"
+              example: "edrtfyuihgfdtser"
+
+      responses:
+        200:
+          description: "Successful operation"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+
+    get:
+      tags:
+      - "Users"
+      summary: "Returns all users data"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                id:
+                  type: "integer"
+                  example: "1"
+                username:
+                  type: "string"
+                  example: "admin"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+  
+  /user/login:
+    post:
+      tags:
+      - "Users"
+      summary : "Login"
+      parameters:
+      - in: "body"
+        name: "Body"
+        description: "Login user"
+        schema:
+          type: "object"
+          properties:
+            username:
+              type: "string"
+              example: "hello"
+            password:
+              type: "string"
+              example: "asdyughsakjdn"
+
+      responses:
+        200:
+          description: "Successful logged in"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+
+  /user/logout:
+    post:
+      tags:
+      - "Users"
+      summary : "Logout"
+              
+      responses:
+        200:
+          description: "Successful logged out"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+
+  /user/delete/{userId}:
+    post:
+      tags:
+      - "Users"
+      summary: "Delete user"
+      parameters:
+      - name: "userId"
+        in: "path"
+        description: "ID of user to delete"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Successful operation"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+
+  /class:
+    post:
+      tags:
+      - "Class"
+      summary: "Create new class"
+      parameters:
+      - in: "body"
+        name: "Body"
+        schema:
+          type: "object"
+          properties:
+            cn_class:
+              type: "string"
+              example: "2慧"
+            en_class:
+              type: "string"
+              example: "2hui"
+            theme:
+              type: "string"
+              example: "VR WORLD"
+            society:
+              type: "string"
+              example: "computer society"
+            picture:
+              type: "string"
+              example: "vr.jpg/potato"
+            detail:
+              type: "string"
+              example: "Welcome to VR World!"
+      responses:
+        200:
+          description: "Successful operation"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+
+    get:
+      tags:
+      - "Class"
+      summary: "Get all class data"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              cn_class:
+                type: "string"
+                example: "2慧"
+              en_class:
+                type: "string"
+                example: "2hui"
+              theme:
+                type: "string"
+                example: "VR WORLD"
+              society:
+                type: "string"
+                example: "computer society"
+              picture:
+                type: "string"
+                example: "vr.jpg"
+              detail:
+                type: "string"
+                example: "welcome!"
+        401:  
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+
+  /class/{classId}:
+    get:
+      tags:
+      - "Class"
+      summary : "Get single class data"
+      parameters:
+      - name: "classId"
+        in: "path"
+        type: "integer"
+        description: "ID of class to get"
+        required: true
+
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              cn_class:
+                type: "string"
+                example: "2慧"
+              en_class:
+                type: "string"
+                example: "2hui"
+              theme:
+                type: "string"
+                example: "VR WORLD"
+              society:
+                type: "string"
+                example: "computer society"
+              picture:
+                type: "string"
+                example: "vr.jpg/potato"
+              detail:
+                type: "string"
+                example: "Welcome to VR World!"
+
+        401:  
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+    
+    post:
+      tags: 
+      - "Class"
+      summary: "Update class data"
+      parameters:
+      - name: "classId"
+        in: "path"
+        description: "ID of class to delete"
+        required: true
+        type: "integer"     
+      - name: "Body"
+        in: "body"
+        description: "Update class data"
+        schema:
+          type: "object"
+          properties:
+            cn_class:
+              type: "string"
+              example: "2慧"
+            en_class:
+              type: "string"
+              example: "2hui"
+            theme:
+              type: "string"
+              example: "VR WORLD"
+            society:
+              type: "string"
+              example: "computer society"
+            picture:
+              type: "string"
+              example: "vr.jpg/potato"
+            detail: 
+              type: "string"
+              example: "welkum to vp world"
+
+      responses:
+        200:
+          description: "Successful operation"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"     
+
+  /class/delete/{classId}:
+    post:
+      tags:
+      - "Class"
+      summary: "Delete class"
+      parameters:
+      - name: "classId"
+        in: "path"
+        description: "ID of class to delete"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Successful operation"
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
