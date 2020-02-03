@@ -20,6 +20,8 @@ $gray-color: lighten($dark-color, 55%) !default;
 $gray-color-dark: darken($gray-color, 30%) !default;
 $gray-color-light: lighten($gray-color, 20%) !default;
 
+$text-color: #747474;
+
 $border-color: lighten($dark-color, 65%) !default;
 $border-color-dark: darken($border-color, 10%) !default;
 $border-color-light: lighten($border-color, 8%) !default;

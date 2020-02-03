@@ -1,0 +1,89 @@
+#_homepage {
+  height: 100vh;
+  .header {
+    padding: 2rem;
+    padding-bottom: 1rem;
+    border: solid 1.5px #e8e8e8;
+    @media screen and (max-width: 320px) {
+      padding : 1rem;
+    }
+    .primary {
+      color: $primary-color;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: .5rem;
+      .student_info {
+        line-height: 1rem;
+        .id {
+          font-weight: 500;
+        }
+      }
+    }
+    .week {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      span {
+        font-weight: 600;
+        font-size: 1rem;
+      }
+      .days {
+        display: flex;
+        justify-content: space-between;
+        .avatar {
+          background-color: #ebebeb;
+          &.active {
+            background-color: $primary-color;
+            &::before {
+              color: white;
+            }
+          }
+          &::before {
+            color: $text-color;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+
+  .body {
+    .sidebar {
+      padding: 1rem;
+      border-right: solid 1px #e8e8e8;
+      .cell {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        margin-bottom: .5rem;
+        height: 2rem;
+        &.active {
+          color: $primary-color;
+          .progress-bar {
+            border-color: $primary-color;
+          }
+        }
+        .progress-bar {
+          height: 100%; width: 0;
+          border: solid 2px $text-color;
+        }
+      }
+    }
+    .content {
+      padding: 1rem;
+      .accordion {
+        .accordion-header {
+          .icon {
+            font-size: $font-size;
+          }
+          font-size: $font-size-lg;
+          font-weight: 700;
+        }
+        .accordion-body {
+          display: flex;
+          overflow-x: scroll;
+        }
+      }
+    }
+  }
+}

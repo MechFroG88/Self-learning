@@ -10,7 +10,7 @@
         <label class="custom-form-label" for="student_id">学号</label>
       </div>
       <div class="form-group">
-        <input class="form-input" type="text" id="birthday"
+        <input class="form-input" type="password" id="birthday"
         v-model="birthday" :class="{
           'active': birthday
         }">

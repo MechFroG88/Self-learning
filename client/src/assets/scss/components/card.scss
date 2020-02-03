@@ -1,0 +1,23 @@
+#_cards {
+  border: solid 1px #eee;
+  box-shadow: 0 2px 8px rgba(0,0,0, .12);
+  border-radius: .4rem;
+  padding: .5rem;
+  width: 80%;
+  margin: .5rem 0;
+  &:first-of-type {
+    margin-top: 0;
+  }
+  .tile-content {
+    .tile-title {
+      font-size: $font-size-lg;
+      color: #555;
+      font-weight: 500;
+    }
+    .tile-subtitle {
+      display: flex;
+      justify-content: space-between;
+      font-size: .45rem;
+    }
+  }
+}

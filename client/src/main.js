@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 
 import '@/assets/scss/spectre/spectre-exp.scss';
+import '@/assets/scss/spectre/spectre-icons.scss';
 import '@/assets/scss/spectre/spectre.scss';
 import '@/assets/scss/style.scss';
 
