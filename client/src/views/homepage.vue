@@ -34,8 +34,11 @@
         <div class="accordion" v-for="i in arr" :key="i">
           <input type="radio" :id="i" name="accordion-checkbox" hidden>
           <label class="accordion-header" :for="i">
-            <i class="icon icon-arrow-right mr-1"></i>
-            {{i}}
+            <div class="accordion-header-section">
+              <i class="icon icon-arrow-right mr-1"></i>
+              {{i}}
+            </div>
+            <div class="label label-rounded label-primary">已选：活动1</div>
           </label>
           <div class="accordion-body">
             <card
