@@ -10,4 +10,14 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    protected function fail()
+    {
+        return response("Validation error",400);
+    }
+
+    protected function ok()
+    {
+        return response("Successful operation",200);
+    }
 }
