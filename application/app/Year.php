@@ -14,6 +14,8 @@ class Year extends Model
     */
     protected $primaryKey = null;
 
+    public $timestamps = false;
+
     /**
      * Indicates if the IDs are auto-incrementing.
      *

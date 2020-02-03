@@ -3,14 +3,12 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+
 
 class User extends Authenticatable
 {
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
+
     protected $table = 'users';
 
     /**
@@ -26,8 +24,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id','cn_name', 'class_id', 'hash_ic',
+        'id','cn_name', 'class_id', 'ic','type','is_submit'
     ];
+
+    public function getAuthPassword() {
+        return $this->ic;
+    }
 
     /**
      * The attributes that should be hidden for arrays.
@@ -35,12 +37,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'hash_ic', 'remember_token',
+        'ic', 'remember_token','class_id'
     ];
 
     public function classes()
     {
-        return $this->belongsTo('App\_Class');
+        return $this->belongsTo('App\_Class','class_id');
     }
 
     public function lessons()

@@ -6,11 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class _Class extends Model
 {
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
+
+    public $timestamps = false;
     protected $table = 'classes';
 
     /**
