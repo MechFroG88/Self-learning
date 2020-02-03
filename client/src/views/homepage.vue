@@ -10,8 +10,8 @@
       </div>
       <h4 class="date">2月15日</h4>
       <div class="week columns">
-        <span class="column col-1 col-lg-2 col-xs-3">星期</span>
-        <div class="days column col-11 col-lg-10 col-xs-9">
+        <span class="column col-2 col-xs-3">星期</span>
+        <div class="days column col-10 col-xs-9">
           <div class="avatar avatar-sm" data-initial="一"></div>
           <div class="avatar avatar-sm" data-initial="二"></div>
           <div class="avatar avatar-sm" data-initial="三"></div>
@@ -22,15 +22,20 @@
       </div>
     </div>
     <div class="body columns">
-      <div class="sidebar column col-1 col-lg-2 col-xs-3">
-        <h6 style="text-align: center; margin-bottom: 1rem;">节数</h6>
-        <div class="cell" v-for="i in 7" :key="i" 
-        :class="{'active': i < 4}">
-          <div class="period">{{i}}</div>
-          <div class="progress-bar"></div>
+      <div class="sidebar col-2 col-xs-3">
+        <div class="period-counter">
+          <h6 style="text-align: center; margin-bottom: 1rem;">节数</h6>
+          <div class="cell" v-for="i in 7" :key="i" 
+          :class="{'active': i < 4}">
+            <div class="period">{{i}}</div>
+            <div class="progress-bar"></div>
+          </div>
+        </div>
+        <div class="logout">
+          <i class="feather icon-log-out"></i>登出
         </div>
       </div>
-      <div class="content column col-11 col-lg-10 col-xs-9">
+      <div class="content column col-10 col-xs-9">
         <div class="accordion" v-for="i in arr" :key="i">
           <input type="radio" :id="i" name="accordion-checkbox" hidden>
           <label class="accordion-header" :for="i">
@@ -38,7 +43,7 @@
               <i class="icon icon-arrow-right mr-1"></i>
               {{i}}
             </div>
-            <div class="label label-rounded label-primary">已选：活动1</div>
+            <small class="label label-rounded label-primary">已选：活动1</small>
           </label>
           <div class="accordion-body">
             <card

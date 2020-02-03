@@ -48,25 +48,46 @@
   }
 
   .body {
+    min-height: calc(100vh - 190px);
     .sidebar {
-      padding: 1rem;
       border-right: solid 1px #e8e8e8;
-      .cell {
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        margin-bottom: .5rem;
-        height: 2rem;
-        &.active {
-          color: $primary-color;
+      display: flex;
+      padding-bottom: 2rem;
+      flex-direction: column;
+      justify-content: space-between;
+      .period-counter {
+        padding-top: 1rem;
+        padding-left: 3rem;
+        padding-right: 3rem;
+        @media screen and (max-width: $size-xl) {
+          padding-left: 2rem;
+          padding-right: 2rem;
+        }
+        @media screen and (max-width: $size-lg) {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+        .cell {
+          display: flex;
+          justify-content: space-evenly;
+          align-items: center;
+          margin-bottom: .5rem;
+          height: 2rem;
+          &.active {
+            color: $primary-color;
+            .progress-bar {
+              border-color: $primary-color;
+            }
+          }
           .progress-bar {
-            border-color: $primary-color;
+            height: 100%; width: 0;
+            border: solid 2px $text-color;
           }
         }
-        .progress-bar {
-          height: 100%; width: 0;
-          border: solid 2px $text-color;
-        }
+      }
+      .logout {
+        margin-top: 5rem;
+        text-align: center;
       }
     }
     .content {

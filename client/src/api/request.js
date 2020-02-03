@@ -1,4 +1,5 @@
 const axios = require('axios');
+const app = require('../main');
 
 let local = 'https://mechfrog88.ddns.net:8080';
 let prod = '';
@@ -11,7 +12,7 @@ let service = axios.create({
 })
 
 service.interceptors.request.use(function (config) {
-  // Do something before request is sent
+  app.$Progress.start();
   return config;
 }, function (error) {
   // Do something with request error
@@ -19,12 +20,10 @@ service.interceptors.request.use(function (config) {
 });
 
 service.interceptors.response.use(function (response) {
-  // Any status code that lie within the range of 2xx cause this function to trigger
-  // Do something with response data
+  app.$Progress.finish();
   return response;
 }, function (error) {
-  // Any status codes that falls outside the range of 2xx cause this function to trigger
-  // Do something with response error
+  app.$Progress.fail();
   return Promise.reject(error);
 });
 
