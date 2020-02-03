@@ -17,7 +17,9 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('cn_name',10);
             $table->integer('class_id');
-            $table->string('hash_ic',255);
+            $table->integer('type');
+            $table->integer('is_submit')->default(0);
+            $table->string('ic',255);
             $table->rememberToken();
             $table->timestamps();
         });

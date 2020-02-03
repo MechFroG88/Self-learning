@@ -19,7 +19,7 @@ class CreateLessonsTable extends Migration
             $table->string('location',120);
             $table->string('subject',60);
             $table->integer('limit');
-            $table->integer('current');
+            $table->integer('current')->default(0);
             $table->timestamps();
         });
     }
