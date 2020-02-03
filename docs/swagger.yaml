@@ -37,7 +37,7 @@ paths:
             ic:
               type: "string"
               example: "123456-78-1234"
-            class:
+            class_id:
               type: "integer"
               example: 1
 
@@ -155,8 +155,8 @@ paths:
           type: "object"
           properties:
             id:
-              type: "string"
-              example: "hello"
+              type: "integer"
+              example: "140145"
             ic:
               type: "string"
               example: "123456-78-1234"
@@ -193,10 +193,13 @@ paths:
         name: "Body"
         description: "Edit user <br> provide lesson_id in the array"
         schema:
-          type: "array"
-          items:
-            type: "integer"
-          example : [4,5,8]
+          type: "object"
+          properties:
+            lessons:
+              type: "array"
+              items:
+                type: "integer"
+              example: [3,2,1]
           
           
       responses:
@@ -233,7 +236,7 @@ paths:
             ic:
               type: "string"
               example: "123456-78-1234"
-            class:
+            class_id:
               type: "integer"
               example: 1
             type:
