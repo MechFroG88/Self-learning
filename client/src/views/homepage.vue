@@ -1,26 +1,8 @@
 <template>
   <div id="_homepage">
-    <div class="header">
-      <div class="primary">
-        <h2 class="title">自主学习</h2>
-        <div class="student_info">
-          <div class="name">黄筱琪</div>
-          <div class="id">170425</div>
-        </div>
-      </div>
-      <h4 class="date">2月15日</h4>
-      <div class="week columns">
-        <span class="column col-2 col-xs-3">星期</span>
-        <div class="days column col-10 col-xs-9">
-          <div class="avatar avatar-sm" data-initial="一"></div>
-          <div class="avatar avatar-sm" data-initial="二"></div>
-          <div class="avatar avatar-sm" data-initial="三"></div>
-          <div class="avatar avatar-sm" data-initial="四"></div>
-          <div class="avatar avatar-sm" data-initial="五"></div>
-          <div class="avatar avatar-sm active" data-initial="六"></div>
-        </div>
-      </div>
-    </div>
+    <header-layout 
+    :cn_name="user.cn_name"
+    :id="user.id"></header-layout>
     <div class="body columns">
       <div class="sidebar col-2 col-xs-3">
         <div class="period-counter">
@@ -31,12 +13,13 @@
             <div class="progress-bar"></div>
           </div>
         </div>
-        <div class="logout">
+        <div class="logout" @click="logout"
+        :class="{'loading': logoutLoad}">
           <i class="feather icon-log-out"></i>登出
         </div>
       </div>
       <div class="content column col-10 col-xs-9">
-        <div class="accordion" v-for="i in arr" :key="i">
+        <div class="accordion" v-for="i in titles" :key="i">
           <input type="radio" :id="i" name="accordion-checkbox" hidden>
           <label class="accordion-header" :for="i">
             <div class="accordion-header-section">
@@ -52,8 +35,33 @@
             :pax="800"
             :num="351"
             classroom="4A Ren"
+            bg-color="#ffdf76"
+            active></card>
+            <card
+            title="活动标题"
+            initials="华"
+            :pax="800"
+            :num="551"
+            classroom="4A Ren"
+            bg-color="#ffdf76"></card>
+            <card
+            title="活动标题"
+            initials="华"
+            :pax="800"
+            :num="351"
+            classroom="4A Ren"
+            bg-color="#ffdf76"></card>
+            <card
+            title="活动标题"
+            initials="华"
+            :pax="800"
+            :num="751"
+            classroom="4A Ren"
             bg-color="#ffdf76"></card>
           </div>
+        </div>
+        <div class="btn btn-lg btn-secondary submit">
+          提交 <i class="feather icon-arrow-right"></i>
         </div>
       </div>
     </div>
@@ -61,15 +69,40 @@
 </template>
 
 <script>
-import card from '../components/card';
+import { userLogout, getUser } from '@/api/user';
+import { getAllLessons } from '@/api/lesson';
+
+import card from '@/components/card';
+import headerLayout from '@/layout/header';
 
 export default {
   components: {
-    card
+    card,
+    headerLayout,
+  },
+  mounted() {
+    getUser().then(({data}) => {
+      this.user = data;
+    })
+    getAllLessons().then(({data}) => {
+      console.log(data)
+    })
   },
   data: () => ({
-    arr: ['hi', 'hihi', 'hihihi']
+    titles: ['第 1-3 节', '第 4-5 节', '第 6-7 节', '第 4-7 节'],
+    user: {},
+    logoutLoad: false,
   }),
+  methods: {
+    logout() {
+      this.logoutLoad = true;
+      userLogout().then((data) => {
+        if (data.status == 200) {
+          this.$router.push('/');
+        }
+      }).finally(() => this.logoutLoad = false)
+    }
+  }
 }
 </script>
 

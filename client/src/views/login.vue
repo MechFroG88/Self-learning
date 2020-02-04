@@ -4,6 +4,7 @@
     <div class="form-container">
       <div class="form-group">
         <input class="form-input" type="text" id="student_id" 
+        style="letter-spacing: 2px;"
         v-model="student_id" :class="{
           'active': student_id
         }">
@@ -11,13 +12,16 @@
       </div>
       <div class="form-group">
         <input class="form-input" type="password" id="birthday"
+        style="letter-spacing: 3px;"
         v-model="birthday" :class="{
           'active': birthday
         }">
         <label class="custom-form-label" for="birthday">生日日期</label>
       </div>
     </div>
-    <div class="btn btn-primary submit">登入</div>
+    <div class="btn btn-primary submit loading-lg" 
+    :class="{'loading': isLoading}"
+    @click="login">登入</div>
   </div>
 </template>
 
@@ -26,16 +30,21 @@ import { userLogin } from '@/api/user';
 export default {
   data: () => ({
     student_id: '',
-    birthday: ''
+    birthday: '',
+    isLoading: false,
   }),
   methods: {
     login() {
-      // userLogin({
-      //   id: this.student_id,
-      //   ic: this.birthday
-      // }).then(({data}) => {
-      //   console.log(student);
-      // })
+      this.isLoading = true;
+      userLogin({
+        id: this.student_id,
+        ic: this.birthday
+      }).then((data) => {
+        console.log(data)
+        if (data.status == 200) {
+          this.$router.push('/home');
+        }
+      }).finally(() => this.isLoading = false)
     }
   }
 }

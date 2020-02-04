@@ -34,7 +34,6 @@
         transition-property: border-radius;
         padding-left: 1rem; 
         padding-right: 1rem;
-        letter-spacing: 3px;
         &:focus, &.active {
           border-color: $primary-color;
           box-shadow: 0 0 0 0.1rem $secondary-color;

@@ -1,5 +1,5 @@
 <template>
-  <div id="_cards" class="tile tile-centered">
+  <div id="_cards" class="tile tile-centered" :class="{active}">
     <div class="tile-icon">
       <figure class="avatar avatar-lg" :data-initial="initials"
       :style="{'background-color': bgColor || ''}"></figure>
@@ -7,14 +7,17 @@
     <div class="tile-content">
       <div class="tile-title">{{ title }}</div>
       <small class="tile-subtitle">
-        <div class="pax">
+        <div class="pax mr-2">
           <div>人数：{{num}}/{{pax}}</div>
           <div class="bar bar-sm">
-            <div class="bar-item" role="progressbar" :style="{'width': `${num*100/pax}%`}"
+            <div class="bar-item" role="progressbar" :style="{
+              'width': `${num*100/pax}%`,
+              'background-color': num*100/pax > 85 ? '#e85600' : num*100/pax > 60 ? '#ffb700': '#32b643'
+            }"
             aria-valuemin="0" :aria-valuemax="pax" :aria-valuenow="num"></div>
           </div>
         </div>
-        <div class="class">{{ classroom }}</div>
+        <div class="class ml-2">{{ classroom }}</div>
       </small>
     </div>
   </div>
@@ -49,6 +52,10 @@ export default {
       type: String,
       required: true
     },
+    active: {
+      type: Boolean,
+      default: false
+    }
   },
   data: () => ({
     
