@@ -26,6 +26,7 @@
           align-items: center;
           margin-bottom: .5rem;
           height: 2rem;
+          transition: color 300ms;
           &.active {
             color: $primary-color;
             .progress-bar {
@@ -35,6 +36,7 @@
           .progress-bar {
             height: 100%; width: 0;
             border: solid 2px $text-color;
+            transition: border-color 300ms;
           }
         }
       }
@@ -75,9 +77,6 @@
           #_cards {
             margin-top: .25rem;
             margin-left: .8rem;
-            &:first-of-type {
-              margin-left: 0;
-            }
           }
         }
       }

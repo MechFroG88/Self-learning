@@ -65,11 +65,6 @@ export default {
       this.$emit('clicked');
     }
   },
-  watch: {
-    active() {
-      console.log("object")
-    }
-  }
 }
 </script>
 

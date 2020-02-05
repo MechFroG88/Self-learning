@@ -1,16 +1,42 @@
 #_cards {
   border: solid 1px #eee;
-  box-shadow: 0 2px 8px rgba(0,0,0, .12);
+  box-shadow: 0 2px 6px rgba(0,0,0, .12);
   border-radius: .4rem;
   padding: .5rem;
   width: 80%;
   max-width: 15rem;
   min-width: 10rem;
   margin: .5rem 0;
-  &.active {
-    border-color: $primary-color-dark;
-    box-shadow: 0 2px 15px rgba($primary-color, .2);
+  position: relative;
+  transition: border-color 300ms, box-shadow 300ms;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0;
+    transition: opacity 300ms;
+    box-shadow: 0 3px 12px rgba(0,0,0,.12);
   }
+  &:hover::before {
+    opacity: 1;
+  }
+
+  &.active {
+    border-color: $primary-color;
+    box-shadow: 0 2px 8px rgba($primary-color-dark, .22);
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0;
+      transition: opacity 300ms;
+      box-shadow: 0 3px 20px rgba($primary-color-dark, .2);
+    }
+    &:hover::before {
+      opacity: 1;
+    }
+  }
+
   .tile-content {
     .tile-title {
       font-size: $font-size-lg;
