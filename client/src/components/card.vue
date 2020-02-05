@@ -1,5 +1,5 @@
 <template>
-  <div id="_cards" class="tile tile-centered" :class="{active}">
+  <div id="_cards" class="tile tile-centered" :class="{active}" @click="action">
     <div class="tile-icon">
       <figure class="avatar avatar-lg" :data-initial="initials"
       :style="{'background-color': bgColor || ''}"></figure>
@@ -55,11 +55,21 @@ export default {
     active: {
       type: Boolean,
       default: false
-    }
+    },
   },
   data: () => ({
     
-  })
+  }),
+  methods: {
+    action() {
+      this.$emit('clicked');
+    }
+  },
+  watch: {
+    active() {
+      console.log("object")
+    }
+  }
 }
 </script>
 

@@ -40,7 +40,6 @@ export default {
         id: this.student_id,
         ic: this.birthday
       }).then((data) => {
-        console.log(data)
         if (data.status == 200) {
           this.$router.push('/home');
         }

@@ -8,8 +8,7 @@
   min-width: 10rem;
   margin: .5rem 0;
   &.active {
-    border-color: $primary-color;
-    border-width: 1.5px;
+    border-color: $primary-color-dark;
     box-shadow: 0 2px 15px rgba($primary-color, .2);
   }
   .tile-content {

@@ -19,45 +19,31 @@
         </div>
       </div>
       <div class="content column col-10 col-xs-9">
-        <div class="accordion" v-for="i in titles" :key="i">
-          <input type="radio" :id="i" name="accordion-checkbox" hidden>
-          <label class="accordion-header" :for="i">
+        <div class="accordion" v-for="(section, ind) in titles" :key="section">
+          <input type="radio" :id="section" name="accordion-checkbox" hidden>
+          <label class="accordion-header" :for="section">
             <div class="accordion-header-section">
               <i class="icon icon-arrow-right mr-1"></i>
-              {{i}}
+              {{ section }}
             </div>
-            <small class="label label-rounded label-primary">已选：活动1</small>
+            <small class="label label-rounded label-primary"
+            v-if="id[ind]">已选：{{ name[ind] }}</small>
           </label>
           <div class="accordion-body">
+            <div class="text-gray ml-2 mt-2 text-bold text-italic text-large" v-if="lessons[ind].length == 0">
+              你的年级于此时间段无活动
+            </div>
             <card
-            title="活动标题"
-            initials="华"
-            :pax="800"
-            :num="351"
+            v-for="lesson in lessons[ind]" :key="lesson.id"
+            :title="lesson.name"
+            :initials="lesson.subject.substr(0,1)"
+            :pax="lesson.limit"
+            :num="lesson.current"
             classroom="4A Ren"
             bg-color="#ffdf76"
-            active></card>
-            <card
-            title="活动标题"
-            initials="华"
-            :pax="800"
-            :num="551"
-            classroom="4A Ren"
-            bg-color="#ffdf76"></card>
-            <card
-            title="活动标题"
-            initials="华"
-            :pax="800"
-            :num="351"
-            classroom="4A Ren"
-            bg-color="#ffdf76"></card>
-            <card
-            title="活动标题"
-            initials="华"
-            :pax="800"
-            :num="751"
-            classroom="4A Ren"
-            bg-color="#ffdf76"></card>
+            :active="id[ind] == lesson.id"
+            :ref="`card_${lesson.id}`"
+            @clicked="choose(ind, lesson.id, lesson.name)"></card>
           </div>
         </div>
         <div class="btn btn-lg btn-secondary submit">
@@ -69,8 +55,11 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
 import { userLogout, getUser } from '@/api/user';
 import { getAllLessons } from '@/api/lesson';
+
+import data from '@/api/mock/lesson.json';
 
 import card from '@/components/card';
 import headerLayout from '@/layout/header';
@@ -83,25 +72,56 @@ export default {
   mounted() {
     getUser().then(({data}) => {
       this.user = data;
-    })
-    getAllLessons().then(({data}) => {
-      console.log(data)
+      this.year = (new Date().getFullYear() % 100) - parseInt(this.user.id.toString().substr(0, 2)) + 1;
+      // getAllLessons().then(({data}) => {
+      //   // console.log(data)
+      this.year = 4
+        let lessonArr = this.data.filter(el => el.year.indexOf(this.year) != -1)
+        lessonArr.forEach(el => {
+          if (JSON.stringify(el.period.sort()) == JSON.stringify([1,2,3])) this.lessons[0].push(el)
+          if (JSON.stringify(el.period.sort()) == JSON.stringify([4,5])) this.lessons[1].push(el)
+          if (JSON.stringify(el.period.sort()) == JSON.stringify([6,7])) this.lessons[2].push(el)
+          if (JSON.stringify(el.period.sort()) == JSON.stringify([4,5,6,7])) this.lessons[3].push(el)
+        })
+      // })
     })
   },
   data: () => ({
     titles: ['第 1-3 节', '第 4-5 节', '第 6-7 节', '第 4-7 节'],
     user: {},
+    lessons: [[], [], [], []],
+    year: 0,
     logoutLoad: false,
+    data
   }),
   methods: {
+    ...mapMutations('lessons', {
+      select: 'SELECT_LESSON'
+    }),
     logout() {
       this.logoutLoad = true;
       userLogout().then((data) => {
         if (data.status == 200) {
+          localStorage.clear();
           this.$router.push('/');
         }
       }).finally(() => this.logoutLoad = false)
+    },
+    choose(ind, id, name) {
+      if (id == this.id[ind]) {
+        this.select({ind, id: 0, name: ""});
+      } else {
+        this.select({ind, id, name})
+      }
+      this.$forceUpdate();
     }
+
+  },
+  computed: {
+    ...mapState('lessons', {
+      id: 'selected_lesson_id',
+      name: 'selected_lesson_name'
+    })
   }
 }
 </script>
