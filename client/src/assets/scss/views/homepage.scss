@@ -9,16 +9,12 @@
       flex-direction: column;
       justify-content: space-between;
       .period-counter {
-        padding-top: 1rem;
-        padding-left: 3rem;
-        padding-right: 3rem;
+        padding: 1rem 3rem 0;
         @media screen and (max-width: $size-xl) {
-          padding-left: 2rem;
-          padding-right: 2rem;
+          padding: 1rem 2rem 0;
         }
         @media screen and (max-width: $size-lg) {
-          padding-left: 1rem;
-          padding-right: 1rem;
+          padding: 1rem 1rem 0;
         }
         .cell {
           display: flex;
@@ -31,6 +27,12 @@
             color: $primary-color;
             .progress-bar {
               border-color: $primary-color;
+            }
+            &.chosen {
+              color: $success-color;
+              .progress-bar {
+                border-color: $success-color;
+              }
             }
           }
           .progress-bar {
@@ -50,16 +52,28 @@
       }
     }
     .content {
-      padding: 2rem;
+      position: relative;
+      padding: 2rem 0;
       @media screen and (max-width: $size-lg) {
-        padding: 1rem;
+        padding: 1rem 0;
       }
       .accordion {
+        &.disabled {
+          color: $primary-color;
+        }
         .accordion-header {
           display: flex;
           justify-content: space-between;
           font-size: $font-size-lg;
           font-weight: 700;
+          margin: 0 2rem;
+          @media screen and (max-width: $size-lg) {
+            margin: 0 1rem;
+          }
+          @media screen and (max-width: $size-sm) {
+            flex-direction: column-reverse;
+            font-size: $font-size;
+          }
           .icon {
             font-size: $font-size;
           }
@@ -69,11 +83,21 @@
             font-size: $font-size-sm;
             padding-left: .5rem;
             padding-right: .5rem;
+            @media screen and (max-width: $size-sm) {
+              margin-right: auto;
+            }
           }
         }
         .accordion-body {
           display: flex;
           overflow-x: scroll;
+          .empty-lesson {
+            font-weight: 500;
+            font-size: 1rem;
+            @media screen and (max-width: $size-sm){
+              font-size: $font-size;
+            }
+          }
           #_cards {
             margin-top: .25rem;
             margin-left: .8rem;
@@ -84,7 +108,7 @@
       .submit {
         border-radius: .25rem;
         box-shadow: 1px 2px 8px rgba(0,0,0, .12);
-        position: absolute;
+        position: fixed;
         bottom: 2rem;
         right: 2rem;
         border-width: 1.5px;

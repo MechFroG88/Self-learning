@@ -11,12 +11,12 @@
         <label class="custom-form-label" for="student_id">学号</label>
       </div>
       <div class="form-group">
-        <input class="form-input" type="password" id="birthday"
+        <input class="form-input" type="password" id="student_ic"
         style="letter-spacing: 3px;"
-        v-model="birthday" :class="{
-          'active': birthday
+        v-model="student_ic" :class="{
+          'active': student_ic
         }">
-        <label class="custom-form-label" for="birthday">生日日期</label>
+        <label class="custom-form-label" for="birthday">IC 号码</label>
       </div>
     </div>
     <div class="btn btn-primary submit loading-lg" 
@@ -30,7 +30,7 @@ import { userLogin } from '@/api/user';
 export default {
   data: () => ({
     student_id: '',
-    birthday: '',
+    student_ic: '',
     isLoading: false,
   }),
   methods: {
@@ -38,14 +38,14 @@ export default {
       this.isLoading = true;
       userLogin({
         id: this.student_id,
-        ic: this.birthday
+        ic: this.student_ic.split("").filter(el => el != '-').join("")
       }).then((data) => {
         if (data.status == 200) {
           this.$router.push('/home');
         }
       }).finally(() => this.isLoading = false)
     }
-  }
+  },
 }
 </script>
 

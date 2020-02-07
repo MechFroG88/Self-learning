@@ -9,11 +9,19 @@ import '@/assets/scss/spectre/spectre-icons.scss';
 import '@/assets/scss/spectre/spectre.scss';
 import '@/assets/scss/style.scss';
 
+// prgress bar
 import VueProgressBar from 'vue-progressbar';
 Vue.use(VueProgressBar, {
   color: '#57b1ff',
   failedColor: 'f56c6c'
 });
+
+import { extend } from 'vee-validate';
+import { required, regex, numeric } from 'vee-validate/dist/rules';
+extend('required', required);
+extend('regex', regex);
+extend('numeric', numeric);
+
 
 Vue.config.productionTip = false
 
