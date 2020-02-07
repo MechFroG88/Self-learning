@@ -44,7 +44,7 @@ Route::middleware('admin')->delete('class/{id}','_ClassController@delete');
  */
 
 Route::middleware('admin')->post('lesson','LessonController@create');
-Route::middleware('admin')->get('lesson','LessonController@get');
+Route::middleware('auth')->get('lesson','LessonController@get');
 Route::middleware('admin')->get('lesson/{id}','LessonController@get_single');
 Route::middleware('admin')->put('lesson/{id}','LessonController@edit');
 Route::middleware('admin')->delete('lesson/{id}','LessonController@delete');
