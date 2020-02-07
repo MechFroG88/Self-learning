@@ -17,6 +17,10 @@ class LessonController extends Controller
         "location"  => "",
         "subject" => "",
         "limit" => "required|integer",
+        "period" => "required|array",
+        "gender" => "required|in:无,男,女",
+        "stream" => "required|in:无,文,理",
+        "year" => "required|array",
         "period.*" => "required|integer",
         "year.*" => "required|integer",
     ];
