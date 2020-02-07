@@ -16,12 +16,14 @@ Vue.use(VueProgressBar, {
   failedColor: 'f56c6c'
 });
 
-import { extend } from 'vee-validate';
+import { ValidationProvider, extend, localize } from 'vee-validate';
 import { required, regex, numeric } from 'vee-validate/dist/rules';
+import zh_CN from 'vee-validate/dist/locale/zh_CN.json';
 extend('required', required);
 extend('regex', regex);
 extend('numeric', numeric);
-
+localize('zh_CN', zh_CN);
+Vue.component('ValidationProvider', ValidationProvider);
 
 Vue.config.productionTip = false
 
