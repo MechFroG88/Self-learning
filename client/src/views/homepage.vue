@@ -22,49 +22,66 @@
         </div>
       </div>
       <div class="content column col-10 col-xs-9">
-        <div class="accordion" :class="{'disabled': dis[ind]}"
-        v-for="(section, ind) in titles" :key="section"
-        v-if="!isPageLoading">
-          <input type="radio" :id="section" name="accordion-checkbox" hidden :disabled="dis[ind] || invalidSelect(ind)">
-          <label class="accordion-header" :for="section">
-            <div class="accordion-header-section" :class="{'tooltip': dis[ind] || invalidSelect(ind)}"
-            :data-tooltip="dis[ind] ? '已呈交此时间段的活动': '不可选择此时间段'">
-              <i class="icon icon-arrow-right mr-1"></i>
-              {{ section }}
-              <i class="feather icon-lock ml-2"
-              v-if="dis[ind] || invalidSelect(ind)"></i>
+        <div class="accordion-container" v-if="!isPageLoading">
+          <div class="accordion" :class="{'disabled': dis[ind]}"
+          v-for="(section, ind) in titles" :key="section">
+            <input type="radio" :id="section" name="accordion-checkbox" hidden :disabled="dis[ind] || invalidSelect(ind)">
+            <label class="accordion-header" :for="section">
+              <div class="accordion-header-section" :class="{'tooltip': dis[ind] || invalidSelect(ind)}"
+              :data-tooltip="dis[ind] ? '已呈交此时间段的活动': '不可选择此时间段'">
+                <i class="icon icon-arrow-right mr-1"></i>
+                {{ section }}
+                <i class="feather icon-lock ml-2"
+                v-if="dis[ind] || invalidSelect(ind)"></i>
+              </div>
+              <transition name="fade">
+                <small class="label label-rounded label-primary"
+                v-if="dis[ind]">已呈交：{{ name[ind] }}</small>
+                <small class="label label-rounded label-primary"
+                v-else-if="id[ind]">已选：{{ name[ind] }}</small>
+              </transition>
+            </label>
+            <div class="accordion-body">
+              <div class="empty-lesson text-gray ml-2 mt-2 text-italic"
+              v-if="lessons[ind].length == 0">
+                你的年级于此时间段无活动
+              </div>
+              <card
+              v-for="lesson in lessons[ind]" :key="lesson.id"
+              :title="lesson.name"
+              :initials="lesson.subject.substr(0,1)"
+              :pax="lesson.limit"
+              :num="lesson.current"
+              :classroom="lesson.location"
+              bg-color="#ffdf76"
+              :active="id[ind] == lesson.id"
+              class="c-hand"
+              @clicked="choose(ind, lesson.id, lesson.name)"></card>
             </div>
-            <transition name="fade">
-              <small class="label label-rounded label-primary"
-              v-if="dis[ind]">已呈交：{{ name[ind] }}</small>
-              <small class="label label-rounded label-primary"
-              v-else-if="id[ind]">已选：{{ name[ind] }}</small>
-            </transition>
-          </label>
-          <div class="accordion-body">
-            <div class="empty-lesson text-gray ml-2 mt-2 text-italic"
-            v-if="lessons[ind].length == 0">
-              你的年级于此时间段无活动
-            </div>
-            <card
-            v-for="lesson in lessons[ind]" :key="lesson.id"
-            :title="lesson.name"
-            :initials="lesson.subject.substr(0,1)"
-            :pax="lesson.limit"
-            :num="lesson.current"
-            :classroom="lesson.location"
-            bg-color="#ffdf76"
-            :active="id[ind] == lesson.id"
-            class="c-hand"
-            @clicked="choose(ind, lesson.id, lesson.name)"></card>
           </div>
         </div>
         <div class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading}"
-        @click="submit">
+        @click="$refs.confirm.active = true">
           提交 <i class="feather icon-arrow-right"></i>
         </div>
       </div>
     </div>
+    <modal title="确认选择以下活动" ref="confirm"
+    :bodyData="[lessonArr, id, chosenId]">
+      <template v-slot:body="{ data }">
+        <ul v-if="data[1].filter(el => el != 0 && data[2].indexOf(el) == -1).length">
+          <li v-for="single_id in data[1].filter(el => el != 0 && data[2].indexOf(el) == -1)" :key="single_id">
+            {{ data[0].filter(el => el.id == single_id)[0] }}
+          </li>
+        </ul>
+        <div v-else>还未选择任何活动</div>
+      </template>
+      <template v-slot:footer>
+        <div class="btn btn-secondary" @click="submit">
+          确认
+        </div>
+      </template>
+    </modal>
   </div>
 </template>
 
@@ -73,13 +90,15 @@ import { mapState, mapMutations } from 'vuex';
 import { userLogout, getUser, submitUser } from '@/api/user';
 import { getAllLessons } from '@/api/lesson';
 
-import card from '@/components/card';
 import headerLayout from '@/layout/header';
+import card from '@/components/card';
+import modal from '@/components/modal';
 
 export default {
   components: {
-    card,
     headerLayout,
+    card,
+    modal,
   },
   mounted() {
     this.init();
@@ -96,6 +115,7 @@ export default {
     dis: new Array(4).fill(false), // disable accordions for submitted sessions
     locked: new Array(4).fill(false), // forced lessons
     user: {},
+    lessonArr: [], // all lessons
     lessons: [[], [], [], []], // display data
     year: 0,
     logoutLoad: false,
@@ -109,13 +129,12 @@ export default {
       getUser().then(({data}) => {
         this.user = data;
         this.isPageLoading = false;
-        // console.log(this.user)
         // get current year of user
         this.year = (new Date().getFullYear() % 100) - parseInt(this.user.id.toString().substr(0, 2)) + 1;
         getAllLessons().then(({data}) => {
           // find lessons valid for user's year and sort lessons according to period sessions
-          let lessonArr = data.filter(el => el.year.indexOf(this.year) != -1)
-          lessonArr.forEach(el => {
+          this.lessonArr = data.filter(el => el.year.indexOf(this.year) != -1)
+          this.lessonArr.forEach(el => {
             for (let i = 0; i < 4; i++)
               if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i])) 
                 this.lessons[i].push(el)
@@ -170,7 +189,9 @@ export default {
     },
     submit() {
       this.isSubmitLoading = true;
-      submitUser({ lessons: this.id.filter(el => el != 0 && this.chosenId.indexOf(el) == -1) })
+      let arr = this.id.filter(el => el != 0 && this.chosenId.indexOf(el) == -1);
+      if (arr.length == 0) return ;
+      submitUser({ lessons: arr })
         .then((data) => {
           this.init();
         }).finally(() => this.isSubmitLoading = false)

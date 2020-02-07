@@ -54,6 +54,8 @@ $cjk-jp-font-family: $base-font-family, "Hiragino Sans", "Hiragino Kaku Gothic P
 $cjk-ko-font-family: $base-font-family, "Malgun Gothic", $fallback-font-family !default;
 $body-font-family: $base-font-family, $fallback-font-family !default;
 
+$base-font-family: 'Noto Sans', sans-serif;
+
 // Unit sizes
 $unit-o: .05rem !default;
 $unit-h: .1rem !default;
