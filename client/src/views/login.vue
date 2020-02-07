@@ -53,9 +53,9 @@ export default {
   }),
   methods: {
     async login() {
-      // let validId = await this.$refs.id.validate();
-      // let validIc = await this.$refs.ic.validate();
-      // if (validId.valid && validIc.valid) {
+      let validId = await this.$refs.id.validate();
+      let validIc = await this.$refs.ic.validate();
+      if (validId.valid && validIc.valid) {
         this.isLoading = true;
         userLogin({
           id: this.student_id,
@@ -76,7 +76,7 @@ export default {
           this.$refs.ic.reset();
         })
         .finally(() => this.isLoading = false)
-      // }
+      }
     },
     reset() {
       this.loginError = false;
