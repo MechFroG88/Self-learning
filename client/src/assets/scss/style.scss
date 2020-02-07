@@ -1,9 +1,22 @@
 @import 'variables';
 
-
 //views
 @import 'views/login.scss';
 @import 'views/homepage.scss';
 
 //components
 @import 'components/card.scss';
+
+//layouts
+@import 'layout/header.scss';
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 300ms;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}

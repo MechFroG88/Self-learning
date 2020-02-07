@@ -1,14 +1,20 @@
-const axios = require('axios');
-const app = require('../main');
+import router from '@/router'
+import app   from '@/main'
+import axios from 'axios'
+import qs from 'qs'
 
-let local = 'https://mechfrog88.ddns.net:8080';
-let prod = '';
+let local = 'http://10.20.95.34';
+// let local = 'http://172.17.88.111/api';
 
 let service = axios.create({
-  baseURL: process.env.NODE_ENV == 'production' ? prod : local,
-  timeout: 3000,
+  baseURL: process.env.NODE_ENV == 'production' ? '/api' : local,
   withCredentials: true,
-  
+  transformRequest: [function (data, headers) {
+    if(headers['Content-Type'] == "multipart/form-data"){
+      return data;
+    }
+    return qs.stringify(data);
+  }],
 })
 
 service.interceptors.request.use(function (config) {
@@ -24,6 +30,10 @@ service.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   app.$Progress.fail();
+  // console.log(error.response)
+  // if (error.response.status == 401) {
+  //   router.push('/');
+  // }
   return Promise.reject(error);
 });
 

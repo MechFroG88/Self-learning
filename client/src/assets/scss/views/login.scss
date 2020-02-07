@@ -14,6 +14,12 @@
   .form-container {
     margin-top: 50vh;
     transform: translateY(-50%);
+    .toast {
+      margin-bottom: .8rem;
+      @media screen and (max-width: $size-sm) {
+        font-size: .6rem;
+      }
+    }
     .form-group {
       position: relative;
       margin-bottom: 2rem;
@@ -34,7 +40,9 @@
         transition-property: border-radius;
         padding-left: 1rem; 
         padding-right: 1rem;
-        letter-spacing: 3px;
+        &.error {
+          border-color: $error-color;
+        }
         &:focus, &.active {
           border-color: $primary-color;
           box-shadow: 0 0 0 0.1rem $secondary-color;

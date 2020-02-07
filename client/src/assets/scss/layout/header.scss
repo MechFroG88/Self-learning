@@ -1,0 +1,49 @@
+#_header {
+  padding: 2rem;
+  padding-bottom: 1rem;
+  border: solid 1.5px #e8e8e8;
+  @media screen and (max-width: 320px) {
+    padding : 1rem;
+  }
+  .primary {
+    color: $primary-color;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: .5rem;
+    .title {
+      font-weight: 700;
+    }
+    .student_info {
+      line-height: 1rem;
+      .id {
+        font-weight: 500;
+      }
+    }
+  }
+  .week {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    span {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .days {
+      display: flex;
+      justify-content: space-between;
+      .avatar {
+        background-color: #ebebeb;
+        &.active {
+          background-color: $primary-color;
+          &::before {
+            color: white;
+          }
+        }
+        &::before {
+          color: $text-color;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
