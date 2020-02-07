@@ -18,6 +18,8 @@ class CreateLessonsTable extends Migration
             $table->string('name',120);
             $table->string('location',120);
             $table->string('subject',60);
+            $table->string('stream');
+            $table->string('gender');
             $table->integer('limit');
             $table->integer('current')->default(0);
             $table->timestamps();

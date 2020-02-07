@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('cn_name',10);
             $table->integer('class_id');
             $table->integer('type');
+            $table->string('gender');
             $table->integer('is_submit')->default(0);
             $table->string('ic',255);
             $table->rememberToken();
