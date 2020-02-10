@@ -143,7 +143,7 @@ class UserController extends Controller
             $single_data->year = [];
             $ok = false;
             foreach ($years as $year){
-                if ($year == $current_year) $ok = true;
+                if ($year->year == $current_year) $ok = true;
                 array_push($single_data->year,$year->year);
             }
 
