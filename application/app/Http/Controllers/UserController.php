@@ -131,7 +131,7 @@ class UserController extends Controller
             if ($char == '理') $stream = '理';
             else if ($char == '文') $stream = '文';
         }
-        if ($stream != '理' && $stream != '文') $stream = '无';
+        if (!isset($stream)) $stream = '无';
         $lessons = Lesson::whereIn('gender',[$user->gender,'无'])
                          ->whereIn('stream',[$stream,'无'])
                          ->get();
