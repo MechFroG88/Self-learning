@@ -13,8 +13,6 @@ class Lesson extends Model
      */
     protected $table = 'lessons';
 
-    public $timestamps = false;
-
     protected $with = ['years','periods'];
 
     /**
