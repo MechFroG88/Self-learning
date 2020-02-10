@@ -123,7 +123,7 @@ class UserController extends Controller
     public function get_lesson()
     {
         $user = User::find(Auth::id());
-        $current_year = (int)(((int)date('y'))-intdiv(Auth::id(),10000)+1);
+        $current_year = (int)date('y')-intdiv(Auth::id(),10000)+1;
         $class = $user->classes->cn_name;
         $stream;
         if (substr($class,1,1) == '理') $stream = '理';
@@ -151,7 +151,7 @@ class UserController extends Controller
                 array_push($single_data->period,$period->period);
             }
 
-            if (ok) array_push($data,$single_data);
+            if ($ok) array_push($data,$single_data);
         }
         return response($data,200);
     }
