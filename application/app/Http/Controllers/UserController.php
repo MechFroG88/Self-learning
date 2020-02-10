@@ -129,7 +129,7 @@ class UserController extends Controller
         if (substr($class,1,1) == '理') $stream = '理';
         else if (substr($class,1,1) == '文') $stream = '文';
         else $stream = '无';
-        $lessons = Lesson::whereIn('gender',[$gender,'无'])
+        $lessons = Lesson::whereIn('gender',[$user->gender,'无'])
                          ->whereIn('stream',[$stream,'无'])
                          ->get();
         $data = [];
