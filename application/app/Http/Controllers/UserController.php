@@ -127,7 +127,7 @@ class UserController extends Controller
         $class = $user->classes->cn_name;
         $stream = '无';
         if (strstr($class,'理')) $stream = '理';
-        if (strstr($class,'文')) $stream = '文';
+        else if (strstr($class,'文')) $stream = '文';
         $lessons = Lesson::whereIn('gender',[$user->gender,'无'])
                          ->whereIn('stream',[$stream,'无'])
                          ->get();
@@ -167,10 +167,9 @@ class UserController extends Controller
         $lessons_force = $user->lessons_force;
 
         $class = $user->classes->cn_name;
-        $stream;
-        if (substr($class,1,1) == '理') $stream = '理';
-        else if (substr($class,1,1) == '文') $stream = '文';
-        else $stream = '无';
+        $stream = '无';
+        if (strstr($class,'理')) $stream = '理';
+        else if (strstr($class,'文')) $stream = '文';
 
         $gender = $user->gender;
 
