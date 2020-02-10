@@ -125,13 +125,14 @@ class UserController extends Controller
         $user = User::find(Auth::id());
         $current_year = (int)date('y')-intdiv(Auth::id(),10000)+1;
         $class = $user->classes->cn_name;
-        $stream;
+        $stream = '无';
         $array = str_split($class);
         foreach ($array as $char) {
             if ($char == '理') $stream = '理';
             else if ($char == '文') $stream = '文';
+            echo "<br/>";
+            var_dump($stream);
         }
-        if (!isset($stream)) $stream = '无';
         $lessons = Lesson::whereIn('gender',[$user->gender,'无'])
                          ->whereIn('stream',[$stream,'无'])
                          ->get();
