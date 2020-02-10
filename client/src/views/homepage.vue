@@ -66,12 +66,13 @@
         </div>
       </div>
     </div>
+
     <modal title="确认选择以下活动" ref="confirm"
     :bodyData="[lessonArr, id, chosenId]">
       <template v-slot:body="{ data }">
         <ul v-if="data[1].filter(el => el != 0 && data[2].indexOf(el) == -1).length">
           <li v-for="single_id in data[1].filter(el => el != 0 && data[2].indexOf(el) == -1)" :key="single_id">
-            {{ data[0].filter(el => el.id == single_id)[0] }}
+            {{ data[0].filter(el => el.id == single_id)[0].name }}
           </li>
         </ul>
         <div v-else>还未选择任何活动</div>
@@ -87,8 +88,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
-import { userLogout, getUser, submitUser } from '@/api/user';
-import { getAllLessons } from '@/api/lesson';
+import { userLogout, getUser, getUserLessons, submitUser } from '@/api/user';
 
 import headerLayout from '@/layout/header';
 import card from '@/components/card';
@@ -131,18 +131,18 @@ export default {
         this.isPageLoading = false;
         // get current year of user
         this.year = (new Date().getFullYear() % 100) - parseInt(this.user.id.toString().substr(0, 2)) + 1;
-        getAllLessons().then(({data}) => {
-          // find lessons valid for user's year and sort lessons according to period sessions
-          this.lessonArr = data.filter(el => el.year.indexOf(this.year) != -1)
+        getUserLessons().then(({data}) => {
+          // categorise lessons according to sessions
+          this.lessonArr = data;
           this.lessonArr.forEach(el => {
-            for (let i = 0; i < 4; i++)
+            for (let i = 0; i < this.lessons.length; i++)
               if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i])) 
                 this.lessons[i].push(el)
           })
           // set user submit lessons as active
           this.user.lessons.forEach(el => {
             this.chosen[Object.keys(el)[0]-1] = true;
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < this.sessions.length; i++) {
               if (this.sessions[i].indexOf(parseInt(Object.keys(el)[0])) != -1) {
                 this.selectedBool[i] = true; 
                 this.dis[i] = true;
