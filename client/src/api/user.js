@@ -22,6 +22,13 @@ export function getAllUsers() {
   })
 }
 
+export function getUserLessons() {
+  return request({
+    url: '/user/lesson',
+    method: 'GET'
+  })
+}
+
 export function userLogin(data) {
   return request({
     url: '/user/login',
