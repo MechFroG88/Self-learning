@@ -24,6 +24,7 @@ Route::post('user/login','UserController@login');
 Route::middleware('auth')->post('user/logout','UserController@logout');
 Route::post('user','UserController@create');
 Route::middleware('auth')->get('user','UserController@get_current');
+Route::middleware('auth')->get('user/lesson','UserController@get_lesson');
 Route::middleware('auth')->post('user/submit','UserController@submit');
 
 Route::middleware('admin')->get('users','UserController@get_all');

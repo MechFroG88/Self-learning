@@ -17,6 +17,7 @@ class UsersTableSeeder extends Seeder
             'type' => 0,
             'cn_name' => '陈科锦',
             'ic' => Hash::make('010801100351'),
+            'gender' => "男",
             'class_id' => 0,
         ],
         [
@@ -24,6 +25,7 @@ class UsersTableSeeder extends Seeder
             'type' => 0,
             'cn_name' => '陈伟辰',
             'ic' => Hash::make('010527140579'),
+            'gender' => "男",
             'class_id' => 0,
         ],
         [
@@ -31,6 +33,7 @@ class UsersTableSeeder extends Seeder
             'type' => 0,
             'cn_name' => '教务处',
             'ic' => Hash::make('780326009682'),
+            'gender' => "男",
             'class_id' => 0
         ]
         ]);

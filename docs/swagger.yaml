@@ -21,7 +21,7 @@ paths:
       parameters:
       - in: "body"
         name: "Body"
-        description: "Create new user <br> type 0 is admin , 1 is student"
+        description: "Create new user"
         schema:
           type: "object"
           properties:
@@ -37,6 +37,9 @@ paths:
             ic:
               type: "string"
               example: "123456-78-1234"
+            gender:
+              type: "string"
+              example: "男"
             class_id:
               type: "integer"
               example: 1
@@ -55,40 +58,46 @@ paths:
       summary: "Returns current user data"
       responses:
         200:
-          description: "Successful operation<br>If is_submit value is <br>0 means the user has not submitted<br> 1 means the user has submitted<br><br> For object in lessons and forced_lessons, <br> key is period <br> value is lessons_id <br>i.e. { period => lesson_id } "
+          description: "Successful operation"
           schema:
-            type: "object"
-            properties:
-              id:
-                type: "string"
-                example: "140123"
-              cn_name:
-                type: "string"
-                example: "和恶"
-              class:
-                type: "string"
-                example: "高三理忠"
-              type:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                id:
                   type: "integer"
-                  example: 1
-              is_submit:
-                type: "boolean"
-                example : 0
-              lessons:
-                  type: "object"
-                  properties:
-                    1:
-                      type: "integer"
-                      example: "2"
-              forced_lessons:
-                  type: "object"
-                  properties:
-                    3:
-                      type: "integer"
-                      example: "10"
-
-                  
-                  
+                  example: "1"
+                name:
+                  type: "string"
+                  example: "啊实打实的"
+                location:
+                  type: "string"
+                  example: "光驱的"
+                subject:
+                  type: "string"
+                  example: "体育处"
+                current:
+                  type: "string"
+                  example: 12
+                limit:
+                  type: "integer"
+                  example: 30
+                stream:
+                  type: "string"
+                  example: "理"
+                gender:
+                  type: "string"
+                  example: "男"
+                period:
+                  type: "array"
+                  items:
+                    type: "integer"
+                  example : [1,2,3]
+                year:
+                  type: "array"
+                  items:
+                    type: "integer"
+                  example : [1,4,5]
         401:
           description: "Unauthorized"
         400:
@@ -116,6 +125,60 @@ paths:
                 class:
                   type: "string"
                   example: "高三理忠"
+                gender:
+                  type: "string"
+                  example: "男"
+                type:
+                  type: "integer"
+                  example: 1
+                is_submit:
+                  type: "boolean"
+                  example : 0
+                lessons:
+                    type: "object"
+                    properties:
+                      1:
+                        type: "integer"
+                        example: "2"
+                forced_lessons:
+                    type: "object"
+                    properties:
+                      3:
+                        type: "integer"
+                        example: "10"
+
+                  
+                  
+        401:
+          description: "Unauthorized"
+        400:
+          description: "Validation Error"
+          
+  /user/lesson:
+    get:
+      tags:
+      - "Users"
+      summary: "Returns all lesson suitable for the current user"
+      responses:
+        200:
+          description: "Successful operation<br>If is_submit value is <br>0 means the user has not submitted<br> 1 means the user has submitted<br><br> For object in lessons and forced_lessons, <br> key is period <br> value is lessons_id <br>i.e. { period => lesson_id } "
+          schema:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                id:
+                  type: "string"
+                  example: "140123"
+                cn_name:
+                  type: "string"
+                  example: "和恶"
+                class:
+                  type: "string"
+                  example: "高三理忠"
+                gender:
+                  type: "string"
+                  example: "男"
                 type:
                   type: "integer"
                   example: 1
@@ -236,6 +299,9 @@ paths:
             ic:
               type: "string"
               example: "123456-78-1234"
+            gender:
+              type: "string"
+              example: "男"
             class_id:
               type: "integer"
               example: 1
@@ -392,6 +458,12 @@ paths:
             limit:
               type: "integer"
               example: 30
+            stream:
+              type: "string"
+              example: "文"
+            gender:
+              type: "string"
+              example: "男"
             period:
               type: "array"
               items:
@@ -441,6 +513,12 @@ paths:
                 limit:
                   type: "integer"
                   example: 30
+                stream:
+                  type: "string"
+                  example: "理"
+                gender:
+                  type: "string"
+                  example: "男"
                 period:
                   type: "array"
                   items:
@@ -481,6 +559,9 @@ paths:
                 cn_name:
                   type: "string"
                   example: "和恶"
+                gender:
+                  type: "string"
+                  example: "男"
                 class:
                   type: "string"
                   example: "高三理忠"
@@ -517,6 +598,12 @@ paths:
             limit:
               type: "integer"
               example: 30
+            stream:
+              type: "string"
+              example: "理"
+            gender:
+              type: "string"
+              example: "男"
             period:
               type: "array"
               items:

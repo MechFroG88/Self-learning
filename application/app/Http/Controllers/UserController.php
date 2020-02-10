@@ -19,6 +19,7 @@ class UserController extends Controller
         "cn_name"  => ["required","regex:/[\x{4e00}-\x{9fa5}]+/u"],
         "ic"       => "required",
         "type"     => "required|integer|between:0,1",
+        "gender"   => "required|in:男,女",
     ];
 
     private $login_rules = [
@@ -27,6 +28,7 @@ class UserController extends Controller
     ];
 
     private $submit_rules = [
+        "lessons" => "required|array",
         "lessons.*" => "integer"
     ];
 
@@ -60,7 +62,7 @@ class UserController extends Controller
 
     public function get_all()
     {
-        $users = User::with('classes','lessons','lessons_force')->get();
+        $users = User::with('classes','lessons','lessons_force')->where('type',1)->get();
         $data = [];
         foreach ($users as $user){
             $single_data = json_decode($user->toJson());
@@ -118,6 +120,41 @@ class UserController extends Controller
         return response((array) $data,200);
     }
 
+    public function get_lesson()
+    {
+        $user = User::find(Auth::id());
+        $current_year = (int)date('y')-intdiv(Auth::id(),10000)+1;
+        $class = $user->classes->cn_name;
+        $stream = '无';
+        if (strstr($class,'理')) $stream = '理';
+        else if (strstr($class,'文')) $stream = '文';
+        $lessons = Lesson::whereIn('gender',[$user->gender,'无'])
+                         ->whereIn('stream',[$stream,'无'])
+                         ->get();
+        $data = [];
+        foreach($lessons as $lesson){
+            $single_data = json_decode($lesson->toJson());
+            unset($single_data->periods);
+            unset($single_data->years);
+            $periods = $lesson->periods;
+            $years = $lesson->years;
+            $single_data->period = [];
+            $single_data->year = [];
+            $ok = false;
+            foreach ($years as $year){
+                if ($year->year == $current_year) $ok = true;
+                array_push($single_data->year,$year->year);
+            }
+
+            foreach ($periods as $period){
+                array_push($single_data->period,$period->period);
+            }
+
+            if ($ok) array_push($data,$single_data);
+        }
+        return response($data,200);
+    }
+
     public function submit(Request $data)
     {
         $validator = Validator::make($data->all(), $this->submit_rules);
@@ -128,6 +165,13 @@ class UserController extends Controller
         $user = User::find(Auth::id());
         $lessons = $user->lessons;
         $lessons_force = $user->lessons_force;
+
+        $class = $user->classes->cn_name;
+        $stream = '无';
+        if (strstr($class,'理')) $stream = '理';
+        else if (strstr($class,'文')) $stream = '文';
+
+        $gender = $user->gender;
 
         foreach ($lessons_force as $lesson_force){
             foreach ($lesson_force->periods as $period){
@@ -150,6 +194,10 @@ class UserController extends Controller
             if ($single->current >= $single->limit) $slot = false;
             $current_year = (int)date('y')-intdiv(Auth::id(),10000)+1;
             $not_allowed = true;
+            if ($single->stream == '理' && $stream != '理') $not_allowed = false;
+            if ($single->stream == '文' && $stream != '文') $not_allowed = false;
+            if ($single->gender == '男' && $gender != '男') $not_allowed = false;
+            if ($single->gender == '女' && $gender != '女') $not_allowed = false;
             foreach ($single->years as $year){
                 if ($year->year == $current_year) $not_allowed = false; 
             }

@@ -13,8 +13,6 @@ class Lesson extends Model
      */
     protected $table = 'lessons';
 
-    public $timestamps = false;
-
     protected $with = ['years','periods'];
 
     /**
@@ -23,7 +21,7 @@ class Lesson extends Model
      * @var array
      */
     protected $fillable = [
-        'name','location','subject','limit','current'
+        'name','location','subject','limit','current','gender','stream'
     ];
 
     public function years()
