@@ -123,7 +123,7 @@ class UserController extends Controller
     public function get_lesson()
     {
         $user = User::find(Auth::id());
-        $current_year = (int)date('y')-intdiv(Auth::id(),10000)+1;
+        $current_year = (int)(((int)date('y'))-intdiv(Auth::id(),10000)+1);
         $class = $user->classes->cn_name;
         $stream;
         if (substr($class,1,1) == '理') $stream = '理';
