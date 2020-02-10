@@ -129,10 +129,9 @@ class UserController extends Controller
         if (substr($class,1,1) == '理') $stream = '理';
         else if (substr($class,1,1) == '文') $stream = '文';
         else $stream = '无';
-        $lessons = Lesson::where([
-            'gender' => $user->gender,
-            'stream' => $stream,
-        ])->get();
+        $lessons = Lesson::whereIn('gender',[$gender,'无'])
+                         ->whereIn('stream',[$stream,'无'])
+                         ->get();
         $data = [];
         foreach($lessons as $lesson){
             $single_data = json_decode($lesson->toJson());
