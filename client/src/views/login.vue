@@ -23,12 +23,12 @@
         <validation-provider v-slot="{ errors }" ref="ic"
         :rules="{
           required: true,
-          regex: /^[0-9]{6}[-]?[0-9]{2}[-]?[0-9]{4}$/
+          regex: /^(?:[0-9]{6}[-]?[0-9]{2}[-]?[0-9]{4}|[0-9a-zA-Z]{0,9})$/
         }">
           <div class="form-group">
             <input class="form-input" type="password" id="student_ic"
-            style="letter-spacing: 3px;" name="身份证号码"
-            placeholder="XXXXXXXXXXXX 或 XXXXXX-XX-XXXX"
+            style="letter-spacing: 3px;" name="身份证/护照号码"
+            placeholder="外籍生请填写护照号码"
             v-model="student_ic" :class="{
               'active': student_ic,
               'error': errors.length
@@ -49,6 +49,8 @@
 
 <script>
 import { userLogin } from '@/api/user';
+import { mapMutations } from 'vuex';
+
 export default {
   data: () => ({
     student_id: '',
@@ -58,16 +60,25 @@ export default {
     loginError: false,
   }),
   methods: {
+    ...mapMutations('/lesson', {
+      reset: 'RESET'
+    }),
     async login() {
       let validId = await this.$refs.id.validate();
       let validIc = await this.$refs.ic.validate();
       if (validId.valid && validIc.valid) {
         this.isLoading = true;
+        let icArr = this.student_ic.split("").filter(el => el != '-');
+        if (icArr.length > 9) {
+          icArr.splice(8, 0, '-');
+          icArr.splice(6, 0, '-');
+        }
         userLogin({
           id: this.student_id,
-          ic: this.student_ic.split("").filter(el => el != '-').join("")
+          ic: icArr.join('')
         }).then((data) => {
           if (data.status == 200) {
+            this.reset();
             this.$router.push('/home');
           }
         })
