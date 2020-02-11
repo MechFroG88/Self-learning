@@ -32,6 +32,17 @@ class UserController extends Controller
         "lessons.*" => "integer"
     ];
 
+    public function hash()
+    {
+        $users = DB::table('users')->select('id','ic')->get();
+        foreach ($users as $user){
+            DB::table('users')
+              ->where('id',$user->id)
+              ->update(['ic' => Hash::make($user->ic)]);
+        }
+        return $this->ok();
+    }
+
     public function login(Request $data)
     {
         $validator = Validator::make($data->all(), $this->login_rules);
