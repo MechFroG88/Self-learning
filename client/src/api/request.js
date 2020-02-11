@@ -30,8 +30,7 @@ service.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   app.$Progress.fail();
-  // console.log(error.response)
-  if (error.response.status == 401) {
+  if (error.response.status == 401 && router.app._route.fullPath != '/') {
     router.push('/');
   }
   return Promise.reject(error);

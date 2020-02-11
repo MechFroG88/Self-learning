@@ -90,7 +90,9 @@
         }
         .accordion-body {
           display: flex;
-          overflow-x: scroll;
+          @media screen and (max-width: $size-md) {
+            overflow-x: scroll;
+          }
           .empty-lesson {
             font-weight: 500;
             font-size: 1rem;

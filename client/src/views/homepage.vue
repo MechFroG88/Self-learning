@@ -46,17 +46,19 @@
               v-if="lessons[ind].length == 0">
                 你的年级于此时间段无活动
               </div>
-              <card
-              v-for="lesson in lessons[ind]" :key="lesson.id"
-              :title="lesson.name"
-              :initials="lesson.subject.substr(0,1)"
-              :pax="lesson.limit"
-              :num="lesson.current"
-              :classroom="lesson.location"
-              bg-color="#ffdf76"
-              :active="id[ind] == lesson.id"
-              class="c-hand"
-              @clicked="choose(ind, lesson.id, lesson.name)"></card>
+              <div v-for="r in rowSize" :key="r">
+                <card
+                v-for="lesson in lessons[ind].filter((el, i) => i%rowSize == rowSize-r)" :key="lesson.id"
+                :title="lesson.name"
+                :initials="lesson.subject.substr(0,1)"
+                :pax="lesson.limit"
+                :num="lesson.current"
+                :classroom="lesson.location"
+                bg-color="#ffdf76"
+                :active="id[ind] == lesson.id"
+                class="c-hand"
+                @clicked="choose(ind, lesson.id, lesson.name)"></card>
+              </div>
             </div>
           </div>
         </div>
@@ -72,7 +74,7 @@
       <template v-slot:body="{ data }">
         <ul v-if="data[1].filter(el => el != 0 && data[2].indexOf(el) == -1).length">
           <li v-for="single_id in data[1].filter(el => el != 0 && data[2].indexOf(el) == -1)" :key="single_id">
-            {{ data[0].filter(el => el.id == single_id)[0].name }}
+            <div v-if="data[0].filter(el => el.id == single_id).length">{{ data[0].filter(el => el.id == single_id)[0].name }}</div>
           </li>
         </ul>
         <div v-else>还未选择任何活动</div>
@@ -104,6 +106,7 @@ export default {
     this.init();
   },
   data: () => ({
+    rowSize: 2,
     isPageLoading: true,
     isSubmitLoading: false,
     titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节'],
@@ -193,6 +196,7 @@ export default {
       if (arr.length == 0) return ;
       submitUser({ lessons: arr })
         .then((data) => {
+          this.$refs.modal.active = false;
           this.init();
         }).finally(() => this.isSubmitLoading = false)
     },
