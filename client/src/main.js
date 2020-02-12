@@ -9,13 +9,14 @@ import '@/assets/scss/spectre/spectre-icons.scss';
 import '@/assets/scss/spectre/spectre.scss';
 import '@/assets/scss/style.scss';
 
-// prgress bar
+// progress bar
 import VueProgressBar from 'vue-progressbar';
 Vue.use(VueProgressBar, {
   color: '#57b1ff',
   failedColor: 'f56c6c'
 });
 
+// vee-validate
 import { ValidationProvider, extend, localize } from 'vee-validate';
 import { required, regex, numeric } from 'vee-validate/dist/rules';
 import zh_CN from 'vee-validate/dist/locale/zh_CN.json';
@@ -24,6 +25,10 @@ extend('regex', regex);
 extend('numeric', numeric);
 localize('zh_CN', zh_CN);
 Vue.component('ValidationProvider', ValidationProvider);
+
+// notification component
+import Notifications from 'vue-notification';
+Vue.use(Notifications);
 
 Vue.config.productionTip = false
 

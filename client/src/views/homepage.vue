@@ -3,6 +3,7 @@
     <header-layout 
     :cn_name="user.cn_name"
     :id="user.id"></header-layout>
+
     <div class="body columns">
       <div class="sidebar col-2 col-xs-3">
         <div class="period-counter" v-if="!isPageLoading">
@@ -21,6 +22,7 @@
           <i class="feather icon-log-out"></i>登出
         </div>
       </div>
+      
       <div class="content column col-10 col-xs-9">
         <div class="accordion-container" v-if="!isPageLoading">
           <div class="accordion" :class="{'disabled': dis[ind]}"
@@ -64,6 +66,7 @@
             </div>
           </div>
         </div>
+        
         <div class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading}"
         @click="$refs.confirm.active = true">
           提交 <i class="feather icon-arrow-right"></i>
@@ -76,15 +79,17 @@
       <template v-slot:body="{ data }">
         <ul v-if="data[1].filter(el => el != 0 && data[2].indexOf(el) == -1).length">
           <li v-for="single_id in data[1].filter(el => el != 0 && data[2].indexOf(el) == -1)" :key="single_id">
-            <div v-if="data[0].filter(el => el.id == single_id).length">{{ data[0].filter(el => el.id == single_id)[0].name }}</div>
+            <template v-if="data[0].filter(el => el.id == single_id).length">
+              {{ data[0].filter(el => el.id == single_id)[0].name }}
+            </template>
           </li>
+          <div class="text-small text-gray" style="margin-top: 1rem;">提交后将无法更改，是否确认提交？</div>
         </ul>
         <div v-else>还未选择任何活动</div>
       </template>
       <template v-slot:footer>
-        <div class="btn btn-secondary" @click="submit">
-          确认
-        </div>
+        <div class="btn btn-primary" :class="{'loading': isSubmitLoading}" 
+        @click="submit">确认</div>
       </template>
     </modal>
   </div>
@@ -185,6 +190,16 @@ export default {
       }).finally(() => this.logoutLoad = false)
     },
     choose(ind, id, name) {
+      // Ignore click when user has already selected activity with same name in other sessions
+      if (this.name.indexOf(name) != -1) {
+        this.$notify({
+          type: 'warn',
+          title: '无法选择',
+          text: '此活动已在其他时间段选择'
+        });
+        return ;
+      }
+
       if (id == this.id[ind]) {
         // Deactivate card and progress bar
         this.selectedBool[ind] = false;
@@ -196,17 +211,20 @@ export default {
         this.sessions[ind].forEach(el => this.actives[el-1] = true);
         this.select({ind, id, name})
       }
+
       // Update accordion and cards
       this.$forceUpdate();
     },
     submit() {
       this.isSubmitLoading = true;
+      // Filter selected IDs for sessions user hasn't selected for
       let arr = this.id.filter(el => el != 0 && this.chosenId.indexOf(el) == -1);
       if (arr.length == 0) return ;
       submitUser({ lessons: arr })
         .then((data) => {
-          this.$refs.modal.active = false;
+          this.$refs.confirm.active = false;
           this.init();
+          this.$forceUpdate();
         }).finally(() => this.isSubmitLoading = false)
     },
     invalidSelect(ind) {

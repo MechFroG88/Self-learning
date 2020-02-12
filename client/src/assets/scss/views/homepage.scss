@@ -1,7 +1,7 @@
 #_homepage {
   height: 100vh;
   .body {
-    min-height: calc(100vh - 195px);
+    min-height: calc(100vh - 180px);
     .sidebar {
       border-right: solid 1px #e8e8e8;
       display: flex;
@@ -43,7 +43,6 @@
         }
       }
       .logout {
-        margin-top: 5rem;
         text-align: center;
         cursor: pointer;
         &:hover {

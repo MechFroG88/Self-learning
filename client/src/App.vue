@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <vue-progress-bar></vue-progress-bar>
+    <notifications clean position="top left" style="margin-top: 1rem;" width="50%" :max="5" />
     <router-view/>
   </div>
 </template>

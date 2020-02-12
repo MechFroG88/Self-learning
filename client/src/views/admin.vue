@@ -54,13 +54,16 @@
       </div>
     </div>
 
-    <!-- <data-table
+    <data-table ref="table"
+    v-if="showTable"
     :navbar="data_type == 1 ? '' : '学生姓名'"
     :columns="data_type == 1 ? lesson_columns : student_columns"
-    :tableData="">
-    </data-table> -->
+    :tableData="data_type == 1 ? student_list : []">
+    </data-table>
 
-    <div class="btn btn-link" @click="logout">登出</div>
+    <div class="btn btn-link mt-2" 
+    :class="{'loading': logout_load}"
+    @click="logout">登出</div>
   </div>
 </template>
 
@@ -79,13 +82,15 @@ export default {
     data_type: 1,
     lessons: [],
     lesson_columns,
-    logoutLoad: false,
+    logout_load: false,
     selected_id: -1,
     selected_session: -1,
     selected_lessons: [],
     selected_lessons_name: [],
     selected_lessons_id: [],
     sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7]],
+    showTable: false,
+    student_list: [],
     titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节'],
   }),
   mounted() {
@@ -95,16 +100,20 @@ export default {
   },
   methods: {
     logout() {
-      this.logoutLoad = true;
+      this.logout_load = true;
       userLogout().then((data) => {
         if (data.status == 200) {
           this.$router.push('/');
         }
-      }).finally(() => this.logoutLoad = false)
+      }).finally(() => this.logout_load = false)
     }
   },
   watch: {
+    data_type() {
+      this.showTable = false;
+    },
     selected_session(val) {
+      this.showTable = false;
       this.selected_id = -1;
       let ss = JSON.stringify(this.sessions[val]);
       this.selected_lessons = this.lessons.filter(el => JSON.stringify(el.period) == ss);
@@ -112,9 +121,14 @@ export default {
       this.selected_lessons_id = this.selected_lessons.map(el => el.id);
     },
     selected_id(val) {
+      this.showTable = false;
       if (val < 0) return ;
-      getLessonUsers(val).then(({data}) => {
-        console.log(data);
+      this.$nextTick(() => {
+        this.showTable = true;
+        getLessonUsers(val).then(({data}) => {
+          if (data.length == 0) this.$refs.table.is_loading = false;
+          this.student_list = data;
+        })
       })
     }
   }
