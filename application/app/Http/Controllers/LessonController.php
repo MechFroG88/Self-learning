@@ -76,12 +76,12 @@ class LessonController extends Controller
         $data = [];
         foreach ($lessons as $lesson){
             $single_data = [];
-            foreach ($lessons->users as $user){
+            foreach ($lesson->users as $user){
                 $temp = $user->toJson();
                 $temp->class = $user->classes->cn_name;
                 array_push($single_data,$temp);
             }
-            foreach ($lessons->users_force as $user_force){
+            foreach ($lesson->users_force as $user_force){
                 $temp = $user_force->toJson();
                 $temp->class = $user_force->classes->cn_name;
                 array_push($single_data,$temp);
