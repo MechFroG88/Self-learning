@@ -15,7 +15,7 @@ export function getAllLessons() {
   })
 }
 
-export function getLesson(id) {
+export function getLessonUsers(id) {
   return request({
     url: `/lesson/${id}`,
     method: 'GET'

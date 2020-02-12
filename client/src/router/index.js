@@ -17,6 +17,11 @@ const router = new VueRouter({
       name: 'home',
       component: () => import('@/views/homepage')
     },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('@/views/admin')
+    }
   ]
 })
 

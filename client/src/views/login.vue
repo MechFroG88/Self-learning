@@ -39,8 +39,7 @@
         </validation-provider>
       </div>
       <button class="btn btn-primary submit loading-lg" type="submit"
-      :class="{'loading': isLoading}" style="width: 100%"
-      @click="login">
+      :class="{'loading': isLoading}" style="width: 100%">
         登入
       </button>
     </form>
@@ -48,7 +47,7 @@
 </template>
 
 <script>
-import { userLogin } from '@/api/user';
+import { userLogin, getUser } from '@/api/user';
 import { mapMutations } from 'vuex';
 
 export default {
@@ -79,7 +78,12 @@ export default {
         }).then((data) => {
           if (data.status == 200) {
             this.reset();
-            this.$router.push('/home');
+            getUser().then(({data}) => {
+              if (data.type == 1) this.$router.push('/home');
+              else this.$router.push('/admin');
+            }).catch((err) => {
+              console.log(err);
+            });
           }
         })
         .catch((err) => {

@@ -46,18 +46,20 @@
               v-if="lessons[ind].length == 0">
                 你的年级于此时间段无活动
               </div>
-              <div v-for="r in rowSize" :key="r">
-                <card
-                v-for="lesson in lessons[ind].filter((el, i) => i%rowSize == rowSize-r)" :key="lesson.id"
-                :title="lesson.name"
-                :initials="lesson.subject.substr(0,1)"
-                :pax="lesson.limit"
-                :num="lesson.current"
-                :classroom="lesson.location"
-                bg-color="#ffdf76"
-                :active="id[ind] == lesson.id"
-                class="c-hand"
-                @clicked="choose(ind, lesson.id, lesson.name)"></card>
+              <div class="lesson-row">
+                <div class="lesson-col" v-for="c in Math.ceil(lessons[ind].length/rowSize)" :key="c">
+                  <card
+                  v-for="lesson in lessons[ind].slice((c-1)*rowSize, c*rowSize)" :key="lesson.id"
+                  :title="lesson.name"
+                  :initials="lesson.subject.substr(0,1)"
+                  :pax="lesson.limit"
+                  :num="lesson.current"
+                  :classroom="lesson.location"
+                  bg-color="#ffdf76"
+                  :active="id[ind] == lesson.id"
+                  class="c-hand"
+                  @clicked="choose(ind, lesson.id, lesson.name)"></card>
+                </div>
               </div>
             </div>
           </div>
@@ -104,8 +106,15 @@ export default {
   },
   mounted() {
     this.init();
+    this.rowSize = this.defaultRowSize;
+    if (window.innerWidth > 840) this.rowSize = 1;
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 840) this.rowSize = 1;
+      else this.rowSize = this.defaultRowSize;
+    })
   },
   data: () => ({
+    defaultRowSize: 2,
     rowSize: 2,
     isPageLoading: true,
     isSubmitLoading: false,

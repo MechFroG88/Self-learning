@@ -3,7 +3,7 @@ import app   from '@/main'
 import axios from 'axios'
 import qs from 'qs'
 
-// let local = 'http://10.20.95.34';
+// let local = 'http://10.15.10.208';
 let local = 'http://172.17.88.111/api';
 
 let service = axios.create({
