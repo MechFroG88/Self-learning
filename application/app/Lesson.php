@@ -21,7 +21,7 @@ class Lesson extends Model
      * @var array
      */
     protected $fillable = [
-        'name','location','subject','limit','current','gender','stream'
+        'name','location','subject','limit','current','gender','stream','description'
     ];
 
     public function years()
