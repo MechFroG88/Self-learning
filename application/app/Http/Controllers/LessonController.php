@@ -91,17 +91,35 @@ class LessonController extends Controller
     {
         $lessons = Lesson::with('users','users_force')->first();
         $data = [];
-        foreach ($lessons as $lesson){
-            $single_data = [];
+        foreach($lessons as $lesson){
+            $single_data = json_decode($lesson->toJson());
+            unset($single_data->periods);
+            unset($single_data->years);
+            $periods = $lesson->periods;
+            $years = $lesson->years;
+            $single_data->period = [];
+            $single_data->year = [];
+
+            foreach ($years as $year){
+                array_push($single_data->year,$year->year);
+            }
+
+            foreach ($periods as $period){
+                array_push($single_data->period,$period->period);
+            }
+            
+            unset($single_data->users);
+            unset($single_data->users_force);
+            $single_data->user = [];
             foreach ($lesson->users as $user){
                 $temp = $user->toJson();
                 $temp->class = $user->classes->cn_name;
-                array_push($single_data,$temp);
+                array_push($single_data->user,$temp);
             }
             foreach ($lesson->users_force as $user_force){
                 $temp = $user_force->toJson();
                 $temp->class = $user_force->classes->cn_name;
-                array_push($single_data,$temp);
+                array_push($single_data->user,$temp);
             }
             array_push($data,$single_data);
         }
