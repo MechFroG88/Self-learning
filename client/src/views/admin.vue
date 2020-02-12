@@ -1,28 +1,71 @@
 <template>
   <div id="_admin">
-    <select name="session" id="session" v-model="selected_session">
-      <option :value="-1" selected disabled>请选择时段</option>
-      <option 
-      v-for="(session, id) in sessions" 
-      :key="id"
-      :value="id">第{{session[0]}} - {{session[session.length-1]}}节</option>
-    </select>
-    <select name="lessons_name" id="lessons_name" v-model="selected_id">
-      <option :value="-1" selected disabled>请选择活动</option>
-      <option 
-      v-for="(lesson, id) in selected_lessons_name" 
-      :key="id"
-      :value="selected_lessons_id[id]">{{ lesson }}</option>
-    </select>
+    <div class="form-group data-selects">
+      <label class="form-radio">
+        <input type="radio" name="data_type" :value="1" v-model="data_type">
+        <i class="form-icon"></i> 查阅单一活动的学生名单
+      </label>
+      <label class="form-radio">
+        <input type="radio" name="data_type" :value="2" v-model="data_type">
+        <i class="form-icon"></i> 查阅所有学生
+      </label>
+    </div>
+
+    <div class="single-activity" v-if="data_type == 1">
+      <div class="columns">
+        <div class="form-group column col-6 col-xs-12">
+          <div class="form-label">时段</div>
+          <select class="form-select" name="session" id="session" v-model="selected_session">
+            <option :value="-1" selected disabled>请选择时段</option>
+            <option 
+            v-for="(session, id) in sessions" 
+            :key="id"
+            :value="id">第{{session[0]}} - {{session[session.length-1]}}节</option>
+          </select>
+        </div>
+        <div class="form-group column col-6 col-xs-12">
+          <div class="form-label">活动名称</div>
+          <select class="form-select" name="lessons_name" id="lessons_name" v-model="selected_id">
+            <option :value="-1" selected disabled>请选择活动</option>
+            <option 
+            v-for="(lesson, id) in selected_lessons_name" 
+            :key="id"
+            :value="selected_lessons_id[id]">{{ lesson }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="all-students" v-if="data_type == 2">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <div class="col-3 col-sm-12">
+            <label class="form-label" for="input-example-1">班级</label>
+          </div>
+          <div class="columns col-9 col-sm-12">
+            <div class="column col-6">
+
+            </div>
+            <div class="column col-6">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn btn-link" @click="logout">登出</div>
   </div>
 </template>
 
 <script>
+import { userLogout } from '@/api/user';
 import { getAllLessons, getLessonUsers } from '@/api/lesson';
 
 export default {
   data: () => ({
+    data_type: 1,
     lessons: [],
+    logoutLoad: false,
     selected_id: -1,
     selected_session: -1,
     selected_lessons: [],
@@ -37,10 +80,18 @@ export default {
     })
   },
   methods: {
-
+    logout() {
+      this.logoutLoad = true;
+      userLogout().then((data) => {
+        if (data.status == 200) {
+          this.$router.push('/');
+        }
+      }).finally(() => this.logoutLoad = false)
+    }
   },
   watch: {
     selected_session(val) {
+      this.selected_id = -1;
       let ss = JSON.stringify(this.sessions[val]);
       this.selected_lessons = this.lessons.filter(el => JSON.stringify(el.period) == ss);
       this.selected_lessons_name = this.selected_lessons.map(el => el.name);

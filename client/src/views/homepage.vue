@@ -28,7 +28,7 @@
             <input type="radio" :id="section" name="accordion-checkbox" hidden :disabled="dis[ind] || invalidSelect(ind)">
             <label class="accordion-header" :for="section">
               <div class="accordion-header-section" :class="{'tooltip': dis[ind] || invalidSelect(ind)}"
-              :data-tooltip="dis[ind] ? '已呈交此时间段的活动': '不可选择此时间段'">
+              :data-tooltip="dis[ind] ? '已呈交此时间段的活动': '此时间段内已选择其他活动'">
                 <i class="icon icon-arrow-right mr-1"></i>
                 {{ section }}
                 <i class="feather icon-lock ml-2"
@@ -114,8 +114,8 @@ export default {
     })
   },
   data: () => ({
-    defaultRowSize: 2,
-    rowSize: 2,
+    defaultRowSize: 2, // row size for phone/small window mode
+    rowSize: null,
     isPageLoading: true,
     isSubmitLoading: false,
     titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节'],
