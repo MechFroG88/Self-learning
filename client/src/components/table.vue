@@ -28,6 +28,19 @@
         >{{column.name}}</td>
       </tr>
 
+      <tr>
+        <td align="justify" :colspan="columns.length"
+        style="padding: 0;">
+          <div class="empty">
+            <div class="empty-icon">
+              <i class="icon icon-people"></i>
+            </div>
+            <p class="empty-title h5">此活动暂时无学生选择</p>
+          </div>
+        </td>
+      </tr>
+
+      
       <tr v-for="(row, row_num) in displayData" :key="row_num" :class="`row row_${row_num}`">
         <td v-for="column in columns" :key="column.field" :class="`col_${column.field}`">
           <slot

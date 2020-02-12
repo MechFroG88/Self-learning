@@ -3,8 +3,9 @@ export let lesson_columns = [
   { name: '英文姓名', field: 'en_name' },
   { name: '学号', field: 'id' },
   { name: '班级', field: 'class'}
-]
+];
 
 export let studentColumns = [
-  { name: '', field: '', search: true }
-]
+  { name: '学生资料', field: 'student_info' },
+  { name: '选课状态', field: 'status'       }
+];
