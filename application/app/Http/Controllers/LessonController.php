@@ -72,7 +72,24 @@ class LessonController extends Controller
 
     public function get_single($id)
     {
-        $lessons = Lesson::find($id)->with('users','users_force')->get();
+        $lesson = Lesson::find($id)->with('users','users_force')->first();
+        $single_data = [];
+        foreach ($lesson->users as $user){
+            $temp = $user->toJson();
+            $temp->class = $user->classes->cn_name;
+            array_push($single_data,$temp);
+        }
+        foreach ($lesson->users_force as $user_force){
+            $temp = $user_force->toJson();
+            $temp->class = $user_force->classes->cn_name;
+            array_push($single_data,$temp);
+        }
+        return response($single_data,200);
+    }
+
+    public function get_all()
+    {
+        $lessons = Lesson::with('users','users_force')->first();
         $data = [];
         foreach ($lessons as $lesson){
             $single_data = [];
