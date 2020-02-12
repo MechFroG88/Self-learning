@@ -53,6 +53,13 @@
         </div>
       </div>
     </div>
+
+    <!-- <data-table
+    :navbar="data_type == 1 ? '' : '学生姓名'"
+    :columns="data_type == 1 ? lesson_columns : student_columns"
+    :tableData="">
+    </data-table> -->
+
     <div class="btn btn-link" @click="logout">登出</div>
   </div>
 </template>
@@ -60,11 +67,18 @@
 <script>
 import { userLogout } from '@/api/user';
 import { getAllLessons, getLessonUsers } from '@/api/lesson';
+import { lesson_columns, student_columns } from '@/api/tableColumns';
+
+import dataTable from '@/components/table';
 
 export default {
+  components: {
+    dataTable
+  },
   data: () => ({
     data_type: 1,
     lessons: [],
+    lesson_columns,
     logoutLoad: false,
     selected_id: -1,
     selected_session: -1,
@@ -96,6 +110,12 @@ export default {
       this.selected_lessons = this.lessons.filter(el => JSON.stringify(el.period) == ss);
       this.selected_lessons_name = this.selected_lessons.map(el => el.name);
       this.selected_lessons_id = this.selected_lessons.map(el => el.id);
+    },
+    selected_id(val) {
+      if (val < 0) return ;
+      getLessonUsers(val).then(({data}) => {
+        console.log(data);
+      })
     }
   }
 }
