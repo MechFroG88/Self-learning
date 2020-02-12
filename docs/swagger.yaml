@@ -458,6 +458,9 @@ paths:
             gender:
               type: "string"
               example: "男"
+            description:
+              type: "string"
+              example: "asdasd"
             period:
               type: "array"
               items:
@@ -504,6 +507,7 @@ paths:
                 current:
                   type: "string"
                   example: 12
+                  
                 limit:
                   type: "integer"
                   example: 30
@@ -513,6 +517,9 @@ paths:
                 gender:
                   type: "string"
                   example: "男"
+                description:
+                  type: "string"
+                  example: "asdasd"
                 period:
                   type: "array"
                   items:
@@ -571,6 +578,9 @@ paths:
                 gender:
                   type: "string"
                   example: "男"
+                description:
+                  type: "string"
+                  example: "asdasd"
                 period:
                   type: "array"
                   items:
@@ -677,6 +687,9 @@ paths:
             gender:
               type: "string"
               example: "男"
+            description:
+              type: "string"
+              example: "asdasd"
             period:
               type: "array"
               items:

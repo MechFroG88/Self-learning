@@ -16,6 +16,7 @@ class LessonController extends Controller
         "name"  => "required",
         "location"  => "",
         "subject" => "",
+        "description" => "",
         "limit" => "required|integer",
         "period" => "required|array",
         "gender" => "required|in:无,男,女",
@@ -72,15 +73,17 @@ class LessonController extends Controller
 
     public function get_single($id)
     {
-        $lesson = Lesson::find($id)->with('users','users_force')->first();
+        $lesson = Lesson::where('id',$id)->with('users','users_force')->first();
         $single_data = [];
         foreach ($lesson->users as $user){
-            $temp = $user->toJson();
+            $temp = json_decode($user->toJson());
+            unset($temp->pivot);
             $temp->class = $user->classes->cn_name;
             array_push($single_data,$temp);
         }
         foreach ($lesson->users_force as $user_force){
-            $temp = $user_force->toJson();
+            $temp = json_decode($user_force->toJson());
+            unset($temp->pivot);
             $temp->class = $user_force->classes->cn_name;
             array_push($single_data,$temp);
         }
@@ -89,7 +92,7 @@ class LessonController extends Controller
 
     public function get_all()
     {
-        $lessons = Lesson::with('users','users_force')->first();
+        $lessons = Lesson::with('users','users_force')->get();
         $data = [];
         foreach($lessons as $lesson){
             $single_data = json_decode($lesson->toJson());
@@ -112,12 +115,14 @@ class LessonController extends Controller
             unset($single_data->users_force);
             $single_data->user = [];
             foreach ($lesson->users as $user){
-                $temp = $user->toJson();
+                $temp = json_decode($user->toJson());
+                unset($temp->pivot);
                 $temp->class = $user->classes->cn_name;
                 array_push($single_data->user,$temp);
             }
             foreach ($lesson->users_force as $user_force){
-                $temp = $user_force->toJson();
+                $temp = json_decode($user_force->toJson());
+                unset($temp->pivot);
                 $temp->class = $user_force->classes->cn_name;
                 array_push($single_data->user,$temp);
             }
