@@ -28,7 +28,7 @@
             <input type="radio" :id="section" name="accordion-checkbox" hidden :disabled="dis[ind] || invalidSelect(ind)">
             <label class="accordion-header" :for="section">
               <div class="accordion-header-section" :class="{'tooltip': dis[ind] || invalidSelect(ind)}"
-              :data-tooltip="dis[ind] ? '已呈交此时间段的活动': '不可选择此时间段'">
+              :data-tooltip="dis[ind] ? '已呈交此时间段的活动': '此时间段内已选择其他活动'">
                 <i class="icon icon-arrow-right mr-1"></i>
                 {{ section }}
                 <i class="feather icon-lock ml-2"
@@ -46,18 +46,20 @@
               v-if="lessons[ind].length == 0">
                 你的年级于此时间段无活动
               </div>
-              <div v-for="r in rowSize" :key="r">
-                <card
-                v-for="lesson in lessons[ind].filter((el, i) => i%rowSize == rowSize-r)" :key="lesson.id"
-                :title="lesson.name"
-                :initials="lesson.subject.substr(0,1)"
-                :pax="lesson.limit"
-                :num="lesson.current"
-                :classroom="lesson.location"
-                bg-color="#ffdf76"
-                :active="id[ind] == lesson.id"
-                class="c-hand"
-                @clicked="choose(ind, lesson.id, lesson.name)"></card>
+              <div class="lesson-row">
+                <div class="lesson-col" v-for="c in Math.ceil(lessons[ind].length/rowSize)" :key="c">
+                  <card
+                  v-for="lesson in lessons[ind].slice((c-1)*rowSize, c*rowSize)" :key="lesson.id"
+                  :title="lesson.name"
+                  :initials="lesson.subject.substr(0,1)"
+                  :pax="lesson.limit"
+                  :num="lesson.current"
+                  :classroom="lesson.location"
+                  bg-color="#ffdf76"
+                  :active="id[ind] == lesson.id"
+                  class="c-hand"
+                  @clicked="choose(ind, lesson.id, lesson.name)"></card>
+                </div>
               </div>
             </div>
           </div>
@@ -104,9 +106,16 @@ export default {
   },
   mounted() {
     this.init();
+    this.rowSize = this.defaultRowSize;
+    if (window.innerWidth > 840) this.rowSize = 1;
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 840) this.rowSize = 1;
+      else this.rowSize = this.defaultRowSize;
+    })
   },
   data: () => ({
-    rowSize: 2,
+    defaultRowSize: 2, // row size for phone/small window mode
+    rowSize: null,
     isPageLoading: true,
     isSubmitLoading: false,
     titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节'],

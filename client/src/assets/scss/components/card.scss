@@ -3,9 +3,9 @@
   box-shadow: 0 2px 6px rgba(0,0,0, .12);
   border-radius: .4rem;
   padding: .5rem;
-  width: 80%;
-  max-width: 15rem;
-  min-width: 10rem;
+  width: auto;
+  max-width: 18rem;
+  min-width: 12rem;
   margin: .5rem 0;
   position: relative;
   transition: border-color 300ms, box-shadow 300ms;
@@ -42,6 +42,9 @@
       font-size: $font-size-lg;
       color: #555;
       font-weight: 500;
+      @media screen and (max-width: $size-md) {
+        font-size: $font-size;
+      }
     }
     .tile-subtitle {
       display: flex;
