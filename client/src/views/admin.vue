@@ -37,19 +37,18 @@
     </div>
 
     <div class="all-students" v-if="data_type == 2">
-      <div class="form-horizontal">
-        <div class="form-group">
-          <div class="col-3 col-sm-12">
-            <label class="form-label" for="input-example-1">班级</label>
-          </div>
-          <div class="columns col-9 col-sm-12">
-            <div class="column col-6">
-
-            </div>
-            <div class="column col-6">
-              
-            </div>
-          </div>
+      <div class="columns">
+        <div class="form-group column col-6 col-xs-12">
+          <div class="form-label">年级</div>
+          <select class="form-select" name="year" id="year">
+            <option :value="0" selected disabled>请选择年级</option>
+          </select>
+        </div>
+        <div class="form-group column col-6 col-xs-12">
+          <div class="form-label">班级</div>
+          <select class="form-select" name="class" id="class">
+            <option :value="0" selected disabled>请选择班级</option>
+          </select>
         </div>
       </div>
     </div>

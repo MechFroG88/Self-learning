@@ -71,6 +71,10 @@
         v-if="!disableSubmit" @click="$refs.confirm.active = true">
           提交 <i class="feather icon-arrow-right"></i>
         </div>
+        <div class="btn btn-lg btn-secondary submit"
+        v-else @click="$refs.list.active = true">
+          查阅 <i class="feather icon-check"></i>
+        </div>
       </div>
     </div>
 
@@ -90,6 +94,19 @@
       <template v-slot:footer>
         <div class="btn btn-primary" :class="{'loading': isSubmitLoading}" 
         @click="submit">确认</div>
+      </template>
+    </modal>
+
+    <modal title="已呈交选择以下活动" ref="list"
+    :bodyData="[name]">
+      <template v-slot:body="{ data }">
+        <ul>
+          <li v-for="name in data[0].filter(el => el.replace(/\s/g, '').length != 0)" :key="name">
+            <template>
+              {{ name }}
+            </template>
+          </li>
+        </ul>
       </template>
     </modal>
 
@@ -226,7 +243,7 @@ export default {
       this.$forceUpdate();
     },
     details(ind, lesson) {
-
+      this.$refs.detail.active = true;
     },
     submit() {
       this.isSubmitLoading = true;
