@@ -50,7 +50,7 @@
                   <card
                   v-for="lesson in lessons[ind].slice((c-1)*rowSize, c*rowSize)" :key="lesson.id"
                   :title="lesson.name"
-                  :initials="lesson.subject.substr(0,1)"
+                  :initials="lesson.subject[0]"
                   :pax="lesson.limit"
                   :num="lesson.current"
                   :classroom="lesson.location"

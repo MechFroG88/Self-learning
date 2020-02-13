@@ -40,14 +40,22 @@
       <div class="columns">
         <div class="form-group column col-6 col-xs-12">
           <div class="form-label">年级</div>
-          <select class="form-select" name="year" id="year">
-            <option :value="0" selected disabled>请选择年级</option>
+          <select class="form-select" name="year" id="year" v-model="selected_year">
+            <option value="" selected disabled>请选择年级</option>
+            <option 
+            v-for="(year, id) in years" 
+            :key="id"
+            :value="year">{{ year }}</option>
           </select>
         </div>
         <div class="form-group column col-6 col-xs-12">
           <div class="form-label">班级</div>
           <select class="form-select" name="class" id="class">
-            <option :value="0" selected disabled>请选择班级</option>
+            <option value="" selected disabled>请选择班级</option>
+            <option 
+            v-for="(classname, id) in classnames" 
+            :key="id"
+            :value="classname">{{ classname }}</option>
           </select>
         </div>
       </div>
@@ -71,6 +79,7 @@
 
 <script>
 import { userLogout } from '@/api/user';
+import { getAllClasses } from '@/api/class';
 import { getAllLessons, getLessonUsers } from '@/api/lesson';
 import { lesson_columns, student_columns } from '@/api/tableColumns';
 
@@ -82,6 +91,7 @@ export default {
   },
   data: () => ({
     data_type: 1,
+
     lessons: [],
     lesson_columns,
     logout_load: false,
@@ -92,6 +102,12 @@ export default {
     selected_lessons_name: [],
     selected_lessons_id: [],
     sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7]],
+
+    classes: [],
+    classnames: [],
+    years: ['初一', '初二', '初三', '高一理', '高一文', '高二理', '高二文', '高三理', '高三文'],
+    selected_year: "",
+
     showTable: false,
     student_list: [],
     titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节'],
@@ -99,6 +115,9 @@ export default {
   mounted() {
     getAllLessons().then(({data}) => {
       this.lessons = data;
+    })
+    getAllClasses().then(({data}) => {
+      this.classes = data;
     })
   },
   methods: {
@@ -134,6 +153,13 @@ export default {
           this.student_list = data;
         })
       })
+    },
+    selected_year(val) {
+      this.showTable = false;
+      if (val == '' || !val) this.classnames = [];
+      else this.classnames = this.classes
+                            .filter(el => el.cn_name.includes(val))
+                            .map(el => el.cn_name[el.cn_name.length-2]);
     }
   }
 }
