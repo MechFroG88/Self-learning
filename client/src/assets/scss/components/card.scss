@@ -9,31 +9,15 @@
   margin: .5rem 0;
   position: relative;
   transition: border-color 300ms, box-shadow 300ms;
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    opacity: 0;
-    transition: opacity 300ms;
+  &:hover {
     box-shadow: 0 3px 12px rgba(0,0,0,.12);
-  }
-  &:hover::before {
-    opacity: 1;
   }
 
   &.active {
     border-color: $primary-color;
     box-shadow: 0 2px 8px rgba($primary-color-dark, .22);
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      opacity: 0;
-      transition: opacity 300ms;
+    &:hover {
       box-shadow: 0 3px 20px rgba($primary-color-dark, .2);
-    }
-    &:hover::before {
-      opacity: 1;
     }
   }
 

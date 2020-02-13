@@ -59,7 +59,8 @@
                   bg-color="#ffdf76"
                   :active="id[ind] == lesson.id"
                   class="c-hand"
-                  @clicked="choose(ind, lesson.id, lesson.name)"></card>
+                  @clicked="choose(ind, lesson.id, lesson.name)"
+                  @action="details(ind, lesson)"></card>
                 </div>
               </div>
             </div>
@@ -90,6 +91,10 @@
         <div class="btn btn-primary" :class="{'loading': isSubmitLoading}" 
         @click="submit">确认</div>
       </template>
+    </modal>
+
+    <modal ref="detail">
+      
     </modal>
   </div>
 </template>
@@ -200,7 +205,7 @@ export default {
         this.$notify({
           type: 'warn',
           title: '无法选择',
-          text: '此活动已在其他时间段选择'
+          text: '此活动已在其他时间段选择',
         });
         return ;
       }
@@ -219,6 +224,9 @@ export default {
 
       // Update accordion and cards
       this.$forceUpdate();
+    },
+    details(ind, lesson) {
+
     },
     submit() {
       this.isSubmitLoading = true;

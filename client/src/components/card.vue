@@ -1,10 +1,10 @@
 <template>
-  <div id="_cards" class="tile tile-centered" :class="{active}" @click="action">
-    <div class="tile-icon">
+  <div id="_cards" class="tile tile-centered" :class="{active}">
+    <div class="tile-icon" @click="action">
       <figure class="avatar avatar-lg" :data-initial="initials"
       :style="{'background-color': bgColor || ''}"></figure>
     </div>
-    <div class="tile-content">
+    <div class="tile-content" @click="action">
       <div class="tile-title">{{ title }}</div>
       <small class="tile-subtitle">
         <div class="pax mr-2">
@@ -21,7 +21,7 @@
       </small>
     </div>
     <div class="tile-action">
-      <button class="btn btn-link">
+      <button class="btn btn-link" @click="btnAction">
         <i class="icon icon-more-vert"></i>
       </button>
     </div>
@@ -79,6 +79,9 @@ export default {
         type: 'warn',
         title: this.disableMsg
       });
+    },
+    btnAction() {
+      this.$emit('action');
     }
   },
 }
