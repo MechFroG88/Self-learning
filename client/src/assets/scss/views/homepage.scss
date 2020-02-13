@@ -58,7 +58,9 @@
       }
       .accordion {
         &.disabled {
-          color: $primary-color;
+          .accordion-header {
+            color: $primary-color;
+          }
         }
         .accordion-header {
           display: flex;

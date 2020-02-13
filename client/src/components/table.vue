@@ -35,7 +35,7 @@
             <div class="empty-icon">
               <i class="icon icon-people"></i>
             </div>
-            <p class="empty-title h5">此活动暂时无学生选择</p>
+            <p class="empty-title h6">此活动暂时无学生选择</p>
           </div>
         </td>
       </tr>

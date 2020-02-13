@@ -20,6 +20,11 @@
         <div class="class ml-2">{{ classroom }}</div>
       </small>
     </div>
+    <div class="tile-action">
+      <button class="btn btn-link">
+        <i class="icon icon-more-vert"></i>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -56,13 +61,24 @@ export default {
       type: Boolean,
       default: false
     },
+    disable: {
+      type: Boolean,
+      default: false,
+    },
+    disableMsg: {
+      type: String
+    }
   },
   data: () => ({
     
   }),
   methods: {
     action() {
-      this.$emit('clicked');
+      if (!this.disable) this.$emit('clicked');
+      else this.$notify({
+        type: 'warn',
+        title: this.disableMsg
+      });
     }
   },
 }

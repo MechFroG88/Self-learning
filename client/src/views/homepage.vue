@@ -27,14 +27,11 @@
         <div class="accordion-container" v-if="!isPageLoading">
           <div class="accordion" :class="{'disabled': dis[ind]}"
           v-for="(section, ind) in titles" :key="section">
-            <input type="checkbox" :id="section" name="accordion-checkbox" hidden :disabled="dis[ind] || invalidSelect(ind)">
+            <input type="checkbox" :id="section" name="accordion-checkbox" hidden>
             <label class="accordion-header" :for="section">
-              <div class="accordion-header-section" :class="{'tooltip': dis[ind] || invalidSelect(ind)}"
-              :data-tooltip="dis[ind] ? '已呈交此时间段的活动': '此时间段内已选择其他活动'">
+              <div class="accordion-header-section">
                 <i class="icon icon-arrow-right mr-1"></i>
                 {{ section }}
-                <i class="feather icon-lock ml-2"
-                v-if="dis[ind] || invalidSelect(ind)"></i>
               </div>
               <transition name="fade">
                 <small class="label label-rounded label-primary"
@@ -57,6 +54,8 @@
                   :pax="lesson.limit"
                   :num="lesson.current"
                   :classroom="lesson.location"
+                  :disable="dis[ind] || invalidSelect(ind)"
+                  :disableMsg="dis[ind] ? '此时间段内已呈交其他活动': '无法选择此时间段内的活动'"
                   bg-color="#ffdf76"
                   :active="id[ind] == lesson.id"
                   class="c-hand"
@@ -144,6 +143,8 @@ export default {
       reset: 'RESET'
     }),
     init() {
+      this.lessons = [[],[],[],[]];
+      this.chosenId = [];
       getUser().then(({data}) => {
         this.user = data;
         this.isPageLoading = false;

@@ -1,7 +1,7 @@
 <template>
   <div id="_header" class="header">
     <div class="primary">
-      <h2 class="title">自主学习</h2>
+      <h2 class="title">开放学习</h2>
       <div class="student_info">
         <div class="name">{{ cn_name }}</div>
         <div class="id">{{ id }}</div>
