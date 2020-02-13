@@ -55,10 +55,13 @@
     </div>
 
     <data-table ref="table"
-    v-if="showTable"
+    v-if="showTable" title hoverable
     :navbar="data_type == 1 ? '' : '学生姓名'"
     :columns="data_type == 1 ? lesson_columns : student_columns"
     :tableData="data_type == 1 ? student_list : []">
+      <template slot="title">
+        {{selected_lesson.name}}
+      </template>
     </data-table>
 
     <div class="btn btn-link mt-2" 
@@ -85,6 +88,7 @@ export default {
     logout_load: false,
     selected_id: -1,
     selected_session: -1,
+    selected_lesson: {},
     selected_lessons: [],
     selected_lessons_name: [],
     selected_lessons_id: [],
@@ -122,11 +126,12 @@ export default {
     },
     selected_id(val) {
       this.showTable = false;
+      this.selected_lesson = this.selected_lessons.filter(el => el.id == val)[0];
       if (val < 0) return ;
       this.$nextTick(() => {
         this.showTable = true;
         getLessonUsers(val).then(({data}) => {
-          if (data.length == 0) this.$refs.table.is_loading = false;
+          this.$refs.table.is_loading = false;
           this.student_list = data;
         })
       })

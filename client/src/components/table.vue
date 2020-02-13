@@ -28,7 +28,7 @@
         >{{column.name}}</td>
       </tr>
 
-      <tr>
+      <tr v-if="tableData.length == 0 && !is_loading">
         <td align="justify" :colspan="columns.length"
         style="padding: 0;">
           <div class="empty">
@@ -60,7 +60,10 @@
 export default {
   props: {
     columns: Array,
-    tableData: Array,
+    tableData: {
+      type: Array,
+      default: []
+    },
     width: {
       type: [Number, String],
       default: 100,
@@ -102,6 +105,7 @@ export default {
   },
   watch: {
     tableData(data) {
+      console.log(data);
       this.loading = false;
       if (this.tableData) {
         this.originalData = this.tableData;

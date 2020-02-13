@@ -27,7 +27,7 @@
         <div class="accordion-container" v-if="!isPageLoading">
           <div class="accordion" :class="{'disabled': dis[ind]}"
           v-for="(section, ind) in titles" :key="section">
-            <input type="radio" :id="section" name="accordion-checkbox" hidden :disabled="dis[ind] || invalidSelect(ind)">
+            <input type="checkbox" :id="section" name="accordion-checkbox" hidden :disabled="dis[ind] || invalidSelect(ind)">
             <label class="accordion-header" :for="section">
               <div class="accordion-header-section" :class="{'tooltip': dis[ind] || invalidSelect(ind)}"
               :data-tooltip="dis[ind] ? '已呈交此时间段的活动': '此时间段内已选择其他活动'">
@@ -68,7 +68,7 @@
         </div>
         
         <div class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading}"
-        @click="$refs.confirm.active = true">
+        v-if="!disableSubmit" @click="$refs.confirm.active = true">
           提交 <i class="feather icon-arrow-right"></i>
         </div>
       </div>
@@ -83,7 +83,7 @@
               {{ data[0].filter(el => el.id == single_id)[0].name }}
             </template>
           </li>
-          <div class="text-small text-gray" style="margin-top: 1rem;">提交后将无法更改，是否确认提交？</div>
+          <div class="text-small text-gray" style="margin-top: 1rem; margin-left: -.8rem;">提交后将无法更改，是否确认提交？</div>
         </ul>
         <div v-else>还未选择任何活动</div>
       </template>
@@ -131,6 +131,7 @@ export default {
     chosenId: [], //chosen period IDs from user object
     dis: new Array(4).fill(false), // disable accordions for submitted sessions
     locked: new Array(4).fill(false), // forced lessons
+    disableSubmit: false,
     user: {},
     lessonArr: [], // all lessons
     lessons: [[], [], [], []], // display data
@@ -170,6 +171,7 @@ export default {
               }
             }
           })
+          if (this.chosen.indexOf(false) == -1) this.disableSubmit = true;
           // set initially chosen (haven't submit) lessons and progress bar
           this.id.forEach((el, ind) => {
             if (el) {
@@ -191,7 +193,7 @@ export default {
     },
     choose(ind, id, name) {
       // Ignore click when user has already selected activity with same name in other sessions
-      if (this.name.indexOf(name) != -1) {
+      if (this.name.indexOf(name) != -1 && this.id.indexOf(id) == -1) {
         this.$notify({
           type: 'warn',
           title: '无法选择',
