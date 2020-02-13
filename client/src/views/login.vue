@@ -33,7 +33,7 @@
               'active': student_ic,
               'error': errors.length
             }">
-            <label class="custom-form-label" for="birthday">IC 号码</label>
+            <label class="custom-form-label" for="student_ic">IC 号码</label>
           </div>
           <p class="text-error form-input-hint">{{ errors[0] }}</p>
         </validation-provider>
