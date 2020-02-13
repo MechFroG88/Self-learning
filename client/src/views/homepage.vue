@@ -27,7 +27,7 @@
         <div class="accordion-container" v-if="!isPageLoading">
           <div class="accordion" :class="{'disabled': dis[ind]}"
           v-for="(section, ind) in titles" :key="section">
-            <input type="checkbox" :id="section" name="accordion-checkbox" hidden>
+            <input type="checkbox" :id="section" name="accordion-checkbox" hidden v-model="accordions[ind]">
             <label class="accordion-header" :for="section">
               <div class="accordion-header-section">
                 <i class="icon icon-arrow-right mr-1"></i>
@@ -124,6 +124,7 @@ export default {
     isSubmitLoading: false,
     titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节'],
     sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7]],
+    accordions: new Array(4).fill(false),
     selectedBool: new Array(4).fill(false), // to prevent collission selections
     actives: new Array(7).fill(false), // current chosen periods before submission
     chosen: new Array(7).fill(false), // chosen periods from user object
@@ -143,6 +144,7 @@ export default {
       reset: 'RESET'
     }),
     init() {
+      this.accordions = new Array(4).fill(false);
       this.lessons = [[],[],[],[]];
       this.chosenId = [];
       getUser().then(({data}) => {
