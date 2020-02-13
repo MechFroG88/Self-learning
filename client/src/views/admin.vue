@@ -50,7 +50,7 @@
         </div>
         <div class="form-group column col-6 col-xs-12">
           <div class="form-label">班级</div>
-          <select class="form-select" name="class" id="class">
+          <select class="form-select" name="class" id="class" v-model="selected_class">
             <option value="" selected disabled>请选择班级</option>
             <option 
             v-for="(classname, id) in classnames" 
@@ -59,14 +59,17 @@
           </select>
         </div>
       </div>
+      <div class="btn btn-primary" @click="check">
+        查询 <i class="feather icon-check"></i>
+      </div>
     </div>
 
     <data-table ref="table"
     v-if="showTable" title hoverable
-    :navbar="data_type == 1 ? '' : '学生姓名'"
+    navbar="学生姓名"
     :columns="data_type == 1 ? lesson_columns : student_columns"
-    :tableData="data_type == 1 ? student_list : []">
-      <template slot="title">
+    :tableData="student_table_list">
+      <template slot="title" v-if="data_type == 1">
         {{selected_lesson.name}}
       </template>
     </data-table>
@@ -79,6 +82,7 @@
 
 <script>
 import { userLogout } from '@/api/user';
+import { getAllUsers } from '@/api/user';
 import { getAllClasses } from '@/api/class';
 import { getAllLessons, getLessonUsers } from '@/api/lesson';
 import { lesson_columns, student_columns } from '@/api/tableColumns';
@@ -105,22 +109,38 @@ export default {
 
     classes: [],
     classnames: [],
-    years: ['初一', '初二', '初三', '高一理', '高一文', '高二理', '高二文', '高三理', '高三文'],
+    student_columns,
+    years: [],
     selected_year: "",
+    selected_class: "",
 
     showTable: false,
-    student_list: [],
-    titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节'],
+    students:[],
+    student_table_list: [],
   }),
   mounted() {
     getAllLessons().then(({data}) => {
       this.lessons = data;
     })
     getAllClasses().then(({data}) => {
+      this.years = ['初一', '初二', '初三', '高一理', '高一文', '高二理', '高二文', '高三理', '高三文'];
       this.classes = data;
     })
   },
   methods: {
+    check() {
+      getAllUsers().then(({data}) => {
+        this.showTable = true;
+        this.$nextTick(() => {
+          this.$refs.table.is_loading = true;
+          this.student_table_list = data.filter(
+                                      el => el.class.includes(this.selected_year) 
+                                          && el.class.includes(this.selected_class));
+          this.$refs.table.is_loading = false;
+          // console.table(this.student_table_list, ['cn_name', 'id', 'class']);
+        })
+      })
+    },
     logout() {
       this.logout_load = true;
       userLogout().then((data) => {
@@ -135,6 +155,7 @@ export default {
       this.showTable = false;
     },
     selected_session(val) {
+      if (this.data_type != 1) return ;
       this.showTable = false;
       this.selected_id = -1;
       let ss = JSON.stringify(this.sessions[val]);
@@ -143,14 +164,14 @@ export default {
       this.selected_lessons_id = this.selected_lessons.map(el => el.id);
     },
     selected_id(val) {
+      if (this.data_type != 1 || val < 0) return ;
       this.showTable = false;
       this.selected_lesson = this.selected_lessons.filter(el => el.id == val)[0];
-      if (val < 0) return ;
       this.$nextTick(() => {
         this.showTable = true;
         getLessonUsers(val).then(({data}) => {
           this.$refs.table.is_loading = false;
-          this.student_list = data;
+          this.student_table_list = data;
         })
       })
     },
@@ -160,7 +181,7 @@ export default {
       else this.classnames = this.classes
                             .filter(el => el.cn_name.includes(val))
                             .map(el => el.cn_name[el.cn_name.length-2]);
-    }
+    },
   }
 }
 </script>

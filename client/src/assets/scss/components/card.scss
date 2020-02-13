@@ -4,11 +4,16 @@
   border-radius: .4rem;
   padding: .5rem;
   width: auto;
-  max-width: 18rem;
+  max-width: 20rem;
   min-width: 12rem;
   margin: .5rem 0;
   position: relative;
   transition: border-color 300ms, box-shadow 300ms;
+
+  @media screen and (max-width: $size-lg) {
+    max-width: 18rem; 
+  }
+
   &:hover {
     box-shadow: 0 3px 12px rgba(0,0,0,.12);
   }
@@ -23,9 +28,12 @@
 
   .tile-content {
     .tile-title {
-      font-size: $font-size-lg;
+      font-size: 1rem;
       color: #555;
       font-weight: 500;
+      @media screen and (max-width: $size-lg) {
+        font-size: $font-size-lg;
+      }
       @media screen and (max-width: $size-md) {
         font-size: $font-size;
       }
@@ -33,7 +41,18 @@
     .tile-subtitle {
       display: flex;
       justify-content: space-between;
-      font-size: .45rem;
+      margin-top: .3rem;
+      font-size: .7rem;
+      @media screen and (max-width: $size-xl) {
+        font-size: .6rem;
+      }
+      @media screen and (max-width: $size-lg) {
+        font-size: .5rem;        
+      }
+      @media screen and (max-width: $size-md) {
+        font-size: .45rem;
+        margin-top: 0;
+      }
     }
   }
 }

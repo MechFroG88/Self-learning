@@ -7,7 +7,7 @@
     <div class="body columns">
       <div class="sidebar col-2 col-xs-3">
         <div class="period-counter" v-if="!isPageLoading">
-          <h6 style="text-align: center; margin-bottom: 1rem;">节数</h6>
+          <h4 style="text-align: center; margin-bottom: 1rem;">节数</h4>
           <div class="cell" v-for="i in 7" :key="i" 
           :class="{
             'active': actives[i-1],
@@ -54,8 +54,8 @@
                   :pax="lesson.limit"
                   :num="lesson.current"
                   :classroom="lesson.location"
-                  :disable="dis[ind] || invalidSelect(ind)"
-                  :disableMsg="dis[ind] ? '此时间段内已呈交其他活动': '无法选择此时间段内的活动'"
+                  :disable="dis[ind] || invalidSelect(ind) || lesson.current == lesson.limit"
+                  :disableMsg="dis[ind] ? '此时间段内已呈交其他活动': invalidSelect(ind) ? '无法选择此时间段内的活动' : '此活动人数已满，请选择其他活动'"
                   bg-color="#ffdf76"
                   :active="id[ind] == lesson.id"
                   class="c-hand"

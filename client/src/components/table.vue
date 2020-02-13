@@ -105,7 +105,6 @@ export default {
   },
   watch: {
     tableData(data) {
-      console.log(data);
       this.loading = false;
       if (this.tableData) {
         this.originalData = this.tableData;
