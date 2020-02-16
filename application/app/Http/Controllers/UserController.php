@@ -88,15 +88,15 @@ class UserController extends Controller
             $single_data->lessons = [];
             $single_data->forced_lessons = [];
             foreach($lessons as $lesson){
-                $periods = $lesson->period;
+                $periods = $lesson->periods;
                 foreach($periods as $period){
-                    $single_data[lessons[$lesson->period]] = $lesson->id;
+                    array_push($single_data->lessons,[$period->period => $lesson->id]);
                 }
             }
             foreach($lessons_force as $lesson_force){
-                $periods = $lesson_force->period;
+                $periods = $lesson_force->periods;
                 foreach($periods as $period){
-                    $single_data[forced_lessons[$lesson_force->period]] = $lesson_force->id;
+                    array_push($single_data->lessons,[$period->period => $lesson->id]);
                 }
             }
             array_push($data,$single_data);
