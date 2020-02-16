@@ -14,6 +14,7 @@ class UsersTableSeeder extends Seeder
         DB::table('users')->insert([
         [
             'id' => 140145,
+            'class_no' => 0,
             'type' => 0,
             'cn_name' => '陈科锦',
             'en_name' => 'Tan Kel Zin',
@@ -23,6 +24,7 @@ class UsersTableSeeder extends Seeder
         ],
         [
             'id' => 140204,
+            'class_no' => 0,
             'type' => 0,
             'cn_name' => '陈伟辰',
             'en_name' => 'Tan Weiu Cheng',
@@ -32,6 +34,7 @@ class UsersTableSeeder extends Seeder
         ],
         [
             'id' => 119999,
+            'class_no' => 0,
             'type' => 0,
             'cn_name' => '教务处',
             'en_name' => 'jiaowuchu',
