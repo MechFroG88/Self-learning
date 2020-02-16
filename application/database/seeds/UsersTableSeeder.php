@@ -16,6 +16,7 @@ class UsersTableSeeder extends Seeder
             'id' => 140145,
             'type' => 0,
             'cn_name' => '陈科锦',
+            'en_name' => 'Tan Kel Zin',
             'ic' => Hash::make('010801-10-0351'),
             'gender' => "男",
             'class_id' => 0,
@@ -24,6 +25,7 @@ class UsersTableSeeder extends Seeder
             'id' => 140204,
             'type' => 0,
             'cn_name' => '陈伟辰',
+            'en_name' => 'Tan Weiu Cheng',
             'ic' => Hash::make('010527-14-0579'),
             'gender' => "男",
             'class_id' => 0,
@@ -32,6 +34,7 @@ class UsersTableSeeder extends Seeder
             'id' => 119999,
             'type' => 0,
             'cn_name' => '教务处',
+            'en_name' => 'jiaowuchu',
             'ic' => Hash::make('780326-00-9682'),
             'gender' => "男",
             'class_id' => 0
