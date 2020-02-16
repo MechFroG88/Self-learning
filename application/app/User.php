@@ -24,7 +24,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id','cn_name', 'class_id', 'ic','type','is_submit','gender'
+        'id','cn_name', 'class_id', 'ic','type','is_submit','gender','en_name','class_no'
     ];
 
     public function getAuthPassword() {
