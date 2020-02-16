@@ -23,9 +23,9 @@
       <tr class="table_columns">
         <td
           v-for="column in columns"
-          :key="column.name"
+          :key="column.label"
           :class="`col_${column.field}`"
-        >{{column.name}}</td>
+        >{{column.label}}</td>
       </tr>
 
       <tr v-if="tableData.length == 0 && !is_loading">
@@ -105,7 +105,7 @@ export default {
   },
   watch: {
     tableData(data) {
-      this.loading = false;
+      this.is_loading = false;
       if (this.tableData) {
         this.originalData = this.tableData;
         this.displayData  = this.tableData;

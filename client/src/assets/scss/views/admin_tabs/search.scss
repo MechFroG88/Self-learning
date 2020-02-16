@@ -8,15 +8,14 @@
     margin: 0 .5rem 1rem;
   }
 
-  .all-students {
-    .btn {
-      margin-top: 1rem;
-      float: right;
-      .feather {
-        font-weight: 700;
-        &::before {
-          border: none;
-        }
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    .feather {
+      font-weight: 700;
+      &::before {
+        border: none;
       }
     }
   }

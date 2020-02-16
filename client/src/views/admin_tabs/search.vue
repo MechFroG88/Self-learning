@@ -25,12 +25,12 @@
         </div>
         <div class="form-group column col-6 col-xs-12">
           <div class="form-label">活动名称</div>
-          <select class="form-select" name="lessons_name" id="lessons_name" v-model="selected_id">
-            <option :value="-1" selected disabled>请选择活动</option>
+          <select class="form-select" name="lessons_name" id="lessons_name" v-model="selected_name">
+            <option :value="''" selected>--</option>
             <option 
-            v-for="(lesson, id) in selected_lessons_name" 
+            v-for="(lesson, id) in selected_lessons_name"
             :key="id"
-            :value="selected_lessons_id[id]">{{ lesson }}</option>
+            :value="lesson">{{ lesson }}</option>
           </select>
         </div>
       </div>
@@ -41,7 +41,7 @@
         <div class="form-group column col-6 col-xs-12">
           <div class="form-label">年级</div>
           <select class="form-select" name="year" id="year" v-model="selected_year">
-            <option value="" selected disabled>请选择年级</option>
+            <option :value="''" selected>--</option>
             <option 
             v-for="(year, id) in years" 
             :key="id"
@@ -51,7 +51,7 @@
         <div class="form-group column col-6 col-xs-12">
           <div class="form-label">班级</div>
           <select class="form-select" name="class" id="class" v-model="selected_class">
-            <option value="" selected disabled>请选择班级</option>
+            <option :value="''" selected>--</option>
             <option 
             v-for="(classname, id) in classnames" 
             :key="id"
@@ -59,24 +59,40 @@
           </select>
         </div>
       </div>
-      <div class="btn btn-primary" @click="check">
+    </div>
+
+    <div class="button-group mb-2">
+      <vue-excel-xlsx
+        v-if="showTable
+        && (data_type == 1 ? !!student_table_list.length : true)"
+        class="btn btn-primary mr-2"
+        :data="student_table_list"
+        :columns="
+          data_type == 1 ? selected_name ? 
+          lesson_columns : lesson_name_columns :
+          selected_class.length ? student_columns : student_class_columns"
+        :filename="'filename'"
+        :sheetname="'sheet1'"
+        >
+        输出&下载excel文档
+      </vue-excel-xlsx>
+      <div class="btn btn-primary ml-2" @click="check(data_type)">
         查询 <i class="feather icon-check"></i>
       </div>
     </div>
 
-    <data-table ref="table"
+    <data-table ref="table" class="mt-2"
     v-if="showTable" title hoverable
     navbar="学生姓名"
-    :columns="data_type == 1 ? lesson_columns : student_columns"
+    :columns="
+      data_type == 1 ? selected_name ? 
+      lesson_columns : lesson_name_columns :
+      selected_class.length ? student_columns : student_class_columns"
     :tableData="student_table_list">
-      <template slot="title" v-if="data_type == 1">
-        {{selected_lesson.name}}
+      <template slot="title" v-if="data_type == 2">
+        {{ selected_year+selected_class}}
       </template>
     </data-table>
-
-    <div class="btn btn-link mt-2" 
-    :class="{'loading': logout_load}"
-    @click="logout">登出</div>
   </div>
 </template>
 
@@ -84,8 +100,8 @@
 import { userLogout } from '@/api/user';
 import { getAllUsers } from '@/api/user';
 import { getAllClasses } from '@/api/class';
-import { getAllLessons, getLessonUsers } from '@/api/lesson';
-import { lesson_columns, student_columns } from '@/api/tableColumns';
+import { getAllLessons, getLessonUsers, getLessonsList } from '@/api/lesson';
+import { lesson_columns, student_columns, student_class_columns, lesson_name_columns } from '@/api/tableColumns';
 
 import dataTable from '@/components/table';
 
@@ -98,10 +114,10 @@ export default {
 
     lessons: [],
     lesson_columns,
+    lesson_name_columns,
     logout_load: false,
-    selected_id: -1,
+    selected_name: "",
     selected_session: -1,
-    selected_lesson: {},
     selected_lessons: [],
     selected_lessons_name: [],
     selected_lessons_id: [],
@@ -110,6 +126,7 @@ export default {
     classes: [],
     classnames: [],
     student_columns,
+    student_class_columns,
     years: [],
     selected_year: "",
     selected_class: "",
@@ -119,26 +136,63 @@ export default {
     student_table_list: [],
   }),
   mounted() {
-    getAllLessons().then(({data}) => {
+    getLessonsList().then(({data}) => {
       this.lessons = data;
-    })
+    });
     getAllClasses().then(({data}) => {
-      this.years = ['初一', '初二', '初三', '高一理', '高一文', '高二理', '高二文', '高三理', '高三文'];
+      this.years = ['初一', '初二', '初三', '高一理', '高一文', '高二理', '高二文', '高三理', '高三文', '高三商'];
       this.classes = data;
-    })
+    });
+    getAllUsers().then(({data}) => {
+      this.students = data;
+    });
   },
   methods: {
-    check() {
-      getAllUsers().then(({data}) => {
-        this.showTable = true;
-        this.$nextTick(() => {
-          this.$refs.table.is_loading = true;
-          this.student_table_list = data.filter(
+    check(type) {
+      this.showTable = true;
+      this.$nextTick(() => {
+        if (type == 1) {
+          this.student_table_list = [];
+          this.selected_lessons
+            .filter(el => el.name == this.selected_name || !this.selected_name)
+            .forEach(el => this.student_table_list = this.student_table_list.concat(el.user
+              .map(elem => ({...elem, lesson_name: el.name}))
+              .sort((a, b) => {
+                let yearcmp = this.years.indexOf(a.class.substr(0,a.class.length-3))-this.years.indexOf(b.class.substr(0,b.class.length-3)),
+                classnamescmp = this.classes.filter(el => el.cn_name.includes(a.class.substr(0,a.class.length-3))).map(el => el.cn_name[el.cn_name.length-2]);
+                return yearcmp == 0 ? 
+                  classnamescmp.indexOf(a.class[a.class.length-2])-classnamescmp.indexOf(b.class[b.class.length-2])
+                : yearcmp;
+              })
+            ));
+        }
+        else {
+          this.student_table_list = this.students.filter(
                                       el => el.class.includes(this.selected_year) 
                                           && el.class.includes(this.selected_class));
-          this.$refs.table.is_loading = false;
-          // console.table(this.student_table_list, ['cn_name', 'id', 'class']);
-        })
+          this.student_table_list.forEach(el => {
+            let names = ["", "", ""];
+            [1,4,6].forEach((elem, ind) => {
+              let id_obj = el.lessons.filter(element => Object.keys(element).indexOf(elem.toString()) != -1)[0] 
+                        || el.forced_lessons.filter(element => Object.keys(element).indexOf(elem.toString()) != -1)[0];
+              names[ind] = id_obj ? 
+                `${this.lessons.filter(element => element.id == id_obj[elem])[0].name}（${this.lessons.filter(element => element.id == id_obj[elem])[0].location}）`
+                : "--";
+            })
+            el.first = names[0];
+            el.second = names[1];
+            el.third = names[2];
+          });
+          if (!this.selected_class) this.student_table_list.sort((a, b) => {
+            let classcmp = this.classnames.indexOf(a.class[a.class.length-2])-this.classnames.indexOf(b.class[b.class.length-2]),
+                gendercmp = a.gender == b.gender ? 0 : a.gender == '女' ? -1 : 1;
+            return classcmp == 0 ?
+              gendercmp == 0 ?
+                a.class_no-b.class_no
+              : gendercmp 
+            : classcmp;
+          });
+        }
       })
     },
     logout() {
@@ -158,22 +212,13 @@ export default {
       if (this.data_type != 1) return ;
       this.showTable = false;
       this.selected_id = -1;
-      let ss = JSON.stringify(this.sessions[val]);
-      this.selected_lessons = this.lessons.filter(el => JSON.stringify(el.period) == ss);
+      if (val < 0) this.selected_lessons = this.lessons;
+      else {
+        let ss = JSON.stringify(this.sessions[val]);
+        this.selected_lessons = this.lessons.filter(el => JSON.stringify(el.period) == ss);
+      }
       this.selected_lessons_name = this.selected_lessons.map(el => el.name);
       this.selected_lessons_id = this.selected_lessons.map(el => el.id);
-    },
-    selected_id(val) {
-      if (this.data_type != 1 || val < 0) return ;
-      this.showTable = false;
-      this.selected_lesson = this.selected_lessons.filter(el => el.id == val)[0];
-      this.$nextTick(() => {
-        this.showTable = true;
-        getLessonUsers(val).then(({data}) => {
-          this.$refs.table.is_loading = false;
-          this.student_table_list = data;
-        })
-      })
     },
     selected_year(val) {
       this.showTable = false;

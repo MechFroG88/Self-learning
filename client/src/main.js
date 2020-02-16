@@ -30,6 +30,10 @@ Vue.component('ValidationProvider', ValidationProvider);
 import Notifications from 'vue-notification';
 Vue.use(Notifications);
 
+// export as excel
+import VueExcelXlsx from 'vue-excel-xlsx';
+Vue.use(VueExcelXlsx);
+
 Vue.config.productionTip = false
 
 export default new Vue({

@@ -61,7 +61,7 @@
                    : invalidSelect(ind) ? '无法选择此时间段内的活动' 
                           : locked[ind] ? '此阶段已有绑定的活动' 
                                         : '此活动人数已满，请选择其他活动'"
-                  bg-color="#ffdf76"
+                  :bg-color="color[lesson.subject]"
                   :active="id[ind] == lesson.id"
                   class="c-hand"
                   @clicked="choose(ind, lesson.id, lesson.name)"
@@ -143,6 +143,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import { userLogout, getUser, getUserLessons, submitUser } from '@/api/user';
+import colors from '@/api/colors.json';
 
 import headerLayout from '@/layout/header';
 import card from '@/components/card';
@@ -175,10 +176,12 @@ export default {
     actives: new Array(7).fill(false), // current chosen periods before submission
     chosen: new Array(7).fill(false), // chosen periods from user object
     chosenId: [], //chosen period IDs from user object
+    color: {},
+    colors,
     dis: new Array(4).fill(false), // disable accordions for submitted sessions
     locked: new Array(4).fill(false), // forced lessons
     disableSubmit: false,
-    user: {},
+    user: {}, // user object
     lessonArr: [], // all lessons
     lessons: [[], [], [], []], // display data
     detailLesson: {}, // lesson to have details displayed
@@ -198,14 +201,20 @@ export default {
         this.user = data;
         this.isPageLoading = false;
         // get current year of user
-        this.year = (new Date().getFullYear() % 100) - parseInt(this.user.id.toString().substr(0, 2)) + 1;
+        let years = ['初一', '初二', '初三', '高一', '高二', '高三'];
+        this.year = years.indexOf(this.user.class.substr(0, 2)) + 1;
         getUserLessons().then(({data}) => {
+          let subs = new Set();
           // categorise lessons according to sessions
           this.lessonArr = data.sort((left, right) => (right.limit-right.current)-(left.limit-left.current));
           this.lessonArr.forEach(el => {
             for (let i = 0; i < this.lessons.length; i++)
-              if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i])) 
-                this.lessons[i].push(el)
+              if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i])) this.lessons[i].push(el);
+            let count = 0;
+            if (!subs.has(el.subject)) {
+              color[el.subject] = colors[count++];
+              subs.add(el.subject);
+            }
           })
 
           // set user submit lessons as active
