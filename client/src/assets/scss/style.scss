@@ -1,13 +1,15 @@
 @import 'variables';
 
 //views
+@import 'views/admin.scss';
 @import 'views/login.scss';
 @import 'views/homepage.scss';
-@import 'views/admin.scss';
+@import 'views/admin_tabs/search.scss';
 
 //components
 @import 'components/card.scss';
 @import 'components/table.scss';
+@import 'components/modal.scss';
 
 //layouts
 @import 'layout/header.scss';
@@ -24,6 +26,10 @@
   @media screen and (max-width: $size-md) {
     font-size: 16px !important;
   }
+}
+
+.text-small {
+  font-size: $font-size-sm;
 }
 
 html {

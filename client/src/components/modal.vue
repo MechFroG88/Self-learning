@@ -1,5 +1,5 @@
 <template>
-  <div class="modal modal-sm" :class="{active}"
+  <div class="modal" :class="{active}"
   id="_modal">
     <a class="modal-overlay" aria-label="Close" @click="active = false"></a>
     <div class="modal-container">

@@ -1,0 +1,8 @@
+#_modal {
+  @media screen and (max-width: $size-2x) {
+    .modal-container {
+      max-width: $control-width-sm;
+      padding: 0 $unit-2;
+    }
+  }
+}

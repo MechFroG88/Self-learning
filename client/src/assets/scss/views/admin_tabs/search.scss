@@ -1,0 +1,27 @@
+#_search {
+  font-size: $font-size-lg;
+  @media screen and (max-width: $size-md) {
+    font-size: $font-size;
+  }
+
+  .data-selects {
+    margin: 0 .5rem 1rem;
+  }
+
+  .all-students {
+    .btn {
+      margin-top: 1rem;
+      float: right;
+      .feather {
+        font-weight: 700;
+        &::before {
+          border: none;
+        }
+      }
+    }
+  }
+
+  #_table {
+    margin-top: 1rem;
+  }
+}

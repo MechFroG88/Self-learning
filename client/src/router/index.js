@@ -18,9 +18,24 @@ const router = new VueRouter({
       component: () => import('@/views/homepage')
     },
     {
-      path: '/admin',
-      name: 'admin',
-      component: () => import('@/views/admin')
+      path: '/admin/',
+      component: () => import('@/views/admin'),
+      children: [
+        {
+          path: '',
+          redirect: { 'name': 'adminSearch' },
+        },
+        {
+          path: 'search',
+          name: 'adminSearch',
+          component: () => import('@/views/admin_tabs/search')
+        },
+        {
+          path: 'edit_lesson',
+          name: 'adminEditLesson',
+          component: () => import('@/views/admin_tabs/edit_lesson')
+        }
+      ]
     }
   ]
 })
