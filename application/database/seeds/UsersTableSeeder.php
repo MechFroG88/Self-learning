@@ -37,74 +37,74 @@ class UsersTableSeeder extends Seeder
             'class_id' => 0
         ],
         [
-            'id' => 111111,
+            'id' => 201111,
             'type' => 1,
             'cn_name' => '初一',
-            'ic' => Hash::make('111111'),
+            'ic' => Hash::make('201111'),
             'gender' => "男",
             'class_id' => 1
         ],
         [
-            'id' => 222222,
+            'id' => 192222,
             'type' => 1,
             'cn_name' => '初二',
-            'ic' => Hash::make('222222'),
+            'ic' => Hash::make('192222'),
             'gender' => "男",
             'class_id' => 20
         ],
         [
-            'id' => 333333,
+            'id' => 183333,
             'type' => 1,
             'cn_name' => '初三',
-            'ic' => Hash::make('333333'),
+            'ic' => Hash::make('183333'),
             'gender' => "男",
             'class_id' => 37
         ],
         [
-            'id' => 444441,
+            'id' => 174441,
             'type' => 1,
             'cn_name' => '高一理',
-            'ic' => Hash::make('444441'),
+            'ic' => Hash::make('174441'),
             'gender' => "男",
             'class_id' => 80
         ],
         [
-            'id' => 444442,
+            'id' => 174442,
             'type' => 1,
             'cn_name' => '高一文',
-            'ic' => Hash::make('444442'),
+            'ic' => Hash::make('174442'),
             'gender' => "男",
             'class_id' => 52
         ],
         [
-            'id' => 555551,
+            'id' => 165551,
             'type' => 1,
             'cn_name' => '高二理',
-            'ic' => Hash::make('555552'),
+            'ic' => Hash::make('165552'),
             'gender' => "男",
             'class_id' => 86
         ],
         [
-            'id' => 555552,
+            'id' => 165552,
             'type' => 1,
             'cn_name' => '高二文',
-            'ic' => Hash::make('555552'),
+            'ic' => Hash::make('165552'),
             'gender' => "男",
             'class_id' => 63
         ],
         [
-            'id' => 666661,
+            'id' => 156661,
             'type' => 1,
             'cn_name' => '高三理',
-            'ic' => Hash::make('666662'),
+            'ic' => Hash::make('156662'),
             'gender' => "男",
             'class_id' => 93
         ],
         [
-            'id' => 666662,
+            'id' => 156662,
             'type' => 1,
             'cn_name' => '高三文',
-            'ic' => Hash::make('666662'),
+            'ic' => Hash::make('156662'),
             'gender' => "男",
             'class_id' => 73
         ],
