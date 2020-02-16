@@ -1,146 +1,41 @@
 <template>
   <div id="_admin">
-    <div class="form-group data-selects">
-      <label class="form-radio">
-        <input type="radio" name="data_type" :value="1" v-model="data_type">
-        <i class="form-icon"></i> 查阅单一活动的学生名单
-      </label>
-      <label class="form-radio">
-        <input type="radio" name="data_type" :value="2" v-model="data_type">
-        <i class="form-icon"></i> 查阅所有学生
-      </label>
+    <header class="navbar">
+      <section class="navbar-section">
+        <router-link :to="{ name: 'adminSearch' }"
+        :class="{'active': $route.name == 'adminSearch'}">
+          查询名单
+        </router-link>
+        <router-link :to="{ name: 'adminEditLesson' }"
+        :class="{'active': $route.name == 'adminEditLesson'}">
+          更改活动
+        </router-link>
+      </section>
+      <section class="navbar-section">
+        <div class="btn btn-link mt-2" 
+        :class="{'loading': logout_load}"
+        @click="logout">
+          登出 <i class="feather icon-log-out"></i>
+        </div>
+      </section>
+    </header>
+    <div class="body">
+      <router-view></router-view>
     </div>
-
-    <div class="single-activity" v-if="data_type == 1">
-      <div class="columns">
-        <div class="form-group column col-6 col-xs-12">
-          <div class="form-label">时段</div>
-          <select class="form-select" name="session" id="session" v-model="selected_session">
-            <option :value="-1" selected disabled>请选择时段</option>
-            <option 
-            v-for="(session, id) in sessions" 
-            :key="id"
-            :value="id">第{{session[0]}} - {{session[session.length-1]}}节</option>
-          </select>
-        </div>
-        <div class="form-group column col-6 col-xs-12">
-          <div class="form-label">活动名称</div>
-          <select class="form-select" name="lessons_name" id="lessons_name" v-model="selected_id">
-            <option :value="-1" selected disabled>请选择活动</option>
-            <option 
-            v-for="(lesson, id) in selected_lessons_name" 
-            :key="id"
-            :value="selected_lessons_id[id]">{{ lesson }}</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="all-students" v-if="data_type == 2">
-      <div class="columns">
-        <div class="form-group column col-6 col-xs-12">
-          <div class="form-label">年级</div>
-          <select class="form-select" name="year" id="year" v-model="selected_year">
-            <option value="" selected disabled>请选择年级</option>
-            <option 
-            v-for="(year, id) in years" 
-            :key="id"
-            :value="year">{{ year }}</option>
-          </select>
-        </div>
-        <div class="form-group column col-6 col-xs-12">
-          <div class="form-label">班级</div>
-          <select class="form-select" name="class" id="class" v-model="selected_class">
-            <option value="" selected disabled>请选择班级</option>
-            <option 
-            v-for="(classname, id) in classnames" 
-            :key="id"
-            :value="classname">{{ classname }}</option>
-          </select>
-        </div>
-      </div>
-      <div class="btn btn-primary" @click="check">
-        查询 <i class="feather icon-check"></i>
-      </div>
-    </div>
-
-    <data-table ref="table"
-    v-if="showTable" title hoverable
-    navbar="学生姓名"
-    :columns="data_type == 1 ? lesson_columns : student_columns"
-    :tableData="student_table_list">
-      <template slot="title" v-if="data_type == 1">
-        {{selected_lesson.name}}
-      </template>
-    </data-table>
-
-    <div class="btn btn-link mt-2" 
-    :class="{'loading': logout_load}"
-    @click="logout">登出</div>
   </div>
 </template>
 
 <script>
 import { userLogout } from '@/api/user';
-import { getAllUsers } from '@/api/user';
-import { getAllClasses } from '@/api/class';
-import { getAllLessons, getLessonUsers } from '@/api/lesson';
-import { lesson_columns, student_columns } from '@/api/tableColumns';
-
-import dataTable from '@/components/table';
 
 export default {
-  components: {
-    dataTable
-  },
   data: () => ({
-    data_type: 1,
-
-    lessons: [],
-    lesson_columns,
     logout_load: false,
-    selected_id: -1,
-    selected_session: -1,
-    selected_lesson: {},
-    selected_lessons: [],
-    selected_lessons_name: [],
-    selected_lessons_id: [],
-    sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7]],
-
-    classes: [],
-    classnames: [],
-    student_columns,
-    years: [],
-    selected_year: "",
-    selected_class: "",
-
-    showTable: false,
-    students:[],
-    student_table_list: [],
   }),
   mounted() {
-    getAllLessons().then(({data}) => {
-      this.lessons = data;
-    })
-    getAllClasses().then(({data}) => {
-      this.years = ['初一', '初二', '初三', '高一理', '高一文', '高二理', '高二文', '高三理', '高三文'];
-      this.classes = data;
-    })
+    
   },
   methods: {
-    check() {
-      getAllUsers().then(({data}) => {
-        this.showTable = true;
-        this.$nextTick(() => {
-          this.$refs.table.is_loading = true;
-          this.student_table_list = data.filter(
-                                      el => el.class.includes(this.selected_year) 
-                                          && el.class.includes(this.selected_class));
-          this.$refs.table.is_loading = false;
-          // console.table(this.student_table_list, ['cn_name', 'id', 'class']);
-        })
-      })
-    },
     logout() {
       this.logout_load = true;
       userLogout().then((data) => {
@@ -150,39 +45,6 @@ export default {
       }).finally(() => this.logout_load = false)
     }
   },
-  watch: {
-    data_type() {
-      this.showTable = false;
-    },
-    selected_session(val) {
-      if (this.data_type != 1) return ;
-      this.showTable = false;
-      this.selected_id = -1;
-      let ss = JSON.stringify(this.sessions[val]);
-      this.selected_lessons = this.lessons.filter(el => JSON.stringify(el.period) == ss);
-      this.selected_lessons_name = this.selected_lessons.map(el => el.name);
-      this.selected_lessons_id = this.selected_lessons.map(el => el.id);
-    },
-    selected_id(val) {
-      if (this.data_type != 1 || val < 0) return ;
-      this.showTable = false;
-      this.selected_lesson = this.selected_lessons.filter(el => el.id == val)[0];
-      this.$nextTick(() => {
-        this.showTable = true;
-        getLessonUsers(val).then(({data}) => {
-          this.$refs.table.is_loading = false;
-          this.student_table_list = data;
-        })
-      })
-    },
-    selected_year(val) {
-      this.showTable = false;
-      if (val == '' || !val) this.classnames = [];
-      else this.classnames = this.classes
-                            .filter(el => el.cn_name.includes(val))
-                            .map(el => el.cn_name[el.cn_name.length-2]);
-    },
-  }
 }
 </script>
 
