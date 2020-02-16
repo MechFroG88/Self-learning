@@ -36,78 +36,78 @@ class UsersTableSeeder extends Seeder
             'gender' => "男",
             'class_id' => 0
         ],
-        [
-            'id' => 201111,
-            'type' => 1,
-            'cn_name' => '初一',
-            'ic' => Hash::make('201111'),
-            'gender' => "男",
-            'class_id' => 1
-        ],
-        [
-            'id' => 192222,
-            'type' => 1,
-            'cn_name' => '初二',
-            'ic' => Hash::make('192222'),
-            'gender' => "男",
-            'class_id' => 20
-        ],
-        [
-            'id' => 183333,
-            'type' => 1,
-            'cn_name' => '初三',
-            'ic' => Hash::make('183333'),
-            'gender' => "男",
-            'class_id' => 37
-        ],
-        [
-            'id' => 174441,
-            'type' => 1,
-            'cn_name' => '高一理',
-            'ic' => Hash::make('174441'),
-            'gender' => "男",
-            'class_id' => 80
-        ],
-        [
-            'id' => 174442,
-            'type' => 1,
-            'cn_name' => '高一文',
-            'ic' => Hash::make('174442'),
-            'gender' => "男",
-            'class_id' => 52
-        ],
-        [
-            'id' => 165551,
-            'type' => 1,
-            'cn_name' => '高二理',
-            'ic' => Hash::make('165552'),
-            'gender' => "男",
-            'class_id' => 86
-        ],
-        [
-            'id' => 165552,
-            'type' => 1,
-            'cn_name' => '高二文',
-            'ic' => Hash::make('165552'),
-            'gender' => "男",
-            'class_id' => 63
-        ],
-        [
-            'id' => 156661,
-            'type' => 1,
-            'cn_name' => '高三理',
-            'ic' => Hash::make('156662'),
-            'gender' => "男",
-            'class_id' => 93
-        ],
-        [
-            'id' => 156662,
-            'type' => 1,
-            'cn_name' => '高三文',
-            'ic' => Hash::make('156662'),
-            'gender' => "男",
-            'class_id' => 73
-        ],
+        // [
+        //     'id' => 201111,
+        //     'type' => 1,
+        //     'cn_name' => '初一',
+        //     'ic' => Hash::make('201111'),
+        //     'gender' => "男",
+        //     'class_id' => 1
+        // ],
+        // [
+        //     'id' => 192222,
+        //     'type' => 1,
+        //     'cn_name' => '初二',
+        //     'ic' => Hash::make('192222'),
+        //     'gender' => "男",
+        //     'class_id' => 20
+        // ],
+        // [
+        //     'id' => 183333,
+        //     'type' => 1,
+        //     'cn_name' => '初三',
+        //     'ic' => Hash::make('183333'),
+        //     'gender' => "男",
+        //     'class_id' => 37
+        // ],
+        // [
+        //     'id' => 174441,
+        //     'type' => 1,
+        //     'cn_name' => '高一理',
+        //     'ic' => Hash::make('174441'),
+        //     'gender' => "男",
+        //     'class_id' => 80
+        // ],
+        // [
+        //     'id' => 174442,
+        //     'type' => 1,
+        //     'cn_name' => '高一文',
+        //     'ic' => Hash::make('174442'),
+        //     'gender' => "男",
+        //     'class_id' => 52
+        // ],
+        // [
+        //     'id' => 165551,
+        //     'type' => 1,
+        //     'cn_name' => '高二理',
+        //     'ic' => Hash::make('165552'),
+        //     'gender' => "男",
+        //     'class_id' => 86
+        // ],
+        // [
+        //     'id' => 165552,
+        //     'type' => 1,
+        //     'cn_name' => '高二文',
+        //     'ic' => Hash::make('165552'),
+        //     'gender' => "男",
+        //     'class_id' => 63
+        // ],
+        // [
+        //     'id' => 156661,
+        //     'type' => 1,
+        //     'cn_name' => '高三理',
+        //     'ic' => Hash::make('156662'),
+        //     'gender' => "男",
+        //     'class_id' => 93
+        // ],
+        // [
+        //     'id' => 156662,
+        //     'type' => 1,
+        //     'cn_name' => '高三文',
+        //     'ic' => Hash::make('156662'),
+        //     'gender' => "男",
+        //     'class_id' => 73
+        // ],
         ]);
     }
 }
