@@ -32,7 +32,7 @@ class UsersTableSeeder extends Seeder
             'id' => 119999,
             'type' => 0,
             'cn_name' => '教务处',
-            'ic' => Hash::make('780326009682'),
+            'ic' => Hash::make('780326-00-9682'),
             'gender' => "男",
             'class_id' => 0
         ],
