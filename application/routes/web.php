@@ -19,7 +19,7 @@ Route::get('/', function () {
  * User Route
  */
 
-Route::post('hash','UserController@hash');
+//Route::post('hash','UserController@hash');
 Route::post('user/login','UserController@login');
 
 Route::middleware('auth')->post('user/logout','UserController@logout');
