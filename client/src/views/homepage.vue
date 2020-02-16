@@ -35,7 +35,9 @@
               </div>
               <transition name="fade">
                 <small class="label label-rounded label-primary"
-                v-if="dis[ind]">已呈交：{{ name[ind] }}</small>
+                v-if="locked[ind]">已绑定：{{ name[ind] }}</small>
+                <small class="label label-rounded label-primary"
+                v-else-if="dis[ind]">已呈交：{{ name[ind] }}</small>
                 <small class="label label-rounded label-primary"
                 v-else-if="id[ind]">已选：{{ name[ind] }}</small>
               </transition>
@@ -54,8 +56,11 @@
                   :pax="lesson.limit"
                   :num="lesson.current"
                   :classroom="lesson.location"
-                  :disable="dis[ind] || invalidSelect(ind) || lesson.current == lesson.limit"
-                  :disableMsg="dis[ind] ? '此时间段内已呈交其他活动': invalidSelect(ind) ? '无法选择此时间段内的活动' : '此活动人数已满，请选择其他活动'"
+                  :disable="dis[ind] || invalidSelect(ind) || locked[ind] || lesson.current == lesson.limit"
+                  :disableMsg="dis[ind] ? '此时间段内已呈交活动' 
+                   : invalidSelect(ind) ? '无法选择此时间段内的活动' 
+                          : locked[ind] ? '此阶段已有绑定的活动' 
+                                        : '此活动人数已满，请选择其他活动'"
                   bg-color="#ffdf76"
                   :active="id[ind] == lesson.id"
                   class="c-hand"
@@ -87,7 +92,14 @@
               {{ data[0].filter(el => el.id == single_id)[0].name }}
             </template>
           </li>
-          <div class="text-small text-gray" style="margin-top: 1rem; margin-left: -.8rem;">提交后将无法更改，是否确认提交？</div>
+          <div class="text-small text-gray text-italic text-bold" style="margin-top: 1rem; margin-left: -.8rem;">
+            <span>
+              点击选择栏的 
+              </span><i class="icon icon-more-vert text-primary"></i><span>
+              可查阅活动详情与须知。
+            </span>
+          </div>
+          <div class="text-gray" style="margin-left: -.8rem;">提交后将无法更改，是否确认提交？</div>
         </ul>
         <div v-else>还未选择任何活动</div>
       </template>
@@ -97,7 +109,7 @@
       </template>
     </modal>
 
-    <modal title="已呈交选择以下活动" ref="list"
+    <modal title="已呈交选择以下活动" ref="list" v-if="disableSubmit"
     :bodyData="[name]">
       <template v-slot:body="{ data }">
         <ul>
@@ -110,8 +122,20 @@
       </template>
     </modal>
 
-    <modal ref="detail">
-      
+    <modal :title="detailLesson.name" ref="detail" :bodyData="detailLesson">
+      <template v-slot:body="{ data }">
+        <h6 v-if="data.description"><b>
+          {{ data.description }}
+        </b></h6>
+        <h6>
+          人数：{{ `${data.current}/${data.limit}` }}
+        </h6>
+        <h6>{{ data.location }}</h6>
+        <h6>
+          {{ data.subject }}
+          <em>（{{ titles[data.ind] }}）</em>
+        </h6>
+      </template>
     </modal>
   </div>
 </template>
@@ -157,6 +181,7 @@ export default {
     user: {},
     lessonArr: [], // all lessons
     lessons: [[], [], [], []], // display data
+    detailLesson: {}, // lesson to have details displayed
     year: 0,
     logoutLoad: false,
   }),
@@ -176,27 +201,36 @@ export default {
         this.year = (new Date().getFullYear() % 100) - parseInt(this.user.id.toString().substr(0, 2)) + 1;
         getUserLessons().then(({data}) => {
           // categorise lessons according to sessions
-          this.lessonArr = data;
+          this.lessonArr = data.sort((left, right) => (right.limit-right.current)-(left.limit-left.current));
           this.lessonArr.forEach(el => {
             for (let i = 0; i < this.lessons.length; i++)
               if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i])) 
                 this.lessons[i].push(el)
           })
+
           // set user submit lessons as active
           this.user.lessons.forEach(el => {
             this.chosen[Object.keys(el)[0]-1] = true;
             for (let i = 0; i < this.sessions.length; i++) {
               if (this.sessions[i].indexOf(parseInt(Object.keys(el)[0])) != -1) {
-                this.selectedBool[i] = true; 
                 this.dis[i] = true;
-                this.sessions[i].forEach(elem => this.actives[elem-1] = true);
                 this.chosenId.push(el[Object.keys(el)[0]]);
-                this.select({ind: i, id: el[Object.keys(el)[0]], name: this.lessons[i].filter(elem => elem.id == el[Object.keys(el)[0]])[0].name})
+                this.selectedBool[i] = true;
+                this.sessions[i].forEach(elem => this.actives[elem-1] = true);
+                this.select({
+                  ind: i, 
+                  id: el[Object.keys(el)[0]], 
+                  name: this.lessons[i].filter(elem => elem.id == el[Object.keys(el)[0]])[0].name
+                })
                 break;
               }
             }
           })
+          this.clearConflict();
+
+          // disable submit button for user who completed submission
           if (this.chosen.indexOf(false) == -1) this.disableSubmit = true;
+
           // set initially chosen (haven't submit) lessons and progress bar
           this.id.forEach((el, ind) => {
             if (el) {
@@ -204,6 +238,27 @@ export default {
               this.sessions[ind].forEach(elem => this.actives[elem-1] = true);
             }
           })
+
+          // set user force_lessons as active
+          this.user.forced_lessons.forEach(el => {
+            this.chosen[Object.keys(el)[0]-1] = true;
+            for (let i = 0; i < this.sessions.length; i++) {
+              if (this.sessions[i].indexOf(parseInt(Object.keys(el)[0])) != -1) {
+                this.dis[i] = true;
+                this.locked[i] = true;
+                this.chosenId.push(el[Object.keys(el)[0]]);
+                this.selectedBool[i] = true;
+                this.sessions[i].forEach(elem => this.actives[elem-1] = true);
+                this.select({
+                  ind: i, 
+                  id: el[Object.keys(el)[0]], 
+                  name: this.lessons[i].filter(elem => elem.id == el[Object.keys(el)[0]])[0].name
+                })
+                break;
+              }
+            }
+          })
+          this.clearConflict();
         })
       })
     },
@@ -244,6 +299,7 @@ export default {
     },
     details(ind, lesson) {
       this.$refs.detail.active = true;
+      this.detailLesson = { ind, ...lesson };
     },
     submit() {
       this.isSubmitLoading = true;
@@ -260,6 +316,18 @@ export default {
     invalidSelect(ind) {
       return (ind == 1 || ind == 2) ? this.selectedBool[3] : ind == 3 ? (this.selectedBool[1] || this.selectedBool[2]) : false
     },
+    clearConflict() {
+      // prevent 4-5 and 6-7 confusion with 4-7
+      if (this.id[1] == this.id[2] && this.id[1] != 0) {
+        let id = this.id[1], name = this.name[1];
+        this.dis[1] = false; this.dis[2] = false;
+        this.selectedBool[1] = false; this.selectedBool[2] = false;
+        this.select({ind: 1, id, name}); this.select({ind: 2, id, name});
+        this.dis[3] = true;
+        this.selectedBool[3] = true;
+        this.select({ind: 3, id, name});
+      }
+    }
   },
   computed: {
     ...mapState('lessons', {

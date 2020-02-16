@@ -1,7 +1,10 @@
 <template>
   <div id="_login">
-    <!-- <img class="logo img-responsive" src="@/assets/images/chkl_logo.png" alt=""> -->
-    <h1 class="logo">开放学习日</h1>
+    <div class="logo">
+      <h1 class="cn">开放学习日</h1>
+      <h4 class="en">Open Learning Day</h4>
+      <!-- <img class="img img-responsive" src="@/assets/images/chkl_logo.png" alt=""> -->
+    </div>
     <form @submit.prevent="login" method="POST" action="/user/login">
       <div class="form-container">
         <div class="toast toast-error" v-if="formError || loginError">
