@@ -136,16 +136,10 @@ export default {
     student_table_list: [],
   }),
   mounted() {
-    getLessonsList().then(({data}) => {
-      this.lessons = data;
-    });
-    getAllClasses().then(({data}) => {
-      this.years = ['初一', '初二', '初三', '高一理', '高一文', '高二理', '高二文', '高三理', '高三文', '高三商'];
-      this.classes = data;
-    });
-    getAllUsers().then(({data}) => {
-      this.students = data;
-    });
+    this.years = ['初一', '初二', '初三', '高一理', '高一文', '高二理', '高二文', '高三理', '高三文', '高三商'];
+    getLessonsList().then(({data}) => { this.lessons = data; });
+    getAllClasses() .then(({data}) => { this.classes = data; });
+    getAllUsers()   .then(({data}) => { this.students = data; });
   },
   methods: {
     check(type) {
@@ -154,9 +148,13 @@ export default {
         if (type == 1) {
           this.student_table_list = [];
           this.selected_lessons
+            // Find all selected_lessons of selected_session by name (if specified)
             .filter(el => el.name == this.selected_name || !this.selected_name)
+            // Concat all the users associated with said lessons into table data
             .forEach(el => this.student_table_list = this.student_table_list.concat(el.user
+              // Apply property of lesson_name in case querying for whole session
               .map(elem => ({...elem, lesson_name: el.name}))
+              // Sort by year then by classname
               .sort((a, b) => {
                 let yearcmp = this.years.indexOf(a.class.substr(0,a.class.length-3))-this.years.indexOf(b.class.substr(0,b.class.length-3)),
                 classnamescmp = this.classes.filter(el => el.cn_name.includes(a.class.substr(0,a.class.length-3))).map(el => el.cn_name[el.cn_name.length-2]);
@@ -167,9 +165,12 @@ export default {
             ));
         }
         else {
+          // Find all students of said year and/or class (if specified)
           this.student_table_list = this.students.filter(
                                       el => el.class.includes(this.selected_year) 
                                           && el.class.includes(this.selected_class));
+          
+          // Get names of lessons selected by every student and categorize into sessions
           this.student_table_list.forEach(el => {
             let names = ["", "", ""];
             [1,4,6].forEach((elem, ind) => {
@@ -183,6 +184,8 @@ export default {
             el.second = names[1];
             el.third = names[2];
           });
+
+          // Sort by class if querying for whole year/school
           if (!this.selected_class) this.student_table_list.sort((a, b) => {
             let classcmp = this.classnames.indexOf(a.class[a.class.length-2])-this.classnames.indexOf(b.class[b.class.length-2]),
                 gendercmp = a.gender == b.gender ? 0 : a.gender == '女' ? -1 : 1;

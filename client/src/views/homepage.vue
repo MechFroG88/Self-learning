@@ -27,6 +27,7 @@
         <div class="accordion-container" v-if="!isPageLoading">
           <div class="accordion" :class="{'disabled': dis[ind]}"
           v-for="(section, ind) in titles" :key="section">
+            <!-- Accordion header -->
             <input type="checkbox" :id="section" name="accordion-checkbox" hidden v-model="accordions[ind]">
             <label class="accordion-header" :for="section">
               <div class="accordion-header-section">
@@ -34,14 +35,17 @@
                 {{ section }}
               </div>
               <transition name="fade">
-                <small class="label label-rounded label-primary"
+                <small class="label label-rounded label-success"
                 v-if="locked[ind]">已绑定：{{ name[ind] }}</small>
-                <small class="label label-rounded label-primary"
+                <small class="label label-rounded label-success"
                 v-else-if="dis[ind]">已呈交：{{ name[ind] }}</small>
                 <small class="label label-rounded label-primary"
                 v-else-if="id[ind]">已选：{{ name[ind] }}</small>
               </transition>
             </label>
+            <!-- Accordion header -->
+
+            <!-- Accordion body -->
             <div class="accordion-body">
               <div class="empty-lesson text-gray ml-2 mt-2 text-italic"
               v-if="lessons[ind].length == 0">
@@ -69,6 +73,7 @@
                 </div>
               </div>
             </div>
+            <!-- Accordion body -->
           </div>
         </div>
         
@@ -204,18 +209,19 @@ export default {
         let years = ['初一', '初二', '初三', '高一', '高二', '高三'];
         this.year = years.indexOf(this.user.class.substr(0, 2)) + 1;
         getUserLessons().then(({data}) => {
-          let subs = new Set();
+          let subs = new Set(), count = 0;
           // categorise lessons according to sessions
           this.lessonArr = data.sort((left, right) => (right.limit-right.current)-(left.limit-left.current));
           this.lessonArr.forEach(el => {
             for (let i = 0; i < this.lessons.length; i++)
               if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i])) this.lessons[i].push(el);
-            let count = 0;
+
+            // assign a color for each unique subject
             if (!subs.has(el.subject)) {
-              color[el.subject] = colors[count++];
+              this.color[el.subject] = this.colors[count++];
               subs.add(el.subject);
             }
-          })
+          });
 
           // set user submit lessons as active
           this.user.lessons.forEach(el => {
@@ -234,7 +240,7 @@ export default {
                 break;
               }
             }
-          })
+          });
           this.clearConflict();
 
           // disable submit button for user who completed submission
