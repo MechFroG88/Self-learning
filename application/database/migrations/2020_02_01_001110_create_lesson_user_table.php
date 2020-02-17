@@ -16,6 +16,7 @@ class CreateLessonUserTable extends Migration
         Schema::create('lesson_user', function (Blueprint $table) {
             $table->integer('user_id');
             $table->integer('lesson_id');
+            $table->index('user_id');
         });
     }
 
