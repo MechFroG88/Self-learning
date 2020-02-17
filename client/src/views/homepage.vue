@@ -78,7 +78,7 @@
         </div>
 
         <button class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading, 'tooltip tooltip-left': tempDisableSubmit}"
-        :data-tooltip="`提交开放时段： \n 18/2/2020 20:00 - 21/2/2020 20:00 \n 开放时间在${time(new Date('2020-02-18T20:00:00'))}`"
+        :data-tooltip="`提交开放时段： \n 18/2 20:00 - 21/2 20:00 \n 开放时间在${time(new Date('2020-02-18T20:00:00'))}`"
         v-if="!disableSubmit" @click="$refs.confirm.active = true" :disabled="tempDisableSubmit">
           提交 <i class="feather icon-arrow-right"></i>
         </button>
@@ -172,7 +172,7 @@ export default {
     })
   },
   data: () => ({
-    tempDisableSubmit: true, // temporarily disable button for non-submitting periods
+    tempDisableSubmit: process.env.NODE_ENV == 'production', // temporarily disable button for non-submitting periods
     defaultRowSize: 2, // row size for phone/small window mode
     rowSize: null,
     isPageLoading: true,
