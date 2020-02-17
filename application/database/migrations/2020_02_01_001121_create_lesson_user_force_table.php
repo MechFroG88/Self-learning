@@ -16,6 +16,7 @@ class CreateLessonUserForceTable extends Migration
         Schema::create('lesson_user_force', function (Blueprint $table) {
             $table->integer('user_id');
             $table->integer('lesson_id');
+            $table->index('user_id');
         });
     }
 
