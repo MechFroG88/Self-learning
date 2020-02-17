@@ -78,7 +78,7 @@
         </div>
         
         <div class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading}"
-        v-if="!disableSubmit" @click="$refs.confirm.active = true">
+        v-if="!disableSubmit" @click="$refs.confirm.active = true" disabled>
           提交 <i class="feather icon-arrow-right"></i>
         </div>
         <div class="btn btn-lg btn-secondary submit"

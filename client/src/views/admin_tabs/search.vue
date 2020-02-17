@@ -127,7 +127,7 @@ export default {
     classnames: [],
     student_columns,
     student_class_columns,
-    years: [],
+    years: ['初一', '初二', '初三', '高一理', '高一文', '高二理', '高二文', '高三理', '高三文', '高三商'],
     selected_year: "",
     selected_class: "",
 
@@ -136,7 +136,6 @@ export default {
     student_table_list: [],
   }),
   mounted() {
-    this.years = ['初一', '初二', '初三', '高一理', '高一文', '高二理', '高二文', '高三理', '高三文', '高三商'];
     getLessonsList().then(({data}) => { this.lessons = data; });
     getAllClasses() .then(({data}) => { this.classes = data; });
     getAllUsers()   .then(({data}) => { this.students = data; });

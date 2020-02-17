@@ -6,6 +6,9 @@ export default {
   mutations: {
     SET_LESSON(state, lesson) {
       state.lesson = lesson;
+    },
+    RESET_LESSON(state) {
+      state.lesson = {};
     }
   }
 }
