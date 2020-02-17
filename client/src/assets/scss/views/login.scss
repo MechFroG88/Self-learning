@@ -42,8 +42,8 @@
       .form-input {
         border-width: 1.5px;
         transition-duration: all 300ms;
-        padding-left: .5rem; 
-        padding-right: .5rem;
+        padding-left: 1rem; 
+        padding-right: 1rem;
         &#student_ic {
           &:focus::placeholder {
             opacity: 1;
