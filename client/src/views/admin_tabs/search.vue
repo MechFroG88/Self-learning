@@ -71,7 +71,10 @@
           data_type == 1 ? selected_name ? 
           lesson_columns : lesson_name_columns :
           selected_class.length ? student_columns : student_class_columns"
-        :filename="'filename'"
+        :filename="
+          data_type == 1 ? selected_name ?
+          `${filenames[selected_session]}(${selected_name})` : filenames[selected_session] :
+          selected_year+selected_class"
         :sheetname="'sheet1'"
         >
         输出&下载excel文档
@@ -122,6 +125,7 @@ export default {
     selected_lessons_name: [],
     selected_lessons_id: [],
     sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7]],
+    filenames: ['第1-3节', '第4-5节', '第6-7节', '第4-7节'],
 
     classes: [],
     classnames: [],
@@ -137,8 +141,13 @@ export default {
   }),
   mounted() {
     getLessonsList().then(({data}) => { this.lessons = data; });
-    getAllClasses() .then(({data}) => { this.classes = data; });
     getAllUsers()   .then(({data}) => { this.students = data; });
+    getAllClasses() .then(({data}) => { 
+      this.classes = data; 
+      this.classnames = this.classes
+                          .filter(el => el.cn_name.includes('初一'))
+                          .map(el => el.cn_name[el.cn_name.length-2]);
+    });
   },
   methods: {
     check(type) {
@@ -184,15 +193,18 @@ export default {
             el.third = names[2];
           });
 
-          // Sort by class if querying for whole year/school
+          // Sort by class (and year) if querying for whole year/school
           if (!this.selected_class) this.student_table_list.sort((a, b) => {
             let classcmp = this.classnames.indexOf(a.class[a.class.length-2])-this.classnames.indexOf(b.class[b.class.length-2]),
+                yearcmp = this.years.indexOf(a.class.substr(0,a.class.length-3))-this.years.indexOf(b.class.substr(0,b.class.length-3)),
                 gendercmp = a.gender == b.gender ? 0 : a.gender == '女' ? -1 : 1;
-            return classcmp == 0 ?
-              gendercmp == 0 ?
-                a.class_no-b.class_no
-              : gendercmp 
-            : classcmp;
+            return yearcmp == 0 ? 
+              classcmp == 0 ?
+                gendercmp == 0 ?
+                  a.class_no-b.class_no
+                : gendercmp 
+              : classcmp
+            : yearcmp;
           });
         }
       })
