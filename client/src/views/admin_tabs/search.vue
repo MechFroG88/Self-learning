@@ -193,7 +193,7 @@ export default {
             el.third = names[2];
           });
 
-          // Sort by class if querying for whole year/school
+          // Sort by class (and year) if querying for whole year/school
           if (!this.selected_class) this.student_table_list.sort((a, b) => {
             let classcmp = this.classnames.indexOf(a.class[a.class.length-2])-this.classnames.indexOf(b.class[b.class.length-2]),
                 yearcmp = this.years.indexOf(a.class.substr(0,a.class.length-3))-this.years.indexOf(b.class.substr(0,b.class.length-3)),
