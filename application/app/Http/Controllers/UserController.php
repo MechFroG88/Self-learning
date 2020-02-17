@@ -168,7 +168,7 @@ class UserController extends Controller
 
     public function submit(Request $data)
     {
-        if (App::environment('production')){
+        if (env('APP_ENV') == 'production'){
             $now = new DateTime();
             $start = DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-18 20:00:00');   
             $end = DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-21 20:00:00'); 
