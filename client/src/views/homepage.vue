@@ -78,7 +78,7 @@
         </div>
 
         <button class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading, 'tooltip tooltip-left': tempDisableSubmit}"
-        :data-tooltip="`提交开放时段： \n 18/2/2020 20:00 - 21/2/2020 20:00 \n 开放时间在${time(new Date('2020-02-18T20:00:00'))}`"
+        :data-tooltip="`提交开放时段： \n 18/2 20:00 - 21/2 20:00 \n 开放时间在${time(new Date('2020-02-18T20:00:00'))}`"
         v-if="!disableSubmit" @click="$refs.confirm.active = true" :disabled="tempDisableSubmit">
           提交 <i class="feather icon-arrow-right"></i>
         </button>
@@ -164,6 +164,7 @@ export default {
   },
   mounted() {
     this.init();
+    // Change the view mode for different screen sizes
     this.rowSize = this.defaultRowSize;
     if (window.innerWidth > 840) this.rowSize = 1;
     window.addEventListener('resize', () => {
@@ -172,7 +173,7 @@ export default {
     })
   },
   data: () => ({
-    tempDisableSubmit: true, // temporarily disable button for non-submitting periods
+    tempDisableSubmit: process.env.NODE_ENV == 'production', // temporarily disable button for non-submitting periods
     defaultRowSize: 2, // row size for phone/small window mode
     rowSize: null,
     isPageLoading: true,
@@ -332,10 +333,11 @@ export default {
         }).finally(() => this.isSubmitLoading = false)
     },
     invalidSelect(ind) {
-      return (ind == 1 || ind == 2) ? this.selectedBool[3] : ind == 3 ? (this.selectedBool[1] || this.selectedBool[2]) : false
+      // Test if a session is still selectable without conflicts arising
+      return (ind == 1 || ind == 2) ? this.selectedBool[3] : ind == 3 ? (this.selectedBool[1] || this.selectedBool[2]) : false;
     },
     clearConflict() {
-      // prevent 4-5 and 6-7 confusion with 4-7
+      // prevent 4-5 and 6-7 confusion with 4-7 when presetting submitted/selected data
       if (this.id[1] == this.id[2] && this.id[1] != 0) {
         let id = this.id[1], name = this.name[1];
         this.dis[1] = false; this.dis[2] = false;
@@ -348,7 +350,6 @@ export default {
     },
     time(date) {
       moment.locale("zh-cn");
-      // console.log(moment(), date)
       return moment().to(date);
     }
   },

@@ -15,8 +15,10 @@ class UserController extends Controller
 
     private $rules = [
         "id"       => "required|integer|unique:users,id",
+        "class_no" => "requried|integer",
         "class_id" => "required|integer",
         "cn_name"  => ["required","regex:/[\x{4e00}-\x{9fa5}]+/u"],
+        "en_name"  => "required",
         "ic"       => "required",
         "type"     => "required|integer|between:0,1",
         "gender"   => "required|in:男,女",
@@ -134,7 +136,7 @@ class UserController extends Controller
     public function get_lesson()
     {
         $user = User::find(Auth::id());
-        $current_year = (int)date('y')-intdiv(Auth::id(),10000)+1;
+        $current_year = (int)(($user->classes->en_name)[0]);
         $class = $user->classes->cn_name;
         $stream = '无';
         if (strstr($class,'理')) $stream = '理';
@@ -210,7 +212,7 @@ class UserController extends Controller
         foreach ($lessons as $lesson){
             $single = Lesson::findOrFail($lesson);
             if ($single->current >= $single->limit) $slot = false;
-            $current_year = (int)date('y')-intdiv(Auth::id(),10000)+1;
+            $current_year = (int)(($user->classes->en_name)[0]);
             $not_allowed = true;
             if ($single->stream == '理' && $stream != '理') $not_allowed = false;
             if ($single->stream == '文' && $stream != '文') $not_allowed = false;
