@@ -28,9 +28,15 @@ paths:
             id:
               type: "string"
               example: "150142"
+            class_no:
+              type: "integer"
+              example: 1
             cn_name:
               type: "string"
               example: "常常"
+            en_name:
+              type: "string"
+              example: "hello"
             type:
               type: "integer"
               example: 1
@@ -64,10 +70,16 @@ paths:
             properties:
                 id:
                   type: "string"
-                  example: "140123"
+                  example: "150142"
+                class_no:
+                  type: "integer"
+                  example: 1
                 cn_name:
                   type: "string"
-                  example: "和恶"
+                  example: "常常"
+                en_name:
+                  type: "string"
+                  example: "hello"
                 class:
                   type: "string"
                   example: "高三理忠"
@@ -112,10 +124,16 @@ paths:
               properties:
                 id:
                   type: "string"
-                  example: "140123"
+                  example: "150142"
+                class_no:
+                  type: "integer"
+                  example: 1
                 cn_name:
                   type: "string"
-                  example: "和恶"
+                  example: "常常"
+                en_name:
+                  type: "string"
+                  example: "hello"
                 class:
                   type: "string"
                   example: "高三理忠"
@@ -163,10 +181,16 @@ paths:
               properties:
                 id:
                   type: "string"
-                  example: "140123"
+                  example: "150142"
+                class_no:
+                  type: "integer"
+                  example: 1
                 cn_name:
                   type: "string"
-                  example: "和恶"
+                  example: "常常"
+                en_name:
+                  type: "string"
+                  example: "hello"
                 class:
                   type: "string"
                   example: "高三理忠"
@@ -287,9 +311,15 @@ paths:
             id:
               type: "string"
               example: "150142"
+            class_no:
+              type: "integer"
+              example: 1
             cn_name:
               type: "string"
               example: "常常"
+            en_name:
+              type: "string"
+              example: "hello"
             ic:
               type: "string"
               example: "123456-78-1234"
@@ -598,10 +628,16 @@ paths:
                     properties:
                       id:
                         type: "string"
-                        example: "140123"
+                        example: "150142"
+                      class_no:
+                        type: "integer"
+                        example: 1
                       cn_name:
                         type: "string"
-                        example: "和恶"
+                        example: "常常"
+                      en_name:
+                        type: "string"
+                        example: "hello"
                       gender:
                         type: "string"
                         example: "男"
@@ -638,10 +674,16 @@ paths:
               properties:
                 id:
                   type: "string"
-                  example: "140123"
+                  example: "150142"
+                class_no:
+                  type: "integer"
+                  example: 1
                 cn_name:
                   type: "string"
-                  example: "和恶"
+                  example: "常常"
+                en_name:
+                  type: "string"
+                  example: "hello"
                 gender:
                   type: "string"
                   example: "男"

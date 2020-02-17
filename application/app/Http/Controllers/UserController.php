@@ -15,8 +15,10 @@ class UserController extends Controller
 
     private $rules = [
         "id"       => "required|integer|unique:users,id",
+        "class_no" => "requried|integer",
         "class_id" => "required|integer",
         "cn_name"  => ["required","regex:/[\x{4e00}-\x{9fa5}]+/u"],
+        "en_name"  => "required",
         "ic"       => "required",
         "type"     => "required|integer|between:0,1",
         "gender"   => "required|in:男,女",
