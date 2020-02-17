@@ -15,6 +15,13 @@ export function getAllLessons() {
   })
 }
 
+export function getLessonsList() {
+  return request({
+    url: '/lessons',
+    method: 'GET'
+  })
+}
+
 export function getLessonUsers(id) {
   return request({
     url: `/lesson/${id}`,
