@@ -11,6 +11,6 @@
   font-family: 'Noto Sans SC', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #747474;
+  color: #707070;
 }
 </style>
