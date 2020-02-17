@@ -76,15 +76,16 @@
             <!-- Accordion body -->
           </div>
         </div>
-        
-        <div class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading}"
-        v-if="!disableSubmit" @click="$refs.confirm.active = true" disabled>
+
+        <button class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading, 'tooltip tooltip-left': tempDisableSubmit}"
+        :data-tooltip="`提交开放时段： \n 18/2/2020 20:00 - 21/2/2020 20:00 \n 开放时间在${time(new Date('2020-02-18T20:00:00'))}`"
+        v-if="!disableSubmit" @click="$refs.confirm.active = true" :disabled="tempDisableSubmit">
           提交 <i class="feather icon-arrow-right"></i>
-        </div>
-        <div class="btn btn-lg btn-secondary submit"
+        </button>
+        <button class="btn btn-lg btn-secondary submit"
         v-else @click="$refs.list.active = true">
           查阅 <i class="feather icon-check"></i>
-        </div>
+        </button>
       </div>
     </div>
 
@@ -146,6 +147,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import { mapState, mapMutations } from 'vuex';
 import { userLogout, getUser, getUserLessons, submitUser } from '@/api/user';
 import colors from '@/api/colors.json';
@@ -170,6 +172,7 @@ export default {
     })
   },
   data: () => ({
+    tempDisableSubmit: true, // temporarily disable button for non-submitting periods
     defaultRowSize: 2, // row size for phone/small window mode
     rowSize: null,
     isPageLoading: true,
@@ -342,6 +345,11 @@ export default {
         this.selectedBool[3] = true;
         this.select({ind: 3, id, name});
       }
+    },
+    time(date) {
+      moment.locale("zh-cn");
+      // console.log(moment(), date)
+      return moment().to(date);
     }
   },
   computed: {
