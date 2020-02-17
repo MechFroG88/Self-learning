@@ -61,7 +61,7 @@
         &:focus, &.active {
           border-color: $primary-color;
           box-shadow: 0 0 0 0.1rem $secondary-color;
-          // border-radius: .8rem;
+          border-radius: .8rem;
           &~.custom-form-label {
             top: -.1rem;
             font-size: $font-size-lg;
