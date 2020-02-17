@@ -71,7 +71,10 @@
           data_type == 1 ? selected_name ? 
           lesson_columns : lesson_name_columns :
           selected_class.length ? student_columns : student_class_columns"
-        :filename="'filename'"
+        :filename="
+          data_type == 1 ? selected_name ?
+          `${filenames[selected_session]}(${selected_name})` : filenames[selected_session] :
+          selected_year+selected_class"
         :sheetname="'sheet1'"
         >
         输出&下载excel文档
@@ -122,6 +125,7 @@ export default {
     selected_lessons_name: [],
     selected_lessons_id: [],
     sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7]],
+    filenames: ['第1-3节', '第4-5节', '第6-7节', '第4-7节'],
 
     classes: [],
     classnames: [],
