@@ -178,21 +178,21 @@ export default {
     rowSize: null,
     isPageLoading: true,
     isSubmitLoading: false,
-    titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节'],
-    sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7]],
-    accordions: new Array(4).fill(false),
-    selectedBool: new Array(4).fill(false), // to prevent collission selections
+    titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节', '第 1 - 7 节'],
+    sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7], [1,2,3,4,5,6,7]],
+    accordions: new Array(5).fill(false),
+    selectedBool: new Array(5).fill(false), // to prevent collission selections
+    dis: new Array(5).fill(false), // disable accordions for submitted sessions
+    locked: new Array(5).fill(false), // forced lessons
+    lessons: [[], [], [], [], []], // display data
     actives: new Array(7).fill(false), // current chosen periods before submission
     chosen: new Array(7).fill(false), // chosen periods from user object
     chosenId: [], //chosen period IDs from user object
     color: {},
     colors,
-    dis: new Array(4).fill(false), // disable accordions for submitted sessions
-    locked: new Array(4).fill(false), // forced lessons
     disableSubmit: false,
     user: {}, // user object
     lessonArr: [], // all lessons
-    lessons: [[], [], [], []], // display data
     detailLesson: {}, // lesson to have details displayed
     year: 0,
     logoutLoad: false,
