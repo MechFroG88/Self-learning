@@ -1,0 +1,14 @@
+#_details {
+  .form-group-row {
+    margin-bottom: .8rem;
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+  
+  .btn {
+    .feather::before {
+      border: none;
+    }
+  }
+}
