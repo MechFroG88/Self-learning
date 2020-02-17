@@ -7,7 +7,7 @@
   left: 50%; top: 50%;
   transform: translate(-50%, -50%);
   // height: 100vh;
-  max-width: 500px;
+  max-width: 600px;
   .logo {
     // position: absolute;
     display: flex;
@@ -42,8 +42,8 @@
       .form-input {
         border-width: 1.5px;
         transition-duration: all 300ms;
-        padding-left: 1rem; 
-        padding-right: 1rem;
+        padding-left: .5rem; 
+        padding-right: .5rem;
         &#student_ic {
           &:focus::placeholder {
             opacity: 1;
@@ -61,7 +61,7 @@
         &:focus, &.active {
           border-color: $primary-color;
           box-shadow: 0 0 0 0.1rem $secondary-color;
-          border-radius: .8rem;
+          // border-radius: .8rem;
           &~.custom-form-label {
             top: -.1rem;
             font-size: $font-size-lg;

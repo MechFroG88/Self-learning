@@ -36,7 +36,7 @@
               </div>
               <transition name="fade">
                 <small class="label label-rounded label-success"
-                v-if="locked[ind]">已绑定：{{ name[ind] }}</small>
+                v-if="locked[ind]">已保留：{{ name[ind] }}</small>
                 <small class="label label-rounded label-success"
                 v-else-if="dis[ind]">已呈交：{{ name[ind] }}</small>
                 <small class="label label-rounded label-primary"
@@ -63,7 +63,7 @@
                   :disable="dis[ind] || invalidSelect(ind) || locked[ind] || lesson.current == lesson.limit"
                   :disableMsg="dis[ind] ? '此时间段内已呈交活动' 
                    : invalidSelect(ind) ? '无法选择此时间段内的活动' 
-                          : locked[ind] ? '此阶段已有绑定的活动' 
+                          : locked[ind] ? '此阶段已有保留的活动' 
                                         : '此活动人数已满，请选择其他活动'"
                   :bg-color="color[lesson.subject]"
                   :active="id[ind] == lesson.id"
@@ -78,7 +78,7 @@
         </div>
 
         <button class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading, 'tooltip tooltip-left': tempDisableSubmit}"
-        :data-tooltip="`提交开放时段： \n 18/2 20:00 - 21/2 20:00 \n 开放时间在${time(new Date('2020-02-18T20:00:00'))}`"
+        :data-tooltip="`还未开放提交！ \n 提交开放时段： \n 18/2 20:00 - 21/2 20:00`"
         v-if="!disableSubmit" @click="$refs.confirm.active = true" :disabled="tempDisableSubmit">
           提交 <i class="feather icon-arrow-right"></i>
         </button>
