@@ -141,8 +141,13 @@ export default {
   }),
   mounted() {
     getLessonsList().then(({data}) => { this.lessons = data; });
-    getAllClasses() .then(({data}) => { this.classes = data; });
     getAllUsers()   .then(({data}) => { this.students = data; });
+    getAllClasses() .then(({data}) => { 
+      this.classes = data; 
+      this.classnames = this.classes
+                          .filter(el => el.cn_name.includes('初一'))
+                          .map(el => el.cn_name[el.cn_name.length-2]);
+    });
   },
   methods: {
     check(type) {
@@ -191,12 +196,15 @@ export default {
           // Sort by class if querying for whole year/school
           if (!this.selected_class) this.student_table_list.sort((a, b) => {
             let classcmp = this.classnames.indexOf(a.class[a.class.length-2])-this.classnames.indexOf(b.class[b.class.length-2]),
+                yearcmp = this.years.indexOf(a.class.substr(0,a.class.length-3))-this.years.indexOf(b.class.substr(0,b.class.length-3)),
                 gendercmp = a.gender == b.gender ? 0 : a.gender == '女' ? -1 : 1;
-            return classcmp == 0 ?
-              gendercmp == 0 ?
-                a.class_no-b.class_no
-              : gendercmp 
-            : classcmp;
+            return yearcmp == 0 ? 
+              classcmp == 0 ?
+                gendercmp == 0 ?
+                  a.class_no-b.class_no
+                : gendercmp 
+              : classcmp
+            : yearcmp;
           });
         }
       })
