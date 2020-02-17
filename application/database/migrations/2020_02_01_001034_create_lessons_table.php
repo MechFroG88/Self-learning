@@ -24,6 +24,8 @@ class CreateLessonsTable extends Migration
             $table->integer('limit');
             $table->integer('current')->default(0);
             $table->timestamps();
+            $table->index('gender');
+            $table->index('stream');
         });
     }
 
