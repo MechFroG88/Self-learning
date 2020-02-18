@@ -221,9 +221,9 @@ export default {
     }
   },
   watch: {
-    data_type() {
-      this.showTable = false;
-    },
+    data_type: function() { this.showTable = false; },
+    selected_name: function() { this.showTable = false; },
+    selected_class: function() { this.showTable = false; },
     selected_session(val) {
       if (this.data_type != 1) return ;
       this.showTable = false;
@@ -236,19 +236,13 @@ export default {
       this.selected_lessons_name = this.selected_lessons.map(el => el.name);
       this.selected_lessons_id = this.selected_lessons.map(el => el.id);
     },
-    selected_name() {
-      this.showTable = false;
-    },
     selected_year(val) {
       this.showTable = false;
       if (val == '' || !val) this.classnames = [];
       else this.classnames = this.classes
-                            .filter(el => el.cn_name.includes(val))
-                            .map(el => el.cn_name[el.cn_name.length-2]);
+                              .filter(el => el.cn_name.includes(val))
+                              .map(el => el.cn_name[el.cn_name.length-2]);
     },
-    selected_class() {
-      this.showTable = false;
-    }
   }
 }
 </script>

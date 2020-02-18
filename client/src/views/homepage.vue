@@ -150,6 +150,7 @@
 import moment from 'moment';
 import { mapState, mapMutations } from 'vuex';
 import { userLogout, getUser, getUserLessons, submitUser } from '@/api/user';
+import { getAllLessons } from '@/api/lesson';
 import colors from '@/api/colors.json';
 
 import headerLayout from '@/layout/header';
@@ -246,61 +247,6 @@ export default {
         })
       })
     },
-    logout() {
-      this.logoutLoad = true;
-      userLogout().then((data) => {
-        if (data.status == 200) {
-          this.reset();
-          this.$router.push('/');
-        }
-      }).finally(() => this.logoutLoad = false)
-    },
-    choose(ind, id, name) {
-      // Ignore click when user has already selected activity with same name in other sessions
-      if (this.name.indexOf(name) != -1 && this.id.indexOf(id) == -1) {
-        this.$notify({
-          type: 'warn',
-          title: '无法选择',
-          text: '此活动已在其他时间段选择',
-        });
-        return ;
-      }
-
-      if (id == this.id[ind]) {
-        // Deactivate card and progress bar
-        this.selectedBool[ind] = false;
-        this.sessions[ind].forEach(el => this.actives[el-1] = false);
-        this.select({ind, id: 0, name: ""});
-      } else {
-        // Activate card and progress bar
-        this.selectedBool[ind] = true;
-        this.sessions[ind].forEach(el => this.actives[el-1] = true);
-        this.select({ind, id, name})
-      }
-
-      // Update accordion and cards
-      this.$forceUpdate();
-    },
-    details(ind, lesson) {
-      this.$refs.detail.active = true;
-      this.detailLesson = { ind, ...lesson };
-    },
-    submit() {
-      this.isSubmitLoading = true;
-      // Filter selected IDs for sessions user hasn't selected for
-      let arr = this.id.filter(el => el != 0 && this.chosenId.indexOf(el) == -1);
-      if (arr.length == 0) return ;
-      submitUser({ lessons: arr })
-        .then((data) => {
-          this.$refs.confirm.active = false;
-          this.init();
-          this.$forceUpdate();
-        }).finally(() => this.isSubmitLoading = false)
-    },
-    invalidSelect(ind) {
-      // Test if a session is still selectable without conflicts arising
-      return (ind == 1 || ind == 2) ? this.selectedBool[3] : ind == 3 ? (this.selectedBool[1] || this.selectedBool[2]) : false;
-    },
     checkId(lessons, forced=false) {
       let period_lessons = [0,0,0,0,0,0,0];
       lessons.forEach(el => {
@@ -330,6 +276,61 @@ export default {
           break;
         }
       }
+    },
+    choose(ind, id, name) {
+      // Ignore click when user has already selected activity with same name in other sessions
+      if (this.name.indexOf(name) != -1 && this.id.indexOf(id) == -1) {
+        this.$notify({
+          type: 'warn',
+          title: '无法选择',
+          text: '此活动已在其他时间段选择',
+        });
+        return ;
+      }
+
+      if (id == this.id[ind]) {
+        // Deactivate card and progress bar
+        this.selectedBool[ind] = false;
+        this.sessions[ind].forEach(el => this.actives[el-1] = false);
+        this.select({ind, id: 0, name: ""});
+      } else {
+        // Activate card and progress bar
+        this.selectedBool[ind] = true;
+        this.sessions[ind].forEach(el => this.actives[el-1] = true);
+        this.select({ind, id, name})
+      }
+
+      // Update accordion and cards
+      this.$forceUpdate();
+    },
+    submit() {
+      this.isSubmitLoading = true;
+      // Filter selected IDs for sessions user hasn't selected for
+      let arr = this.id.filter(el => el != 0 && this.chosenId.indexOf(el) == -1);
+      if (arr.length == 0) return ;
+      submitUser({ lessons: arr })
+        .then((data) => {
+          this.$refs.confirm.active = false;
+          this.init();
+          this.$forceUpdate();
+        }).finally(() => this.isSubmitLoading = false)
+    },
+    details(ind, lesson) {
+      this.$refs.detail.active = true;
+      this.detailLesson = { ind, ...lesson };
+    },
+    invalidSelect(ind) {
+      // Test if a session is still selectable without conflicts arising
+      return (ind == 1 || ind == 2) ? this.selectedBool[3] : ind == 3 ? (this.selectedBool[1] || this.selectedBool[2]) : false;
+    },
+    logout() {
+      this.logoutLoad = true;
+      userLogout().then((data) => {
+        if (data.status == 200) {
+          this.reset();
+          this.$router.push('/');
+        }
+      }).finally(() => this.logoutLoad = false)
     },
     time(date) {
       moment.locale("zh-cn");
