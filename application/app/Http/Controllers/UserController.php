@@ -211,7 +211,6 @@ class UserController extends Controller
             if ($now > $end) return $this->fail();
         }
         
-        return $this->ok();
         $validator = Validator::make($data->all(), $this->submit_rules);
         if ($validator->fails()) return $this->fail();
         //if (User::find(Auth::id())->is_submit) return response("You have already submitted",400);
