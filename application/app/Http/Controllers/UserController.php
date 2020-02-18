@@ -244,7 +244,6 @@ class UserController extends Controller
 
     public function edit(Request $data,$id)
     {
-        var_dump($data->all());
         $validator = Validator::make($data->all(),$this->rules);
         if ($validator->fails()) return $this->fail();
         if ($id != $data->id) return $this->fail();
