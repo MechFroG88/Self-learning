@@ -79,7 +79,7 @@
 
         <button class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading, 'tooltip tooltip-left': tempDisableSubmit}"
         :data-tooltip="`还未开放提交！ \n 提交开放时段： \n 18/2 20:00 - 21/2 20:00`"
-        v-if="!disableSubmit" @click="$refs.confirm.active = true" :disabled="tempDisableSubmit">
+        v-if="!disableSubmit" @click="tempDisableSubmit ? () => {} : $refs.confirm.active = true">
           提交 <i class="feather icon-arrow-right"></i>
         </button>
         <button class="btn btn-lg btn-secondary submit"
