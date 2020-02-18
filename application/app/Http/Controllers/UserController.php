@@ -14,7 +14,7 @@ class UserController extends Controller
 {
 
     private $rules = [
-        "id"       => "required|integer|unique:users,id",
+        "id"       => "required|integer",
         "class_no" => "requried|integer",
         "class_id" => "required|integer",
         "cn_name"  => ["required","regex:/[\x{4e00}-\x{9fa5}]+/u"],
@@ -246,7 +246,6 @@ class UserController extends Controller
     {
         $validator = Validator::make($data->all(),$this->rules);
         if ($validator->fails()) return $this->fail();
-        if ($id != $data->id) return $this->fail();
         $data->merge(['ic' => Hash::make($data->ic)]); 
         User::where('id', $id)
             ->update([
