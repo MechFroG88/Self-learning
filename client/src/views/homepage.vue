@@ -180,11 +180,11 @@ export default {
     isSubmitLoading: false,
     titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节', '第 1 - 7 节'],
     sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7], [1,2,3,4,5,6,7]],
-    accordions: new Array(5).fill(false),
+    accordions: null,
     selectedBool: new Array(5).fill(false), // to prevent collission selections
     dis: new Array(5).fill(false), // disable accordions for submitted sessions
     locked: new Array(5).fill(false), // forced lessons
-    lessons: [[], [], [], [], []], // display data
+    lessons: null, // display data
     actives: new Array(7).fill(false), // current chosen periods before submission
     chosen: new Array(7).fill(false), // chosen periods from user object
     chosenId: [], //chosen period IDs from user object
@@ -203,14 +203,15 @@ export default {
       reset: 'RESET'
     }),
     init() {
-      this.accordions = new Array(4).fill(false);
-      this.lessons = [[],[],[],[]];
+      this.accordions = new Array(5).fill(false);
+      this.lessons = [[],[],[],[],[]];
       this.chosenId = [];
       getUser().then(({data}) => {
         this.user = data;
         this.isPageLoading = false;
         // get current year of user
-        let years = ['初一', '初二', '初三', '高一', '高二', '高三'];
+        let years = ['初一', '初二', '初三', '高一', '高二', '高三'],
+            period_lessons = [0,0,0,0,0,0,0];
         this.year = years.indexOf(this.user.class.substr(0, 2)) + 1;
         getUserLessons().then(({data}) => {
           let subs = new Set(), count = 0;
@@ -230,22 +231,32 @@ export default {
           // set user submit lessons as active
           this.user.lessons.forEach(el => {
             this.chosen[Object.keys(el)[0]-1] = true;
-            for (let i = 0; i < this.sessions.length; i++) {
-              if (this.sessions[i].indexOf(parseInt(Object.keys(el)[0])) != -1) {
-                this.dis[i] = true;
-                this.chosenId.push(el[Object.keys(el)[0]]);
-                this.selectedBool[i] = true;
-                this.sessions[i].forEach(elem => this.actives[elem-1] = true);
-                this.select({
-                  ind: i, 
-                  id: el[Object.keys(el)[0]], 
-                  name: this.lessons[i].filter(elem => elem.id == el[Object.keys(el)[0]])[0].name
-                })
-                break;
-              }
-            }
+            period_lessons[Object.keys(el)[0]-1] = el[Object.keys(el)[0]];
           });
-          this.clearConflict();
+
+          console.log(period_lessons)
+
+          for (let i = this.sessions.length-1; i >= 0; i--) {
+            let union = true, found = 0;
+            for (let j = 0; j < this.sessions[i].length; j++) {
+              if (found != 0 && found != period_lessons[this.sessions[i][j]-1]) {
+                union = false; break;
+              }
+              found = period_lessons[this.sessions[i][j]-1];
+            }
+            if (union && found != 0) {
+              this.dis[i] = true;
+              this.chosenId.push(found);
+              this.selectedBool[i] = true;
+              this.sessions[i].forEach(elem => this.actives[elem-1] = true);
+              this.select({
+                ind: i, 
+                id: found, 
+                name: this.lessons[i].filter(elem => elem.id == found)[0].name
+              })
+              break;
+            }
+          }
 
           // disable submit button for user who completed submission
           if (this.chosen.indexOf(false) == -1) this.disableSubmit = true;
@@ -258,26 +269,34 @@ export default {
             }
           })
 
-          // set user force_lessons as active
+          // set user force_lessons as active          
           this.user.forced_lessons.forEach(el => {
             this.chosen[Object.keys(el)[0]-1] = true;
-            for (let i = 0; i < this.sessions.length; i++) {
-              if (this.sessions[i].indexOf(parseInt(Object.keys(el)[0])) != -1) {
-                this.dis[i] = true;
-                this.locked[i] = true;
-                this.chosenId.push(el[Object.keys(el)[0]]);
-                this.selectedBool[i] = true;
-                this.sessions[i].forEach(elem => this.actives[elem-1] = true);
-                this.select({
-                  ind: i, 
-                  id: el[Object.keys(el)[0]], 
-                  name: this.lessons[i].filter(elem => elem.id == el[Object.keys(el)[0]])[0].name
-                })
-                break;
+            period_lessons[Object.keys(el)[0]-1] = el[Object.keys(el)[0]];
+          });
+
+          for (let i = 0; i < this.sessions.length; i++) {
+            let union = true, found = 0;
+            for (let j = 0; j < this.sessions[i].length; j++) {
+              if (found != 0 && found != period_lessons[this.sessions[i][j]-1]) {
+                union = false; break;
               }
+              found = period_lessons[this.sessions[i][j]-1];
             }
-          })
-          this.clearConflict();
+            if (union && found != 0) {
+              this.dis[i] = true;
+              this.chosenId.push(found);
+              this.locked[i] = true;
+              this.selectedBool[i] = true;
+              this.sessions[i].forEach(elem => this.actives[elem-1] = true);
+              this.select({
+                ind: i, 
+                id: found, 
+                name: this.lessons[i].filter(elem => elem.id == found)[0].name
+              })
+              break;
+            }
+          }
         })
       })
     },
