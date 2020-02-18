@@ -152,10 +152,10 @@ class UserController extends Controller
         $stream = '无';
         if (strstr($class,'理')) $stream = '理';
         else if (strstr($class,'文')) $stream = '文';
-        //$force_lesson = [];
-        // foreach ($user->lessons_force as $lesson_force){
-        //     array_push($force_lesson,$lesson_force->lesson_id);
-        // }
+        $force_lesson = [];
+        foreach ($user->lessons_force as $lesson_force){
+            array_push($force_lesson,$lesson_force->lesson_id);
+        }
         $lessons = Lesson::whereIn('gender',[$user->gender,'无'])
                          ->whereIn('stream',[$stream,'无'])
                          ->get();
@@ -180,24 +180,24 @@ class UserController extends Controller
 
             if ($ok) array_push($data,$single_data);
         }
-        // $lessons = Lesson::whereIn('id',$force_lesson)->get();
-        // foreach($lessons as $lesson){
-        //     $single_data = json_decode($lesson->toJson());
-        //     unset($single_data->periods);
-        //     unset($single_data->years);
-        //     $periods = $lesson->periods;
-        //     $years = $lesson->years;
-        //     $single_data->period = [];
-        //     $single_data->year = [];
-        //     foreach ($years as $year){
-        //         array_push($single_data->year,$year->year);
-        //     }
+        $lessons = Lesson::whereIn('id',$force_lesson)->get();
+        foreach($lessons as $lesson){
+            $single_data = json_decode($lesson->toJson());
+            unset($single_data->periods);
+            unset($single_data->years);
+            $periods = $lesson->periods;
+            $years = $lesson->years;
+            $single_data->period = [];
+            $single_data->year = [];
+            foreach ($years as $year){
+                array_push($single_data->year,$year->year);
+            }
 
-        //     foreach ($periods as $period){
-        //         array_push($single_data->period,$period->period);
-        //     }
-        //     array_push($data,$single_data);
-        // }
+            foreach ($periods as $period){
+                array_push($single_data->period,$period->period);
+            }
+            array_push($data,$single_data);
+        }
         return response($data,200);
     }
 
