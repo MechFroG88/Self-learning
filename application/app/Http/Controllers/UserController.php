@@ -246,7 +246,6 @@ class UserController extends Controller
     {
         $validator = Validator::make($data->all(),$this->rules);
         if ($validator->fails()) return $this->fail();
-        if ($id != $data->id) return $this->fail();
         $data->merge(['ic' => Hash::make($data->ic)]); 
         User::where('id', $id)
             ->update([
