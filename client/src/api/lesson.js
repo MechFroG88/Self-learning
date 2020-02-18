@@ -31,8 +31,8 @@ export function getLessonUsers(id) {
 
 export function editLesson(id, data) {
   return request({
-    url: `/lesson/${id}`,
-    method: 'PUT',
+    url: `/lesson/edit/${id}`,
+    method: 'POST',
     data
   })
 }
