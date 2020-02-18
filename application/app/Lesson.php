@@ -2,10 +2,13 @@
 
 namespace App;
 
+use Watson\Rememberable\Rememberable;
 use Illuminate\Database\Eloquent\Model;
 
 class Lesson extends Model
 {
+    use Rememberable;
+    public $rememberCacheTag = 'lesson_queries';
     /**
      * The primary key associated with the table.
      *

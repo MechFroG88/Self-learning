@@ -42,6 +42,8 @@ class LessonController extends Controller
                 ['lesson_id' => $id, 'year' => $year]
             );
         }
+        User::flushCache();
+        Lesson::flushCache();
         return $this->ok();
     }
 
@@ -154,11 +156,15 @@ class LessonController extends Controller
                 ['lesson_id' => $id, 'year' => $year]
             );
         }
+        User::flushCache();
+        Lesson::flushCache();
         return $this->ok();
     }
 
     public function delete(Request $data,$id)
     {
+        User::flushCache();
+        Lesson::flushCache();
         Lesson::where('id', $id)->delete();
         return $this->ok();
     }

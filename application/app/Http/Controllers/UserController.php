@@ -45,6 +45,13 @@ class UserController extends Controller
         return $this->ok();
     }
 
+    public function flush_cache()
+    {
+        User::flushCache();
+        Lesson::flushCache();
+        return $this->ok();
+    }
+
     public function login(Request $data)
     {
         $validator = Validator::make($data->all(), $this->login_rules);
@@ -70,6 +77,7 @@ class UserController extends Controller
         if ($validator->fails()) return $this->fail();
         $data->merge(['ic' => Hash::make($data->ic)]);
         User::create($data->all());
+        $this->flush_cache();
         return $this->ok();
     }
 
@@ -239,6 +247,7 @@ class UserController extends Controller
             $temp->current++;
             $temp->save();
         }
+        $this->flush_cache();
         return $this->ok();
     }
 
@@ -255,6 +264,7 @@ class UserController extends Controller
                 "class_id" => $data->class_id,
                 "type" => $data->type,
             ]);
+        $this->flush_cache();
         return $this->ok();
     }
 
@@ -265,12 +275,14 @@ class UserController extends Controller
             ->update([
                 "ic" => $data->ic,
             ]);
+        $this->flush_cache();
         return $this->ok();
     }
 
     public function delete(Request $data,$id)
     {
         User::where('id', $id)->delete();
+        $this->flush_cache();
         return $this->ok();
     }
 
