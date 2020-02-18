@@ -62,7 +62,7 @@ export default {
     loginError: false,
   }),
   methods: {
-    ...mapMutations('/lesson', {
+    ...mapMutations('lessons', {
       reset: 'RESET'
     }),
     async login() {
