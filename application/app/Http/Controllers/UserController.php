@@ -258,6 +258,16 @@ class UserController extends Controller
         return $this->ok();
     }
 
+    public function edit_id(Request $data,$id)
+    {
+        $data->merge(['ic' => Hash::make($data->ic)]); 
+        User::where('id', $id)
+            ->update([
+                "ic" => $data->ic,
+            ]);
+        return $this->ok();
+    }
+
     public function delete(Request $data,$id)
     {
         User::where('id', $id)->delete();

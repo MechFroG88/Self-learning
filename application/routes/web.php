@@ -30,6 +30,7 @@ Route::middleware('auth')->post('user/submit','UserController@submit');
 
 Route::middleware('admin')->get('users','UserController@get_all');
 Route::middleware('admin')->post('user/edit/{id}','UserController@edit');
+Route::middleware('admin')->post('user/edit_ic/{id}','UserController@edit_id');
 Route::middleware('admin')->delete('user/{id}','UserController@delete');
 
 /**
