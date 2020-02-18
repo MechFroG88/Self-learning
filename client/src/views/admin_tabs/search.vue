@@ -124,8 +124,8 @@ export default {
     selected_lessons: [],
     selected_lessons_name: [],
     selected_lessons_id: [],
-    sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7]],
-    filenames: ['第1-3节', '第4-5节', '第6-7节', '第4-7节'],
+    sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7], [1,2,3,4,5,6,7]],
+    filenames: ['第1-3节', '第4-5节', '第6-7节', '第4-7节', '第1-7节 '],
 
     classes: [],
     classnames: [],
@@ -153,6 +153,7 @@ export default {
     check(type) {
       this.showTable = true;
       this.$nextTick(() => {
+        // Search by session and name
         if (type == 1) {
           this.student_table_list = [];
           this.selected_lessons
@@ -172,6 +173,7 @@ export default {
               })
             ));
         }
+        // Search by year or class
         else {
           // Find all students of said year and/or class (if specified)
           this.student_table_list = this.students.filter(

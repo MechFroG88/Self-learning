@@ -38,8 +38,8 @@ export default {
     lessons: [],
     selected_lessons: [],
     session: -1,
-    titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节'],
-    sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7]],
+    titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节', '第 1 - 7 节'],
+    sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7], [1,2,3,4,5,6,7]],
   }),
   mounted() {
     getAllLessons().then(({data}) => {
