@@ -196,7 +196,7 @@ export default {
           });
 
           // Sort by class (and year) if querying for whole year/school
-          if (!this.selected_class) this.student_table_list.sort((a, b) => {
+          this.student_table_list = this.student_table_list.sort((a, b) => {
             let classcmp = this.classnames.indexOf(a.class[a.class.length-2])-this.classnames.indexOf(b.class[b.class.length-2]),
                 yearcmp = this.years.indexOf(a.class.substr(0,a.class.length-3))-this.years.indexOf(b.class.substr(0,b.class.length-3)),
                 gendercmp = a.gender == b.gender ? 0 : a.gender == '女' ? -1 : 1;
@@ -221,9 +221,9 @@ export default {
     }
   },
   watch: {
-    data_type() {
-      this.showTable = false;
-    },
+    data_type: function() { this.showTable = false; },
+    selected_name: function() { this.showTable = false; },
+    selected_class: function() { this.showTable = false; },
     selected_session(val) {
       if (this.data_type != 1) return ;
       this.showTable = false;
@@ -240,8 +240,8 @@ export default {
       this.showTable = false;
       if (val == '' || !val) this.classnames = [];
       else this.classnames = this.classes
-                            .filter(el => el.cn_name.includes(val))
-                            .map(el => el.cn_name[el.cn_name.length-2]);
+                              .filter(el => el.cn_name.includes(val))
+                              .map(el => el.cn_name[el.cn_name.length-2]);
     },
   }
 }

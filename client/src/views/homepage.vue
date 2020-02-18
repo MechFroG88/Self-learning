@@ -150,6 +150,7 @@
 import moment from 'moment';
 import { mapState, mapMutations } from 'vuex';
 import { userLogout, getUser, getUserLessons, submitUser } from '@/api/user';
+import { getAllLessons } from '@/api/lesson';
 import colors from '@/api/colors.json';
 
 import headerLayout from '@/layout/header';
@@ -210,8 +211,7 @@ export default {
         this.user = data;
         this.isPageLoading = false;
         // get current year of user
-        let years = ['初一', '初二', '初三', '高一', '高二', '高三'],
-            period_lessons = [0,0,0,0,0,0,0];
+        let years = ['初一', '初二', '初三', '高一', '高二', '高三'];
         this.year = years.indexOf(this.user.class.substr(0, 2)) + 1;
         getUserLessons().then(({data}) => {
           let subs = new Set(), count = 0;
@@ -228,11 +228,13 @@ export default {
             }
           });
 
-          // set user submit lessons as active
-          this.checkId(period_lessons, this.user.lessons);
-
           // disable submit button for user who completed submission
           if (this.chosen.indexOf(false) == -1) this.disableSubmit = true;
+
+          // set user submit lessons as active
+          this.checkId(this.user.lessons);
+          // set user force_lessons as active          
+          this.checkId(this.user.forced_lessons, true);
 
           // set initially chosen (haven't submit) lessons and progress bar
           this.id.forEach((el, ind) => {
@@ -242,19 +244,38 @@ export default {
             }
           })
 
-          // set user force_lessons as active          
-          this.checkId(period_lessons, this.user.forced_lessons, true);
         })
       })
     },
-    logout() {
-      this.logoutLoad = true;
-      userLogout().then((data) => {
-        if (data.status == 200) {
-          this.reset();
-          this.$router.push('/');
+    checkId(lessons, forced=false) {
+      let period_lessons = [0,0,0,0,0,0,0];
+      lessons.forEach(el => {
+        this.chosen[Object.keys(el)[0]-1] = true;
+        period_lessons[Object.keys(el)[0]-1] = el[Object.keys(el)[0]];
+      });
+
+      for (let i = this.sessions.length-1; i >= 0; i--) {
+        let union = true, found = 0;
+        for (let j = 0; j < this.sessions[i].length; j++) {
+          if (found != 0 && found != period_lessons[this.sessions[i][j]-1]) {
+            union = false; break;
+          }
+          found = period_lessons[this.sessions[i][j]-1];
         }
-      }).finally(() => this.logoutLoad = false)
+        if (union && found != 0) {
+          this.dis[i] = true;
+          this.chosenId.push(found);
+          this.locked[i] = forced;
+          this.selectedBool[i] = true;
+          this.sessions[i].forEach(elem => this.actives[elem-1] = true);
+          this.select({
+            ind: i, 
+            id: found, 
+            name: this.lessons[i].filter(elem => elem.id == found)[0].name
+          })
+          break;
+        }
+      }
     },
     choose(ind, id, name) {
       // Ignore click when user has already selected activity with same name in other sessions
@@ -282,10 +303,6 @@ export default {
       // Update accordion and cards
       this.$forceUpdate();
     },
-    details(ind, lesson) {
-      this.$refs.detail.active = true;
-      this.detailLesson = { ind, ...lesson };
-    },
     submit() {
       this.isSubmitLoading = true;
       // Filter selected IDs for sessions user hasn't selected for
@@ -298,38 +315,22 @@ export default {
           this.$forceUpdate();
         }).finally(() => this.isSubmitLoading = false)
     },
+    details(ind, lesson) {
+      this.$refs.detail.active = true;
+      this.detailLesson = { ind, ...lesson };
+    },
     invalidSelect(ind) {
       // Test if a session is still selectable without conflicts arising
       return (ind == 1 || ind == 2) ? this.selectedBool[3] : ind == 3 ? (this.selectedBool[1] || this.selectedBool[2]) : false;
     },
-    checkId(period_lessons, lessons, forced=false) {
-      lessons.forEach(el => {
-        this.chosen[Object.keys(el)[0]-1] = true;
-        period_lessons[Object.keys(el)[0]-1] = el[Object.keys(el)[0]];
-      });
-
-      for (let i = this.session.length-1; i >= 0; i--) {
-        let union = true, found = 0;
-        for (let j = 0; j < this.sessions[i].length; j++) {
-          if (found != 0 && found != period_lessons[this.sessions[i][j]-1]) {
-            union = false; break;
-          }
-          found = period_lessons[this.sessions[i][j]-1];
+    logout() {
+      this.logoutLoad = true;
+      userLogout().then((data) => {
+        if (data.status == 200) {
+          this.reset();
+          this.$router.push('/');
         }
-        if (union && found != 0) {
-          this.dis[i] = true;
-          this.chosenId.push(found);
-          this.locked[i] = forced;
-          this.selectedBool[i] = true;
-          this.sessions[i].forEach(elem => this.actives[elem-1] = true);
-          this.select({
-            ind: i, 
-            id: found, 
-            name: this.lessons[i].filter(elem => elem.id == found)[0].name
-          })
-          break;
-        }
-      }
+      }).finally(() => this.logoutLoad = false)
     },
     time(date) {
       moment.locale("zh-cn");
