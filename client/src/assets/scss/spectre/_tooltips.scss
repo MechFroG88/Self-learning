@@ -23,7 +23,8 @@
     z-index: $zindex-3;
   }
   &:focus,
-  &:hover {
+  &:hover,
+  &:focus-within {
     &::after {
       opacity: 1;
       transform: translate(-50%, -$unit-1);
@@ -41,7 +42,8 @@
       transform: translate(-$unit-1, 50%);
     }
     &:focus,
-    &:hover {
+    &:hover,
+    &:focus-within {
       &::after {
         transform: translate($unit-1, 50%);
       }
@@ -55,7 +57,8 @@
       transform: translate(-50%, -$unit-2);
     }
     &:focus,
-    &:hover {
+    &:hover,
+    &:focus-within {
       &::after {
         transform: translate(-50%, $unit-1);
       }
@@ -70,7 +73,8 @@
       transform: translate($unit-2, 50%);
     }
     &:focus,
-    &:hover {
+    &:hover,
+    &:focus-within {
       &::after {
         transform: translate(-$unit-1, 50%);
       }
