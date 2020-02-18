@@ -71,7 +71,7 @@ export default {
       if (validId.valid && validIc.valid) {
         this.isLoading = true;
         let icArr = this.student_ic.split("").filter(el => el != '-');
-        if (/^[0-9]{12}$/.test(icArr)) {
+        if (/^[0-9]{12}$/.test(icArr.join(''))) {
           icArr.splice(8, 0, '-');
           icArr.splice(6, 0, '-');
         }
