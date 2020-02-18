@@ -203,14 +203,15 @@ class UserController extends Controller
 
     public function submit(Request $data)
     {
-        return $this->fail();
-        if (env('APP_ENV') == 'production'){
+        if (env('APP_ENV') != 'local'){
             $now = new \DateTime();
             $start = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-18 20:00:00');   
-            $end = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-21 20:00:00'); 
-            if ($now < $start) return $this->fail();
+            $end = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-21 20:00:00');
+            if ($now < $start) return $this->fail();            
             if ($now > $end) return $this->fail();
         }
+        
+        return $this->ok();
         $validator = Validator::make($data->all(), $this->submit_rules);
         if ($validator->fails()) return $this->fail();
         //if (User::find(Auth::id())->is_submit) return response("You have already submitted",400);
