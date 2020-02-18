@@ -47,8 +47,8 @@ class UserController extends Controller
 
     public function flush_cache()
     {
-        User::flushCache();
-        Lesson::flushCache();
+        // User::flushCache();
+        // Lesson::flushCache();
         return $this->ok();
     }
 
