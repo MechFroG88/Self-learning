@@ -29,7 +29,7 @@ Route::middleware('auth')->get('user/lesson','UserController@get_lesson');
 Route::middleware('auth')->post('user/submit','UserController@submit');
 
 Route::middleware('admin')->get('users','UserController@get_all');
-Route::middleware('admin')->put('user/{id}','UserController@edit');
+Route::middleware('admin')->post('user/edit/{id}','UserController@edit');
 Route::middleware('admin')->delete('user/{id}','UserController@delete');
 
 /**
@@ -38,7 +38,7 @@ Route::middleware('admin')->delete('user/{id}','UserController@delete');
 
 Route::middleware('admin')->post('class','_ClassController@create');
 Route::middleware('admin')->get('class','_ClassController@get');
-Route::middleware('admin')->put('class/{id}','_ClassController@edit');
+Route::middleware('admin')->post('class/edit/{id}','_ClassController@edit');
 Route::middleware('admin')->delete('class/{id}','_ClassController@delete');
 
 /**
@@ -49,5 +49,5 @@ Route::middleware('admin')->post('lesson','LessonController@create');
 Route::middleware('auth')->get('lesson','LessonController@get');
 Route::middleware('admin')->get('lessons','LessonController@get_all');
 Route::middleware('admin')->get('lesson/{id}','LessonController@get_single');
-Route::middleware('admin')->put('lesson/{id}','LessonController@edit');
+Route::middleware('admin')->post('lesson/edit/{id}','LessonController@edit');
 Route::middleware('admin')->delete('lesson/{id}','LessonController@delete');
