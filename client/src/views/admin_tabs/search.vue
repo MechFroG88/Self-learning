@@ -173,6 +173,7 @@ export default {
               })
             ));
         }
+        
         // Search by year or class
         else {
           // Find all students of said year and/or class (if specified)
