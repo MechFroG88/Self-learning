@@ -15,7 +15,7 @@ class UserController extends Controller
 
     private $rules = [
         "id"       => "required|integer",
-        "class_no" => "requried|integer",
+        "class_no" => "required|integer",
         "class_id" => "required|integer",
         "cn_name"  => ["required","regex:/[\x{4e00}-\x{9fa5}]+/u"],
         "en_name"  => "required",
@@ -244,6 +244,7 @@ class UserController extends Controller
 
     public function edit(Request $data,$id)
     {
+        var_dump($data->all());
         $validator = Validator::make($data->all(),$this->rules);
         if ($validator->fails()) return $this->fail();
         if ($id != $data->id) return $this->fail();
