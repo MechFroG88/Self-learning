@@ -243,7 +243,7 @@ export default {
           })
 
           // set user force_lessons as active          
-          this.checkId(period_lessons, this.user.forced_lessons)
+          this.checkId(period_lessons, this.user.forced_lessons, true);
         })
       })
     },
@@ -302,13 +302,13 @@ export default {
       // Test if a session is still selectable without conflicts arising
       return (ind == 1 || ind == 2) ? this.selectedBool[3] : ind == 3 ? (this.selectedBool[1] || this.selectedBool[2]) : false;
     },
-    checkId(period_lessons, lessons) {
+    checkId(period_lessons, lessons, forced=false) {
       lessons.forEach(el => {
         this.chosen[Object.keys(el)[0]-1] = true;
         period_lessons[Object.keys(el)[0]-1] = el[Object.keys(el)[0]];
       });
 
-      for (let i = 0; i < this.sessions.length; i++) {
+      for (let i = this.session.length-1; i >= 0; i--) {
         let union = true, found = 0;
         for (let j = 0; j < this.sessions[i].length; j++) {
           if (found != 0 && found != period_lessons[this.sessions[i][j]-1]) {
@@ -319,7 +319,7 @@ export default {
         if (union && found != 0) {
           this.dis[i] = true;
           this.chosenId.push(found);
-          this.locked[i] = true;
+          this.locked[i] = forced;
           this.selectedBool[i] = true;
           this.sessions[i].forEach(elem => this.actives[elem-1] = true);
           this.select({
