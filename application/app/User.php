@@ -2,12 +2,15 @@
 
 namespace App;
 
+use \Watson\Rememberable\Rememberable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
 
 class User extends Authenticatable
 {
+    use Rememberable;
+    public $rememberCacheTag = 'user_queries';
 
     protected $table = 'users';
 
