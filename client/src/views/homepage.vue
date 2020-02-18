@@ -178,7 +178,7 @@ export default {
   },
   data: () => ({
     periodStart: '2020-02-18T20:00:00', // YYYY-MM-DDTHh:Mm:Ss
-    tempDisableSubmit: process.env.NODE_ENV == 'development', // temporarily disable button for non-submitting periods
+    tempDisableSubmit: process.env.NODE_ENV == 'production', // temporarily disable button for non-submitting periods
     defaultRowSize: 2, // row size for phone/small window mode
     rowSize: null,
     isPageLoading: true,
