@@ -26,7 +26,7 @@
         <validation-provider v-slot="{ errors }" ref="ic"
         :rules="{
           required: true,
-          regex: /^(?:[0-9]{6}[-]?[0-9]{2}[-]?[0-9]{4}|[0-9a-zA-Z]{0,9})$/
+          regex: /^(?:[0-9]{6}[-]?[0-9]{2}[-]?[0-9]{4}|[0-9a-zA-Z]{0,12}|[0-9]{2}\/[0-9]{2}\/[0-9]{4})$/
         }">
           <div class="form-group">
             <input class="form-input" type="password" id="student_ic"
