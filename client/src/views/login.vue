@@ -79,8 +79,8 @@ export default {
           id: this.student_id,
           ic: icArr.join('')
         }).then((data) => {
+          this.reset();
           if (data.status == 200) {
-            this.reset();
             getUser().then(({data}) => {
               if (data.type == 1) this.$router.push('/home');
               else this.$router.push('/admin');
