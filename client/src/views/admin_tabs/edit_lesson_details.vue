@@ -89,8 +89,8 @@ import { editLesson } from '@/api/lesson';
 export default {
   data: () => ({
     lesson_data: {},
-    titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节'],
-    sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7]],
+    titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节', '第 1 - 7 节'],
+    sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7], [1,2,3,4,5,6,7]],
     years: ['初一', '初二', '初三', '高一', '高二', '高三'],
     year_check: new Array(6).fill(false),
   }),
