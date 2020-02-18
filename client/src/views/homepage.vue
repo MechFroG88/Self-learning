@@ -168,6 +168,12 @@ export default {
     let now = new Date().getTime(), start = new Date(this.periodStart).getTime();
     this.tempDisableSubmit &= now < start;
 
+    if (start-now > 0) {
+      setTimeout(() => {
+        this.tempDisableSubmit = false;
+      }, start-now+500);
+    }
+
     // Change the view mode for different screen sizes
     this.rowSize = this.defaultRowSize;
     if (window.innerWidth > 840) this.rowSize = 1;
@@ -263,7 +269,7 @@ export default {
       for (let i = this.sessions.length-1; i >= 0; i--) {
         let union = true, found = 0;
         for (let j = 0; j < this.sessions[i].length; j++) {
-          if (found != 0 && found != period_lessons[this.sessions[i][j]-1]) {
+          if ((found != 0 && found != period_lessons[this.sessions[i][j]-1]) || period_lessons[this.sessions[i][j] - 1] == 0) {
             union = false; break;
           }
           found = period_lessons[this.sessions[i][j]-1];
