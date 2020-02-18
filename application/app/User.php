@@ -14,6 +14,8 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
+    protected $with = ['class','lessons','lessons_force'];
+
     /**
      * Indicates if the IDs are auto-incrementing.
      *
