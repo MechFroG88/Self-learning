@@ -154,7 +154,7 @@ class UserController extends Controller
         else if (strstr($class,'文')) $stream = '文';
         $force_lesson = [];
         foreach ($user->lessons_force as $lesson_force){
-            array_push($force_lesson,$lesson_force->lesson_id);
+            array_push($force_lesson,$lesson_force->id);
         }
         $lessons = Lesson::whereIn('gender',[$user->gender,'无'])
                          ->whereIn('stream',[$stream,'无'])
