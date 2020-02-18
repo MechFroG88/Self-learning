@@ -237,6 +237,7 @@ export default {
 
           // set user submit lessons as active
           this.checkId(this.user.lessons);
+          console.log(this.id)
           // set user force_lessons as active          
           this.checkId(this.user.forced_lessons, true);
 
@@ -277,9 +278,10 @@ export default {
             id: found, 
             name: this.lessons[i].filter(elem => elem.id == found)[0].name
           })
-          break;
+          this.sessions[i].forEach(el => period_lessons[el-1] = 0);
         }
       }
+
     },
     choose(ind, id, name) {
       // Ignore click when user has already selected activity with same name in other sessions
