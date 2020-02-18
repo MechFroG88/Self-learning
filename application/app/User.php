@@ -13,6 +13,7 @@ class User extends Authenticatable
     public $rememberCacheTag = 'user_queries';
 
     protected $table = 'users';
+    public $rememberFor = 1;
 
     protected $with = ['classes','lessons','lessons_force'];
 

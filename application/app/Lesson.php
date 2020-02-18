@@ -15,6 +15,7 @@ class Lesson extends Model
      * @var string
      */
     protected $table = 'lessons';
+    public $rememberFor = 1;
 
     protected $with = ['years','periods'];
 

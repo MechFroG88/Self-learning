@@ -273,7 +273,6 @@ class UserController extends Controller
             $temp->current++;
             $temp->save();
         }
-        $this->flush_cache();
         return $this->ok();
     }
 
