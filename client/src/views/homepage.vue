@@ -223,7 +223,9 @@ export default {
           this.lessonArr = data.sort((left, right) => (right.limit-right.current)-(left.limit-left.current));
           this.lessonArr.forEach(el => {
             for (let i = 0; i < this.lessons.length; i++)
-              if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i])) this.lessons[i].push(el);
+              if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i]) 
+                  && !this.lessons[i].filter(elem => elem.id == el.id).length)
+                    this.lessons[i].push(el);
 
             // assign a color for each unique subject
             if (!subs.has(el.subject)) {
@@ -237,7 +239,6 @@ export default {
 
           // set user submit lessons as active
           this.checkId(this.user.lessons);
-          console.log(this.id)
           // set user force_lessons as active          
           this.checkId(this.user.forced_lessons, true);
 
