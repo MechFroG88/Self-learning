@@ -16,6 +16,7 @@ class CreatePeriodsTable extends Migration
         Schema::create('periods', function (Blueprint $table) {
             $table->integer('lesson_id');
             $table->integer('period');
+            $table->index('lesson_id');
         });
     }
 
