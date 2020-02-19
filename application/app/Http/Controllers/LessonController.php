@@ -94,7 +94,7 @@ class LessonController extends Controller
 
     public function get_all()
     {
-        $lessons = Lesson::all();
+        $lessons = Lesson::with('users','users_force')->get();
         $data = [];
         foreach($lessons as $lesson){
             $single_data = json_decode($lesson->toJson());
