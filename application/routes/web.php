@@ -48,6 +48,8 @@ Route::middleware('admin')->delete('class/{id}','_ClassController@delete');
  * Lessons Route
  */
 
+Route::middleware('admin')->get('lesson/recount','LessonController@recount');
+
 Route::middleware('admin')->post('lesson','LessonController@create');
 Route::middleware('auth')->get('lesson','LessonController@get');
 Route::middleware('admin')->get('lessons','LessonController@get_all');

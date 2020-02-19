@@ -26,6 +26,19 @@ class LessonController extends Controller
         "year.*" => "required|integer",
     ];
 
+    public function recount()
+    {
+        $lesson_users = DB::table('lesson_user')->get();
+        foreach ($lesson_users as $lesson_user){
+            $lesson = Lesson::find($lesson_user->lesson_id);
+            $lesson->current++;
+            $lesson->save();
+        }
+        // User::flushCache();
+        Lesson::flushCache();
+        return $this->ok();
+    }
+
 
     public function create(Request $data)
     {
