@@ -165,6 +165,15 @@ export default {
   },
   mounted() {
     this.init();
+    let now = new Date().getTime(), start = new Date(this.periodStart).getTime();
+    this.tempDisableSubmit &= now < start;
+
+    if (start-now > 0) {
+      setTimeout(() => {
+        this.tempDisableSubmit = false;
+      }, start-now+500);
+    }
+
     // Change the view mode for different screen sizes
     this.rowSize = this.defaultRowSize;
     if (window.innerWidth > 840) this.rowSize = 1;
@@ -174,6 +183,7 @@ export default {
     })
   },
   data: () => ({
+    periodStart: '2020-02-18T20:00:00', // YYYY-MM-DDTHh:Mm:Ss
     tempDisableSubmit: process.env.NODE_ENV == 'production', // temporarily disable button for non-submitting periods
     defaultRowSize: 2, // row size for phone/small window mode
     rowSize: null,
@@ -219,7 +229,9 @@ export default {
           this.lessonArr = data.sort((left, right) => (right.limit-right.current)-(left.limit-left.current));
           this.lessonArr.forEach(el => {
             for (let i = 0; i < this.lessons.length; i++)
-              if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i])) this.lessons[i].push(el);
+              if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i]) 
+                  && !this.lessons[i].filter(elem => elem.id == el.id).length)
+                    this.lessons[i].push(el);
 
             // assign a color for each unique subject
             if (!subs.has(el.subject)) {
@@ -257,7 +269,7 @@ export default {
       for (let i = this.sessions.length-1; i >= 0; i--) {
         let union = true, found = 0;
         for (let j = 0; j < this.sessions[i].length; j++) {
-          if (found != 0 && found != period_lessons[this.sessions[i][j]-1]) {
+          if ((found != 0 && found != period_lessons[this.sessions[i][j]-1]) || period_lessons[this.sessions[i][j] - 1] == 0) {
             union = false; break;
           }
           found = period_lessons[this.sessions[i][j]-1];
@@ -273,9 +285,10 @@ export default {
             id: found, 
             name: this.lessons[i].filter(elem => elem.id == found)[0].name
           })
-          break;
+          this.sessions[i].forEach(el => period_lessons[el-1] = 0);
         }
       }
+
     },
     choose(ind, id, name) {
       // Ignore click when user has already selected activity with same name in other sessions

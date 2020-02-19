@@ -47,8 +47,8 @@ class UserController extends Controller
 
     public function flush_cache()
     {
-        User::flushCache();
-        Lesson::flushCache();
+        // User::flushCache();
+        // Lesson::flushCache();
         return $this->ok();
     }
 
@@ -83,7 +83,7 @@ class UserController extends Controller
 
     public function get_all()
     {
-        $users = User::with('classes','lessons','lessons_force')->where('type',1)->get();
+        $users = User::where('type',1)->get();
         $data = [];
         foreach ($users as $user){
             $single_data = json_decode($user->toJson());
@@ -118,6 +118,9 @@ class UserController extends Controller
     {
         $user = User::find(Auth::id());
         $data = json_decode($user->toJson());
+        unset($data->classes);
+        unset($data->lessons);
+        unset($data->lessons_force);
         $class = $user->classes;
         $lessons = $user->lessons;
         $lessons_force = $user->lessons_force;
@@ -149,6 +152,10 @@ class UserController extends Controller
         $stream = '无';
         if (strstr($class,'理')) $stream = '理';
         else if (strstr($class,'文')) $stream = '文';
+        $force_lesson = [];
+        foreach ($user->lessons_force as $lesson_force){
+            array_push($force_lesson,$lesson_force->id);
+        }
         $lessons = Lesson::whereIn('gender',[$user->gender,'无'])
                          ->whereIn('stream',[$stream,'无'])
                          ->get();
@@ -173,18 +180,37 @@ class UserController extends Controller
 
             if ($ok) array_push($data,$single_data);
         }
+        $lessons = Lesson::whereIn('id',$force_lesson)->get();
+        foreach($lessons as $lesson){
+            $single_data = json_decode($lesson->toJson());
+            unset($single_data->periods);
+            unset($single_data->years);
+            $periods = $lesson->periods;
+            $years = $lesson->years;
+            $single_data->period = [];
+            $single_data->year = [];
+            foreach ($years as $year){
+                array_push($single_data->year,$year->year);
+            }
+
+            foreach ($periods as $period){
+                array_push($single_data->period,$period->period);
+            }
+            array_push($data,$single_data);
+        }
         return response($data,200);
     }
 
     public function submit(Request $data)
     {
-        if (env('APP_ENV') == 'production'){
+        if (env('APP_ENV') != 'local'){
             $now = new \DateTime();
             $start = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-18 20:00:00');   
-            $end = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-21 20:00:00'); 
-            if ($now < $start) return $this->fail();
+            $end = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-21 20:00:00');
+            if ($now < $start) return $this->fail();            
             if ($now > $end) return $this->fail();
         }
+        
         $validator = Validator::make($data->all(), $this->submit_rules);
         if ($validator->fails()) return $this->fail();
         //if (User::find(Auth::id())->is_submit) return response("You have already submitted",400);
@@ -247,7 +273,6 @@ class UserController extends Controller
             $temp->current++;
             $temp->save();
         }
-        $this->flush_cache();
         return $this->ok();
     }
 

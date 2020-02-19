@@ -2,17 +2,20 @@
 
 namespace App;
 
-use \Watson\Rememberable\Rememberable;
+//use \Watson\Rememberable\Rememberable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
 
 class User extends Authenticatable
 {
-    use Rememberable;
-    public $rememberCacheTag = 'user_queries';
+    // use Rememberable;
+    // public $rememberCacheTag = 'user_queries';
 
     protected $table = 'users';
+    // public $rememberFor = 1;
+
+    protected $with = ['classes','lessons','lessons_force'];
 
     /**
      * Indicates if the IDs are auto-incrementing.

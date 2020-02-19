@@ -42,8 +42,8 @@ class LessonController extends Controller
                 ['lesson_id' => $id, 'year' => $year]
             );
         }
-        User::flushCache();
-        Lesson::flushCache();
+        // User::flushCache();
+        // Lesson::flushCache();
         return $this->ok();
     }
 
@@ -113,21 +113,21 @@ class LessonController extends Controller
                 array_push($single_data->period,$period->period);
             }
             
-            unset($single_data->users);
-            unset($single_data->users_force);
-            $single_data->user = [];
-            foreach ($lesson->users as $user){
-                $temp = json_decode($user->toJson());
-                unset($temp->pivot);
-                $temp->class = $user->classes->cn_name;
-                array_push($single_data->user,$temp);
-            }
-            foreach ($lesson->users_force as $user_force){
-                $temp = json_decode($user_force->toJson());
-                unset($temp->pivot);
-                $temp->class = $user_force->classes->cn_name;
-                array_push($single_data->user,$temp);
-            }
+            //unset($single_data->users);
+            //unset($single_data->users_force);
+            // $single_data->user = [];
+            // foreach ($lesson->users as $user){
+            //     $temp = json_decode($user->toJson());
+            //     unset($temp->pivot);
+            //     $temp->class = $user->classes->cn_name;
+            //     array_push($single_data->user,$temp);
+            // }
+            // foreach ($lesson->users_force as $user_force){
+            //     $temp = json_decode($user_force->toJson());
+            //     unset($temp->pivot);
+            //     $temp->class = $user_force->classes->cn_name;
+            //     array_push($single_data->user,$temp);
+            // }
             array_push($data,$single_data);
         }
         return response($data,200);
@@ -156,15 +156,15 @@ class LessonController extends Controller
                 ['lesson_id' => $id, 'year' => $year]
             );
         }
-        User::flushCache();
-        Lesson::flushCache();
+        // User::flushCache();
+        // Lesson::flushCache();
         return $this->ok();
     }
 
     public function delete(Request $data,$id)
     {
-        User::flushCache();
-        Lesson::flushCache();
+        // User::flushCache();
+        // Lesson::flushCache();
         Lesson::where('id', $id)->delete();
         return $this->ok();
     }
