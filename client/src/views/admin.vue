@@ -27,24 +27,42 @@
 
 <script>
 import { userLogout } from '@/api/user';
+import { getAllLessons } from '@/api/lesson';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   data: () => ({
     logout_load: false,
   }),
   mounted() {
-    
+    getAllLessons().then(({data}) => {
+      this.setLessons(data);
+    })
   },
   methods: {
+    ...mapMutations('admin_lessons', {
+      setLessons: 'SET_LESSONS',
+      resetLessons: 'RESET_LESSONS'
+    }),
+    ...mapMutations('user', {
+      logoutUser: 'LOGOUT'
+    }),
     logout() {
       this.logout_load = true;
       userLogout().then((data) => {
         if (data.status == 200) {
+          this.logoutUser();
+          this.resetLessons();
           this.$router.push('/');
         }
       }).finally(() => this.logout_load = false)
     }
   },
+  computed: {
+    ...mapState('user', {
+      user: 'user'
+    })
+  }
 }
 </script>
 

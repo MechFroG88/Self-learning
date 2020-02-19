@@ -105,7 +105,7 @@
               可查阅活动详情与须知。
             </span>
           </div>
-          <div class="text-gray" style="margin-left: -.8rem;">提交后将无法更改，是否确认提交？</div>
+          <!-- <div class="text-gray" style="margin-left: -.8rem;">提交后将无法更改，是否确认提交？</div> -->
         </ul>
         <div v-else>还未选择任何活动</div>
       </template>
@@ -202,7 +202,6 @@ export default {
     color: {},
     colors,
     disableSubmit: false,
-    user: {}, // user object
     lessonArr: [], // all lessons
     detailLesson: {}, // lesson to have details displayed
     year: 0,
@@ -213,51 +212,60 @@ export default {
       select: 'SELECT_LESSON',
       reset: 'RESET'
     }),
+    ...mapMutations('user', {
+      loginUser: 'LOGIN',
+      logoutUser: 'LOGOUT'
+    }),
     init() {
       this.accordions = new Array(5).fill(false);
       this.lessons = [[],[],[],[],[]];
       this.chosenId = [];
-      getUser().then(({data}) => {
-        this.user = data;
-        this.isPageLoading = false;
-        // get current year of user
-        let years = ['初一', '初二', '初三', '高一', '高二', '高三'];
-        this.year = years.indexOf(this.user.class.substr(0, 2)) + 1;
-        getUserLessons().then(({data}) => {
-          let subs = new Set(), count = 0;
-          // categorise lessons according to sessions
-          this.lessonArr = data.sort((left, right) => (right.limit-right.current)-(left.limit-left.current));
-          this.lessonArr.forEach(el => {
-            for (let i = 0; i < this.lessons.length; i++)
-              if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i]) 
-                  && !this.lessons[i].filter(elem => elem.id == el.id).length)
-                    this.lessons[i].push(el);
+      
+      // get current year of user
+      let years = ['初一', '初二', '初三', '高一', '高二', '高三'];
+      this.year = years.indexOf(this.user.class.substr(0, 2)) + 1;
 
-            // assign a color for each unique subject
-            if (!subs.has(el.subject)) {
-              this.color[el.subject] = this.colors[count++];
-              subs.add(el.subject);
-            }
-          });
+      getAllLessons().then(({data}) => {
+        let subs = new Set(), count = 0;
+        // categorise lessons according to sessions
+        this.lessonArr = data
+                          .filter(el => ((el.gender == '无' || el.gender == this.user.gender)
+                                      && (el.stream == '无' || el.stream == this.user.stream)
+                                      && el.year.indexOf(this.year) != -1)
+                                      || this.user.forced_lessons.map(elem => Object.values(elem)[0]).indexOf(el.id) != -1)
+                          .sort((left, right) => (right.limit-right.current)-(left.limit-left.current));
+                          
+        this.lessonArr.forEach(el => {
+          for (let i = 0; i < this.lessons.length; i++)
+            if (JSON.stringify(el.period.sort()) == JSON.stringify(this.sessions[i]) 
+                && !this.lessons[i].filter(elem => elem.id == el.id).length)
+                  this.lessons[i].push(el);
 
-          // disable submit button for user who completed submission
-          if (this.chosen.indexOf(false) == -1) this.disableSubmit = true;
+          // assign a color for each unique subject
+          if (!subs.has(el.subject)) {
+            this.color[el.subject] = this.colors[count++];
+            subs.add(el.subject);
+          }
+        });
 
-          // set user submit lessons as active
-          this.checkId(this.user.lessons);
-          // set user force_lessons as active          
-          this.checkId(this.user.forced_lessons, true);
+        // set user submit lessons as active
+        this.checkId(this.user.lessons);
+        // set user force_lessons as active          
+        this.checkId(this.user.forced_lessons, true);
 
-          // set initially chosen (haven't submit) lessons and progress bar
-          this.id.forEach((el, ind) => {
-            if (el) {
-              this.selectedBool[ind] = true;
-              this.sessions[ind].forEach(elem => this.actives[elem-1] = true);
-            }
-          })
+        // disable submit button for user who completed submission
+        if (this.chosen.indexOf(false) == -1) this.disableSubmit = true;
 
+        // set initially chosen (haven't submit) lessons and progress bar
+        this.id.forEach((el, ind) => {
+          if (el) {
+            this.selectedBool[ind] = true;
+            this.sessions[ind].forEach(elem => this.actives[elem-1] = true);
+          }
         })
       })
+
+      this.isPageLoading = false;
     },
     checkId(lessons, forced=false) {
       let period_lessons = [0,0,0,0,0,0,0];
@@ -323,9 +331,31 @@ export default {
       if (arr.length == 0) return ;
       submitUser({ lessons: arr })
         .then((data) => {
-          this.$refs.confirm.active = false;
-          this.init();
-          this.$forceUpdate();
+          if (data.status == 200) {
+            this.$refs.confirm.active = false;
+            this.$notify({
+              type: 'success',
+              title: '成功提交！'
+            });
+            this.isPageLoading = true;
+            this.loginUser(data.data);
+            this.init();
+            this.$forceUpdate();
+          }
+        })
+        .catch((err) => {
+          if (err.status == 400) {
+            this.$refs.confirm.active = false;
+            this.isPageLoading = true;
+            this.$notify({
+              type: 'error',
+              title: '提交失败！',
+              text: '您所提交的活动名额已满。请刷新页面后在重试。'
+            });
+            this.reset();
+            this.init();
+            this.$forceUpdate();
+          }
         }).finally(() => this.isSubmitLoading = false)
     },
     details(ind, lesson) {
@@ -341,6 +371,7 @@ export default {
       userLogout().then((data) => {
         if (data.status == 200) {
           this.reset();
+          this.logoutUser();
           this.$router.push('/');
         }
       }).finally(() => this.logoutLoad = false)
@@ -355,6 +386,9 @@ export default {
       id: 'selected_lesson_id',
       name: 'selected_lesson_name'
     }),
+    ...mapState('user', {
+      user: 'user'
+    })
   },
 }
 </script>

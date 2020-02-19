@@ -101,10 +101,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { userLogout } from '@/api/user';
 import { getAllUsers } from '@/api/user';
 import { getAllClasses } from '@/api/class';
-import { getAllLessons, getLessonUsers, getLessonsList } from '@/api/lesson';
+import { getLessonUsers, getLessonsList } from '@/api/lesson';
 import { lesson_columns, student_columns, student_class_columns, lesson_name_columns } from '@/api/tableColumns';
 
 import dataTable from '@/components/table';
@@ -118,7 +119,6 @@ export default {
     isCheckLoading: false,
     data_type: 1,
 
-    lessons: [],
     lesson_columns,
     lesson_name_columns,
     logout_load: false,
@@ -143,7 +143,6 @@ export default {
     student_table_list: [],
   }),
   mounted() {
-    getAllLessons().then(({data}) => { this.lessons = data; });
     getAllUsers()   .then(({data}) => { this.students = data; this.isPageLoading = false; });
     getAllClasses() .then(({data}) => { 
       this.classes = data; 
@@ -228,6 +227,11 @@ export default {
         }
       }).finally(() => this.logout_load = false)
     }
+  },
+  computed: {
+    ...mapState('admin_lessons', {
+      lessons: 'lessons'
+    })
   },
   watch: {
     data_type: function() { this.showTable = false; },

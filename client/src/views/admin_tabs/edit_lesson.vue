@@ -23,8 +23,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-import { getAllLessons } from '@/api/lesson';
+import { mapMutations, mapState } from 'vuex';
 import { lesson_list_columns } from '@/api/tableColumns';
 
 import lessonTable from '@/components/table';
@@ -35,17 +34,11 @@ export default {
   },
   data: () => ({
     lesson_list_columns,
-    lessons: [],
     selected_lessons: [],
     session: -1,
     titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节', '第 1 - 7 节'],
     sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7], [1,2,3,4,5,6,7]],
   }),
-  mounted() {
-    getAllLessons().then(({data}) => {
-      this.lessons = data;
-    })
-  },
   methods: {
     ...mapMutations('admin_edit', {
       set: 'SET_LESSON'
@@ -54,6 +47,11 @@ export default {
       this.set(lesson);
       this.$router.push('/admin/edit_lesson/details');
     }
+  },
+  computed: {
+    ...mapState('admin_lessons', {
+      lessons: 'lessons'
+    })
   },
   watch: {
     session(val) {

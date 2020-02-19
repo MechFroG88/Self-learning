@@ -5,6 +5,7 @@ import createPersistedState from 'vuex-persistedstate'
 import user from './modules/user';
 import lessons from './modules/lessons';
 import admin_edit from './modules/admin_edit';
+import admin_lessons from './modules/admin_lessons';
 
 Vue.use(Vuex)
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
     user,
     lessons,
     admin_edit,
+    admin_lessons
   },
   state: {
   },
