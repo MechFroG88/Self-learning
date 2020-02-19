@@ -87,7 +87,7 @@
 
     <data-table ref="table" class="mt-2"
     v-if="showTable" title hoverable
-    navbar="学生姓名"
+    navbar="学生学号"
     :columns="
       data_type == 1 ? selected_name ? 
       lesson_columns : lesson_name_columns :
