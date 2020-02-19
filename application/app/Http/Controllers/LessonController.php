@@ -30,9 +30,7 @@ class LessonController extends Controller
     {
         $lesson_users = DB::table('lesson_user')->get();
         foreach ($lesson_users as $lesson_user){
-            $lesson = Lesson::find($lesson_user->lesson_id);
-            $lesson->current++;
-            $lesson->save();
+            DB::table('lessons')->where('id',$lesson_user->lesson_id)->increment('current');
         }
         // User::flushCache();
         Lesson::flushCache();
