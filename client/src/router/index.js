@@ -7,11 +7,11 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    {
-      path: '*/*',
-      name: 'maintenance',
-      component: () => import('@/views/maintenance')
-    },
+    // {
+    //   path: '*/*',
+    //   name: 'maintenance',
+    //   component: () => import('@/views/maintenance')
+    // },
     {
       path: '/',
       name: 'login',

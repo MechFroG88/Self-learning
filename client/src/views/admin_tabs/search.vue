@@ -103,7 +103,6 @@
 <script>
 import { mapState } from 'vuex';
 import { userLogout } from '@/api/user';
-import { getAllUsers } from '@/api/user';
 import { getAllClasses } from '@/api/class';
 import { getLessonUsers, getLessonsList } from '@/api/lesson';
 import { lesson_columns, student_columns, student_class_columns, lesson_name_columns } from '@/api/tableColumns';
@@ -139,16 +138,15 @@ export default {
     selected_class: "",
 
     showTable: false,
-    students:[],
     student_table_list: [],
   }),
   mounted() {
-    getAllUsers()   .then(({data}) => { this.students = data; this.isPageLoading = false; });
     getAllClasses() .then(({data}) => { 
       this.classes = data; 
       this.classnames = this.classes
                           .filter(el => el.cn_name.includes('初一'))
                           .map(el => el.cn_name[el.cn_name.length-2]);
+      this.isPageLoading = false;
     });
   },
   methods: {
@@ -229,8 +227,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('admin_lessons', {
-      lessons: 'lessons'
+    ...mapState('admin_data', {
+      lessons: 'lessons',
+      students: 'users',
     })
   },
   watch: {

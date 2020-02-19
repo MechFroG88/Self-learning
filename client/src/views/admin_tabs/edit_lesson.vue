@@ -49,7 +49,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('admin_lessons', {
+    ...mapState('admin_data', {
       lessons: 'lessons'
     })
   },
