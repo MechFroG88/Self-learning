@@ -276,6 +276,12 @@ class UserController extends Controller
         return $this->get_current();
     }
 
+    public function reselect()
+    {
+        DB::table('lesson_user')->where('user_id',Auth::id())->delete();
+        return $this->get_current();
+    }
+
     public function edit(Request $data,$id)
     {
         $validator = Validator::make($data->all(),$this->rules);
