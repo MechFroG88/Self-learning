@@ -61,7 +61,7 @@
           }
         }
       }
-      .logout {
+      .settings {
         text-align: center;
         cursor: pointer;
         font-size: 1.2rem;
@@ -77,19 +77,53 @@
         }
 
         &:hover {
-          color: #707070;
+          color: $primary-color;
         }
 
         .feather {
-          font-size: 1rem;
+          font-size: 1.2rem;
           @media screen and (max-width: $size-lg) {
-            font-size: $font-size;
+            font-size: $font-size-lg;
           }
           @media screen and (max-width: $size-md) {
-            font-size: .6rem;
+            font-size: $font-size-sm;
           }
           @media screen and (max-width: $size-xs) {
-            font-size: .55rem;
+            font-size: .6rem;
+          }
+        }
+
+      }
+      .popover-container {
+        padding: .8rem;
+        width: $control-width-xs;
+        .card-body {
+          display: flex;
+          flex-direction: column;
+          .logout, .delete {
+            cursor: pointer;
+            font-size: .9rem;
+            @media screen and (max-width: $size-lg) {
+              font-size: .75rem;
+            }
+            @media screen and (max-width: $size-md) {
+              font-size: .55rem;
+            }
+            @media screen and (max-width: $size-xs) {
+              font-size: .5rem;
+            }
+            .feather {
+              font-size: 1.1rem;
+              @media screen and (max-width: $size-lg) {
+                font-size: .85rem;
+              }
+              @media screen and (max-width: $size-md) {
+                font-size: .65rem;
+              }
+              @media screen and (max-width: $size-xs) {
+                font-size: .6rem;
+              }            
+            }
           }
         }
       }

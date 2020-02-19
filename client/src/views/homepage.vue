@@ -17,9 +17,23 @@
             <div class="progress-bar"></div>
           </div>
         </div>
-        <div class="logout" @click="logout"
-        :class="{'loading': logoutLoad}">
-          <i class="feather icon-log-out"></i>登出
+        <div class="popover popover-right">
+          <div class="settings">
+            <i class="feather icon-settings mr-1"></i>设置
+          </div>
+          <div class="popover-container">
+            <div class="card">
+              <div class="card-body">
+                <span class="delete mb-2" @click="openDelete">
+                  <i class="feather icon-trash mr-2"></i>删除
+                </span>
+                <span class="logout mt-2" @click="logout"
+                :class="{'loading': logoutLoad}">
+                  <i class="feather icon-log-out mr-2"></i>登出
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -61,10 +75,10 @@
                   :num="lesson.current"
                   :classroom="lesson.location"
                   :disable="dis[ind] || invalidSelect(ind) || locked[ind] || lesson.current == lesson.limit"
-                  :disableMsg="dis[ind] ? '此时间段内已呈交活动' 
-                   : invalidSelect(ind) ? '无法选择此时间段内的活动' 
-                          : locked[ind] ? '此阶段已有保留的活动' 
-                                        : '此活动人数已满，请选择其他活动'"
+                  :disableMsg="locked[ind] ? '此阶段已有保留的活动'
+                      : invalidSelect(ind) ? '无法选择此时间段内的活动' 
+                                : dis[ind] ? '此时间段内已呈交活动' 
+                                           : '此活动人数已满，请选择其他活动'"
                   :bg-color="color[lesson.subject]"
                   :active="id[ind] == lesson.id"
                   class="c-hand"
@@ -105,7 +119,6 @@
               可查阅活动详情与须知。
             </span>
           </div>
-          <!-- <div class="text-gray" style="margin-left: -.8rem;">提交后将无法更改，是否确认提交？</div> -->
         </ul>
         <div v-else>还未选择任何活动</div>
       </template>
@@ -143,13 +156,33 @@
         </h6>
       </template>
     </modal>
+
+    <modal title="删除已呈交的活动" ref="delete"
+    :bodyData="[toDelete]">
+      <template v-slot:body="{ data }">
+        <div class="form-group"
+        v-for="(name, ind) in data[0].name" :key="ind">
+          <label class="form-checkbox">
+            <input type="checkbox" class="form-input" 
+            v-model="data[0].data[ind]">
+            <i class="form-icon"></i> {{ name }}
+          </label>
+        </div>
+      </template>
+      <template slot="footer">
+        <div class="btn btn-error float-right" :class="{'loading': deleteLoad}"
+        @click="deleteLessons">
+          删除
+        </div>
+      </template>
+    </modal>
   </div>
 </template>
 
 <script>
 import moment from 'moment';
 import { mapState, mapMutations } from 'vuex';
-import { userLogout, getUser, getUserLessons, submitUser } from '@/api/user';
+import { userLogout, getUser, removeUserLessons, submitUser } from '@/api/user';
 import { getAllLessons } from '@/api/lesson';
 import colors from '@/api/colors.json';
 
@@ -198,14 +231,20 @@ export default {
     lessons: null, // display data
     actives: new Array(7).fill(false), // current chosen periods before submission
     chosen: new Array(7).fill(false), // chosen periods from user object
-    chosenId: [], //chosen period IDs from user object
+    chosenId: [], // chosen period IDs from user object
     color: {},
     colors,
     disableSubmit: false,
     lessonArr: [], // all lessons
     detailLesson: {}, // lesson to have details displayed
+    toDelete: {
+      name: [],
+      id: [],
+      data: [],
+    },
     year: 0,
     logoutLoad: false,
+    deleteLoad: false,
   }),
   methods: {
     ...mapMutations('lessons', {
@@ -220,6 +259,11 @@ export default {
       this.accordions = new Array(5).fill(false);
       this.lessons = [[],[],[],[],[]];
       this.chosenId = [];
+      this.selectedBool = new Array(5).fill(false);
+      this.dis = new Array(5).fill(false);
+      this.locked = new Array(5).fill(false);
+      this.actives = new Array(7).fill(false);
+      this.chosen = new Array(7).fill(false);
       
       // get current year of user
       let years = ['初一', '初二', '初三', '高一', '高二', '高三'];
@@ -263,9 +307,9 @@ export default {
             this.sessions[ind].forEach(elem => this.actives[elem-1] = true);
           }
         })
-      })
 
-      this.isPageLoading = false;
+        this.isPageLoading = false;
+      })
     },
     checkId(lessons, forced=false) {
       let period_lessons = [0,0,0,0,0,0,0];
@@ -358,13 +402,48 @@ export default {
           }
         }).finally(() => this.isSubmitLoading = false)
     },
+    openDelete() {
+      this.$refs.delete.active = true;
+      this.id.forEach((el, ind) => {
+        if (this.chosenId.indexOf(el) != -1) {
+          this.toDelete.id.push(el);
+          this.toDelete.name.push(this.name[ind]);
+          this.toDelete.data.push(false);
+        }
+      })
+    },
+    deleteLessons() {
+      this.deleteLoad = true;
+      removeUserLessons({
+        lessons: this.toDelete.id.filter((el, ind) => this.toDelete.data[ind])
+      }).then((data) => {
+          if (data.status == 200) {
+            this.deleteLoad = false;
+            this.$refs.delete.active = false;
+            this.reset();
+            this.loginUser(data.data);
+            location.reload();
+          }
+        }).catch((err) => {
+          this.deleteLoad = false;
+          this.$refs.delete.active = false;
+          this.$notify({
+            type: 'error',
+            title: '无法删除此活动，请稍后再试。'
+          });
+          this.init();
+          this.$forceUpdate();
+        })
+    },
     details(ind, lesson) {
       this.$refs.detail.active = true;
       this.detailLesson = { ind, ...lesson };
     },
     invalidSelect(ind) {
       // Test if a session is still selectable without conflicts arising
-      return (ind == 1 || ind == 2) ? this.selectedBool[3] : ind == 3 ? (this.selectedBool[1] || this.selectedBool[2]) : false;
+      return (ind == 1 || ind == 2) ? this.selectedBool[3] : ind == 3 ? (this.selectedBool[1] || this.selectedBool[2]) 
+            : ind == 4 ? (this.selectedBool[0] || this.selectedBool[1] || this.selectedBool[2] || this.selectedBool[3])
+            : false;
     },
     logout() {
       this.logoutLoad = true;

@@ -52,6 +52,14 @@ export function submitUser(data) {
   })
 }
 
+export function removeUserLessons(data) {
+return request({
+  url: '/user/reselect',
+  method: 'POST',
+  data
+})
+}
+
 export function editUser(id, data) {
   return request({
     url: `/user/${id}`,
