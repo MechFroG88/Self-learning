@@ -124,8 +124,12 @@ class UserController extends Controller
         $class = $user->classes;
         $lessons = $user->lessons;
         $lessons_force = $user->lessons_force;
-        
-        if (isset($class->cn_name)) $data->class = $class->cn_name;
+        $data->stream = '无';
+        if (isset($class->cn_name)) {
+            $data->class = $class->cn_name;
+            if (strstr($class->cn_name,'理')) $data->stream = '理';
+            else if (strstr($class->cn_name,'文')) $data->stream = '文';
+        }
         $data->lessons = [];
         $data->forced_lessons = [];
         foreach($lessons as $lesson){
