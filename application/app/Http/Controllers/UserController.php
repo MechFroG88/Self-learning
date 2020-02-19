@@ -241,9 +241,9 @@ class UserController extends Controller
             }
         }
 
-        $lessons = Lesson::whereIn($data->lessons)->get();
+        $lessons_check = Lesson::whereIn('id',$data->lessons)->get();
 
-        foreach ($lessons as $lesson){
+        foreach ($lessons_check as $lesson){
             if ($lesson->current >= $lesson->limit) $slot = false;
             $current_year = (int)(($user->classes->en_name)[0]);
             $not_allowed = true;
@@ -261,10 +261,9 @@ class UserController extends Controller
             }
         }
 
-       
         if(!$slot) return response("Bad Request",400);
         User::where('id',Auth::id())->update(['is_submit' => 1]);
-        foreach ($lessons as $lesson){
+        foreach ($data->lessons as $lesson){
             DB::table('lesson_user')->insert(
                 ['user_id' => Auth::id(), 'lesson_id' => $lesson]
             );
@@ -276,9 +275,31 @@ class UserController extends Controller
         return $this->get_current();
     }
 
-    public function reselect()
+    public function reselect(Request $data)
     {
-        DB::table('lesson_user')->where('user_id',Auth::id())->delete();
+        if (env('APP_ENV') != 'local'){
+            $now = new \DateTime();
+            $start = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-18 20:00:00');   
+            $end = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-21 20:00:00');
+            if ($now < $start) return $this->fail();            
+            if ($now > $end) return $this->fail();
+        }
+        $validator = Validator::make($data->all(), $this->submit_rules);
+        if ($validator->fails()) return $this->fail();
+        $lessons_delete = $data->lessons;
+        $lessons = User::find(Auth::id())->lessons;
+        foreach ($lessons as $lesson){
+            if (in_array($lesson->id,$lessons_delete)){
+                DB::table('lesson_user')->where([
+                    'user_id' => Auth::id(),
+                    'lesson_id' => $lesson->id
+                ])->delete();
+                $temp = Lesson::find($lesson->id);   
+                $temp->current--;
+                $temp->save();
+            }
+        }
+        $this->flush_cache();
         return $this->get_current();
     }
 

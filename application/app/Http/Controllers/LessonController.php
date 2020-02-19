@@ -163,9 +163,9 @@ class LessonController extends Controller
 
     public function delete(Request $data,$id)
     {
+        Lesson::where('id', $id)->delete();
         // User::flushCache();
         Lesson::flushCache();
-        Lesson::where('id', $id)->delete();
         return $this->ok();
     }
 
