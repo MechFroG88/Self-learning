@@ -49,6 +49,7 @@ class LessonController extends Controller
 
     public function get()
     {
+        return $this->fail();
         $lessons = Lesson::all();
         $data = [];
         foreach($lessons as $lesson){
