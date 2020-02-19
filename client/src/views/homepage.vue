@@ -241,7 +241,7 @@ export default {
       name: [],
       id: [],
       data: [],
-    },
+    }, // for delete lessons
     year: 0,
     logoutLoad: false,
     deleteLoad: false,
@@ -403,6 +403,11 @@ export default {
         }).finally(() => this.isSubmitLoading = false)
     },
     openDelete() {
+      this.toDelete = {
+        name: [],
+        id: [],
+        data: []
+      };
       this.$refs.delete.active = true;
       this.id.forEach((el, ind) => {
         if (this.chosenId.indexOf(el) != -1) {
