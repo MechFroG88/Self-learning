@@ -292,6 +292,7 @@ class UserController extends Controller
         foreach ($lessons as $lesson){
             array_push($unique_lesson,$lesson->id);
         }
+        $unique_lesson = array_unique($unique_lesson);
         foreach ($unique_lesson as $lesson){
             if (in_array($lesson,$lessons_delete)){
                 DB::table('lesson_user')->where([
