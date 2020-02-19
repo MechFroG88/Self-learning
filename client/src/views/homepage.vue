@@ -248,13 +248,13 @@ export default {
           }
         });
 
-        // disable submit button for user who completed submission
-        if (this.chosen.indexOf(false) == -1) this.disableSubmit = true;
-
         // set user submit lessons as active
         this.checkId(this.user.lessons);
         // set user force_lessons as active          
         this.checkId(this.user.forced_lessons, true);
+
+        // disable submit button for user who completed submission
+        if (this.chosen.indexOf(false) == -1) this.disableSubmit = true;
 
         // set initially chosen (haven't submit) lessons and progress bar
         this.id.forEach((el, ind) => {
