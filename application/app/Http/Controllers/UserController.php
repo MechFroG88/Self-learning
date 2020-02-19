@@ -58,9 +58,7 @@ class UserController extends Controller
         if ($validator->fails()) return $this->fail();
         $id = $data->id;
         $ic = $data->ic;
-        $user = DB::table('users')->where('id',$id)->select('ic')->get();
-        if (isset($user) && $ic == $user->ic) {
-            Auth::login(id);
+        if (Auth::attempt(['id'=>$id, 'password'=>$ic],true)) {
             return $this->get_current();
         } else {
             return response("Unauthorized",401);
