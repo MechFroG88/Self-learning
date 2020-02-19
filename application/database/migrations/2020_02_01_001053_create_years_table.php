@@ -16,6 +16,7 @@ class CreateYearsTable extends Migration
         Schema::create('years', function (Blueprint $table) {
             $table->integer('lesson_id');
             $table->integer('year');
+            $table->index('lesson_id');
         });
     }
 
