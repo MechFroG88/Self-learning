@@ -261,10 +261,9 @@ class UserController extends Controller
             }
         }
 
-       
         if(!$slot) return response("Bad Request",400);
         User::where('id',Auth::id())->update(['is_submit' => 1]);
-        foreach ($lessons as $lesson){
+        foreach ($data->lessons as $lesson){
             DB::table('lesson_user')->insert(
                 ['user_id' => Auth::id(), 'lesson_id' => $lesson]
             );
