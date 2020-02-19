@@ -28,7 +28,7 @@
 <script>
 import { userLogout } from '@/api/user';
 import { getAllLessons } from '@/api/lesson';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
   data: () => ({
@@ -45,7 +45,7 @@ export default {
       resetLessons: 'RESET_LESSONS'
     }),
     ...mapMutations('user', {
-      logoutUser: 'logout'
+      logoutUser: 'LOGOUT'
     }),
     logout() {
       this.logout_load = true;
@@ -58,6 +58,11 @@ export default {
       }).finally(() => this.logout_load = false)
     }
   },
+  computed: {
+    ...mapState('user', {
+      user: 'user'
+    })
+  }
 }
 </script>
 

@@ -105,7 +105,7 @@
               可查阅活动详情与须知。
             </span>
           </div>
-          <div class="text-gray" style="margin-left: -.8rem;">提交后将无法更改，是否确认提交？</div>
+          <!-- <div class="text-gray" style="margin-left: -.8rem;">提交后将无法更改，是否确认提交？</div> -->
         </ul>
         <div v-else>还未选择任何活动</div>
       </template>
