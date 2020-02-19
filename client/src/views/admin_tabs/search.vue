@@ -1,5 +1,5 @@
 <template>
-  <div id="_search">
+  <div id="_search" :class="{'loading loading-lg': isPageLoading}">
     <div class="form-group data-selects">
       <label class="form-radio">
         <input type="radio" name="data_type" :value="1" v-model="data_type">
@@ -79,7 +79,8 @@
         >
         输出&下载excel文档
       </vue-excel-xlsx>
-      <div class="btn btn-primary ml-2" @click="check(data_type)">
+      <div class="btn btn-primary ml-2" :class="{'loading loading-lg': isCheckLoading}"
+      @click="check(data_type)">
         查询 <i class="feather icon-check"></i>
       </div>
     </div>
@@ -113,6 +114,8 @@ export default {
     dataTable
   },
   data: () => ({
+    isPageLoading: true,
+    isCheckLoading: false,
     data_type: 1,
 
     lessons: [],
@@ -140,8 +143,8 @@ export default {
     student_table_list: [],
   }),
   mounted() {
-    getLessonsList().then(({data}) => { this.lessons = data; });
-    getAllUsers()   .then(({data}) => { this.students = data; });
+    getAllLessons().then(({data}) => { this.lessons = data; });
+    getAllUsers()   .then(({data}) => { this.students = data; this.isPageLoading = false; });
     getAllClasses() .then(({data}) => { 
       this.classes = data; 
       this.classnames = this.classes
@@ -151,6 +154,7 @@ export default {
   },
   methods: {
     check(type) {
+      this.isCheckLoading = true;
       this.showTable = true;
       this.$nextTick(() => {
         // Search by session and name
@@ -159,19 +163,22 @@ export default {
           this.selected_lessons
             // Find all selected_lessons of selected_session by name (if specified)
             .filter(el => el.name == this.selected_name || !this.selected_name)
-            // Concat all the users associated with said lessons into table data
-            .forEach(el => this.student_table_list = this.student_table_list.concat(el.user
-              // Apply property of lesson_name in case querying for whole session
-              .map(elem => ({...elem, lesson_name: el.name}))
-              // Sort by year then by classname
-              .sort((a, b) => {
-                let yearcmp = this.years.indexOf(a.class.substr(0,a.class.length-3))-this.years.indexOf(b.class.substr(0,b.class.length-3)),
-                classnamescmp = this.classes.filter(el => el.cn_name.includes(a.class.substr(0,a.class.length-3))).map(el => el.cn_name[el.cn_name.length-2]);
-                return yearcmp == 0 ? 
-                  classnamescmp.indexOf(a.class[a.class.length-2])-classnamescmp.indexOf(b.class[b.class.length-2])
-                : yearcmp;
-              })
-            ));
+            // Concat all the students associated with said lessons into table data
+            .forEach(el => this.student_table_list = this.student_table_list.concat(
+              this.students
+                .filter(elem => elem.lessons.map(element => Object.values(element)[0]).indexOf(el.id) != -1 
+                                        || elem.forced_lessons.map(element => Object.values(element)[0]).indexOf(el.id) != -1)
+                // Apply property of lesson_name in case querying for whole session
+                .map(elem => ({...elem, lesson_name: el.name}))
+                // Sort by year then by classname
+                .sort((a, b) => {
+                    let yearcmp = this.years.indexOf(a.class.substr(0,a.class.length-3))-this.years.indexOf(b.class.substr(0,b.class.length-3)),
+                    classnamescmp = this.classes.filter(el => el.cn_name.includes(a.class.substr(0,a.class.length-3))).map(el => el.cn_name[el.cn_name.length-2]);
+                    return yearcmp == 0 ? 
+                      classnamescmp.indexOf(a.class[a.class.length-2])-classnamescmp.indexOf(b.class[b.class.length-2])
+                    : yearcmp;
+                })
+            ))
         }
         
         // Search by year or class
@@ -210,6 +217,7 @@ export default {
             : yearcmp;
           });
         }
+        this.isCheckLoading = false;
       })
     },
     logout() {
