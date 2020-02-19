@@ -94,7 +94,7 @@ class LessonController extends Controller
 
     public function get_all()
     {
-        $lessons = Lesson::with('users','users_force')->get();
+        $lessons = Lesson::all()->get();
         $data = [];
         foreach($lessons as $lesson){
             $single_data = json_decode($lesson->toJson());
@@ -113,21 +113,21 @@ class LessonController extends Controller
                 array_push($single_data->period,$period->period);
             }
             
-            unset($single_data->users);
-            unset($single_data->users_force);
-            $single_data->user = [];
-            foreach ($lesson->users as $user){
-                $temp = json_decode($user->toJson());
-                unset($temp->pivot);
-                $temp->class = $user->classes->cn_name;
-                array_push($single_data->user,$temp);
-            }
-            foreach ($lesson->users_force as $user_force){
-                $temp = json_decode($user_force->toJson());
-                unset($temp->pivot);
-                $temp->class = $user_force->classes->cn_name;
-                array_push($single_data->user,$temp);
-            }
+            // unset($single_data->users);
+            // unset($single_data->users_force);
+            // $single_data->user = [];
+            // foreach ($lesson->users as $user){
+            //     $temp = json_decode($user->toJson());
+            //     unset($temp->pivot);
+            //     $temp->class = $user->classes->cn_name;
+            //     array_push($single_data->user,$temp);
+            // }
+            // foreach ($lesson->users_force as $user_force){
+            //     $temp = json_decode($user_force->toJson());
+            //     unset($temp->pivot);
+            //     $temp->class = $user_force->classes->cn_name;
+            //     array_push($single_data->user,$temp);
+            // }
             array_push($data,$single_data);
         }
         return response($data,200);
