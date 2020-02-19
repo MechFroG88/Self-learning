@@ -113,8 +113,8 @@ class LessonController extends Controller
                 array_push($single_data->period,$period->period);
             }
             
-            unset($single_data->users);
-            unset($single_data->users_force);
+            //unset($single_data->users);
+            //unset($single_data->users_force);
             // $single_data->user = [];
             // foreach ($lesson->users as $user){
             //     $temp = json_decode($user->toJson());
