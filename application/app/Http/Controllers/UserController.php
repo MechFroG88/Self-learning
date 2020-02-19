@@ -272,9 +272,7 @@ class UserController extends Controller
             DB::table('lesson_user')->insert(
                 ['user_id' => Auth::id(), 'lesson_id' => $lesson]
             );
-            $temp = Lesson::find($lesson);
-            $temp->current++;
-            $temp->save();
+            DB::table('lessons')->where('id',$lesson)->increment('current');
         }
         $this->flush_cache();
         return $this->get_current();
@@ -304,9 +302,7 @@ class UserController extends Controller
                     'user_id' => Auth::id(),
                     'lesson_id' => $lesson
                 ])->delete();
-                $temp = Lesson::find($lesson);   
-                $temp->current--;
-                $temp->save();
+                 DB::table('lessons')->where('id',$lesson)->decrement('current');
             }
         }
         $this->flush_cache();
