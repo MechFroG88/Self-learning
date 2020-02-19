@@ -49,7 +49,6 @@ class LessonController extends Controller
 
     public function get()
     {
-        retur;sdad
         $lessons = Lesson::all();
         $data = [];
         foreach($lessons as $lesson){
