@@ -273,7 +273,7 @@ class UserController extends Controller
             $temp->save();
         }
         $this->flush_cache();
-        return $this->ok();
+        return $this->get_current();
     }
 
     public function edit(Request $data,$id)
