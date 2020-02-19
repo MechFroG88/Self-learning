@@ -39,5 +39,7 @@ export let student_class_columns = [
 export let lesson_list_columns = [
   { label: '活动名称', field: 'name', search: true },
   { label: '科目/部门', field: 'subject' },
+  { label: '现有人数', field: 'current' },
+  { label: '限制人数', field: 'limit' },
   { label: '操作', field: 'action' }
 ]
