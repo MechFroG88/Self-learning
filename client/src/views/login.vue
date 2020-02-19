@@ -51,9 +51,15 @@
 
 <script>
 import { userLogin, getUser } from '@/api/user';
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 export default {
+  mounted() {
+    if (this.user.id != 0) {
+      if (this.user.type == 1) this.$router.push('/home');
+      else this.$router.push('/admin');
+    }
+  },
   data: () => ({
     student_id: '',
     student_ic: '',
@@ -64,6 +70,9 @@ export default {
   methods: {
     ...mapMutations('lessons', {
       reset: 'RESET'
+    }),
+    ...mapMutations('user', {
+      loginUser: 'LOGIN'
     }),
     async login() {
       let validId = await this.$refs.id.validate();
@@ -80,13 +89,10 @@ export default {
           ic: icArr.join('')
         }).then((data) => {
           this.reset();
+          this.loginUser(data.data);
           if (data.status == 200) {
-            getUser().then(({data}) => {
-              if (data.type == 1) this.$router.push('/home');
-              else this.$router.push('/admin');
-            }).catch((err) => {
-              console.log(err);
-            });
+            if (data.data.type == 1) this.$router.push('/home');
+            else this.$router.push('/admin');
           }
         })
         .catch((err) => {
@@ -107,6 +113,11 @@ export default {
       this.formError = false;
     }
   },
+  computed: {
+    ...mapState('user', {
+      user: 'user'
+    })
+  }
 }
 </script>
 

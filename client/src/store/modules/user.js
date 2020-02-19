@@ -1,6 +1,9 @@
 let initialState = () => ({
   id: 0,
   cn_name: '',
+  en_name: '',
+  gender: '',
+  type: 0,
   class: '',
   lessons: [],
   forced_lessons: []
@@ -13,7 +16,7 @@ export default {
   },
   mutations: {
     LOGIN(state, user) {
-      for (let keys of Object.keys(user)) {
+      for (let keys of Object.keys(state.user)) {
         state.user[keys] = user[keys];
       }
     },
