@@ -7,6 +7,11 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    // {
+    //   path: '*/*',
+    //   name: 'maintenance',
+    //   component: () => import('@/views/maintenance')
+    // },
     {
       path: '/',
       name: 'login',
@@ -29,6 +34,11 @@ const router = new VueRouter({
           path: 'search',
           name: 'adminSearch',
           component: () => import('@/views/admin_tabs/search')
+        },
+        {
+          path: 'edit_user',
+          name: 'adminEditUser',
+          component: () => import('@/views/admin_tabs/edit_user')
         },
         {
           path: 'edit_lesson',
