@@ -45,13 +45,13 @@ export default {
       resetLessons: 'RESET_LESSONS'
     }),
     ...mapMutations('user', {
-      logout: 'logout'
+      logoutUser: 'logout'
     }),
     logout() {
       this.logout_load = true;
       userLogout().then((data) => {
         if (data.status == 200) {
-          this.logout();
+          this.logoutUser();
           this.resetLessons();
           this.$router.push('/');
         }
