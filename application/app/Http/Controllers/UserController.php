@@ -288,14 +288,17 @@ class UserController extends Controller
         if ($validator->fails()) return $this->fail();
         $lessons_delete = $data->lessons;
         $lessons = User::find(Auth::id())->lessons;
-        $lessons = array_unique($lessons);
+        $unique_lesson = [];
         foreach ($lessons as $lesson){
-            if (in_array($lesson->id,$lessons_delete)){
+            array_push($unique_lesson,$lesson->id);
+        }
+        foreach ($unique_lesson as $lesson){
+            if (in_array($lesson,$lessons_delete)){
                 DB::table('lesson_user')->where([
                     'user_id' => Auth::id(),
-                    'lesson_id' => $lesson->id
+                    'lesson_id' => $lesson
                 ])->delete();
-                $temp = Lesson::find($lesson->id);   
+                $temp = Lesson::find($lesson);   
                 $temp->current--;
                 $temp->save();
             }
