@@ -5,6 +5,7 @@ let initialState = () => ({
   gender: '',
   type: 0,
   class: '',
+  stream: '',
   lessons: [],
   forced_lessons: []
 });
