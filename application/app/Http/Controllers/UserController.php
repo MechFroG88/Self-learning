@@ -48,8 +48,8 @@ class UserController extends Controller
     public function flush_cache()
     {
         // User::flushCache();
-        // Lesson::flushCache();
-        return $this->ok();
+        Lesson::flushCache();
+        // return $this->ok();
     }
 
     public function login(Request $data)
@@ -241,22 +241,21 @@ class UserController extends Controller
             }
         }
 
-        $lessons = $data->lessons;
+        $lessons = Lesson::whereIn($data->lessons)->get();
 
         foreach ($lessons as $lesson){
-            $single = Lesson::findOrFail($lesson);
-            if ($single->current >= $single->limit) $slot = false;
+            if ($lesson->current >= $lesson->limit) $slot = false;
             $current_year = (int)(($user->classes->en_name)[0]);
             $not_allowed = true;
-            if ($single->stream == '理' && $stream != '理') $not_allowed = false;
-            if ($single->stream == '文' && $stream != '文') $not_allowed = false;
-            if ($single->gender == '男' && $gender != '男') $not_allowed = false;
-            if ($single->gender == '女' && $gender != '女') $not_allowed = false;
-            foreach ($single->years as $year){
+            if ($lesson->stream == '理' && $stream != '理') $not_allowed = false;
+            if ($lesson->stream == '文' && $stream != '文') $not_allowed = false;
+            if ($lesson->gender == '男' && $gender != '男') $not_allowed = false;
+            if ($lesson->gender == '女' && $gender != '女') $not_allowed = false;
+            foreach ($lesson->years as $year){
                 if ($year->year == $current_year) $not_allowed = false; 
             }
             if ($not_allowed) $slot = false;
-            foreach ($single->periods as $period){
+            foreach ($lesson->periods as $period){
                 if (isset($check[$period->period])) $slot = false;
                 else $check[$period->period] = 1;
             }
@@ -273,6 +272,7 @@ class UserController extends Controller
             $temp->current++;
             $temp->save();
         }
+        $this->flush_cache();
         return $this->ok();
     }
 

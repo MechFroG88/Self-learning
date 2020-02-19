@@ -43,7 +43,7 @@ class LessonController extends Controller
             );
         }
         // User::flushCache();
-        // Lesson::flushCache();
+        Lesson::flushCache();
         return $this->ok();
     }
 
@@ -157,14 +157,14 @@ class LessonController extends Controller
             );
         }
         // User::flushCache();
-        // Lesson::flushCache();
+        Lesson::flushCache();
         return $this->ok();
     }
 
     public function delete(Request $data,$id)
     {
         // User::flushCache();
-        // Lesson::flushCache();
+        Lesson::flushCache();
         Lesson::where('id', $id)->delete();
         return $this->ok();
     }
