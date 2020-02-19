@@ -1,0 +1,25 @@
+#_maintenance {
+  text-align: center; 
+  padding: 7.5rem;
+  @media screen and (max-width: $size-md) {
+    padding-left: 5rem;
+    padding-right: 5rem;
+    h1 {
+      font-size: 2rem;
+    }
+    article {
+      font-size: .8rem;
+    }
+  }
+
+  @media screen and (max-width: $size-sm) {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    h1 {
+      font-size: 1.5rem;
+    }
+    article {
+      font-size: .6rem;
+    }
+  }
+}
