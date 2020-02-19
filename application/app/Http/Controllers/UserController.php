@@ -129,6 +129,7 @@ class UserController extends Controller
             $data->class = $class->cn_name;
             if (strstr($class->cn_name,'理')) $data->stream = '理';
             else if (strstr($class->cn_name,'文')) $data->stream = '文';
+            else if (strstr($class->cn_name,'商')) $data->stream = '文';
         }
         $data->lessons = [];
         $data->forced_lessons = [];
