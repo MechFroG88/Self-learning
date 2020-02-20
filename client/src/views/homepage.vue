@@ -309,8 +309,6 @@ export default {
         })
 
         this.isPageLoading = false;
-      }).catch((err) => {
-        this.logout();
       })
     },
     checkId(lessons, forced=false) {
