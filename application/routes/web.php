@@ -49,10 +49,11 @@ Route::middleware('admin')->delete('class/{id}','_ClassController@delete');
  */
 
 Route::middleware('admin')->get('lesson/recount','LessonController@recount');
-
 Route::middleware('admin')->post('lesson','LessonController@create');
 Route::middleware('auth')->get('lesson','LessonController@get');
 Route::middleware('admin')->get('lessons','LessonController@get_all');
 Route::middleware('admin')->get('lesson/{id}','LessonController@get_single');
 Route::middleware('admin')->post('lesson/edit/{id}','LessonController@edit');
 Route::middleware('admin')->delete('lesson/{id}','LessonController@delete');
+Route::middleware('admin')->post('lesson/force/add/{id}','LessonController@add_force');
+Route::middleware('admin')->post('lesson/force/remove/{id}','LessonController@remove_force');
