@@ -251,11 +251,11 @@ class UserController extends Controller
         foreach ($lessons_check as $lesson){
             if ($lesson->current >= $lesson->limit) $slot = false;
             $current_year = (int)(($user->classes->en_name)[0]);
+            if ($lesson->stream == '理' && $stream != '理') $slot = false;
+            if ($lesson->stream == '文' && $stream != '文' && $stream != '商') $slot = false;
+            if ($lesson->gender == '男' && $gender != '男') $slot = false;
+            if ($lesson->gender == '女' && $gender != '女') $slot = false;
             $not_allowed = true;
-            if ($lesson->stream == '理' && $stream != '理') $not_allowed = false;
-            if ($lesson->stream == '文' && ($stream == '文' || $stream == '商')) $not_allowed = false;
-            if ($lesson->gender == '男' && $gender != '男') $not_allowed = false;
-            if ($lesson->gender == '女' && $gender != '女') $not_allowed = false;
             foreach ($lesson->years as $year){
                 if ($year->year == $current_year) $not_allowed = false; 
             }
