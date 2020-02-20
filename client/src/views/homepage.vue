@@ -310,6 +310,9 @@ export default {
 
         this.isPageLoading = false;
       })
+      .catch((err) => {
+        if (err.status) this.logout();
+      })
     },
     checkId(lessons, forced=false) {
       let period_lessons = [0,0,0,0,0,0,0];
