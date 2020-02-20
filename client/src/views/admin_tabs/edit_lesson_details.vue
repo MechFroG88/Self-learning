@@ -34,7 +34,7 @@
       <div class="form-group-row columns">
         <div class="form-group column col-4">
           <label class="form-label" for="limit">限制人数</label>
-          <input class="form-input" type="text" id="limit" placeholder="负责单位"
+          <input class="form-input" type="text" id="limit" placeholder="限制人数"
           v-model="lesson_data.limit">
         </div>
         <div class="form-group column col-2">

@@ -29,6 +29,22 @@ export function getLessonUsers(id) {
   })
 }
 
+export function addForcedLesson(id, data) {
+  return request({
+    url: `/lesson/force/add/${id}`,
+    method: 'POST',
+    data
+  })  
+}
+
+export function removeForcedLesson(id, data) {
+  return request({
+    url: `/lesson/force/remove/${id}`,
+    method: 'POST',
+    data
+  })  
+}
+
 export function editLesson(id, data) {
   return request({
     url: `/lesson/edit/${id}`,
