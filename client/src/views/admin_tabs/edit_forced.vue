@@ -92,14 +92,15 @@ export default {
   }),
   methods: {
     dataImport() {
+      this.table_data = [];
       let ids = this.student_id.split("\n");
-      ids.forEach(el => {
+      ids.forEach((el, ind) => {
         let found = this.users.filter(elem => elem.id == el);
         if (found.length) {
           // let before = found[0].lessons.map()
           this.table_data.push(found[0]);
         }
-        else el.concat(" => 该学号的学生不存在");
+        else if(/[0-9]+/.test(el)) ids[ind] = el.concat(" => 该学号的学生不存在");
       });
       this.student_id = ids.join("\n");
       this.afterImport = true;
