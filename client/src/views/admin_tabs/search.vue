@@ -87,6 +87,7 @@
 
     <data-table ref="table" class="mt-2"
     v-if="showTable" title hoverable
+    emptyMessage="此活动暂时无学生选择"
     navbar="学生学号"
     :columns="
       data_type == 1 ? selected_name ? 
@@ -239,7 +240,6 @@ export default {
     selected_session(val) {
       if (this.data_type != 1) return ;
       this.showTable = false;
-      this.selected_id = -1;
       if (val < 0) this.selected_lessons = this.lessons;
       else {
         let ss = JSON.stringify(this.sessions[val]);

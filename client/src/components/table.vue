@@ -28,14 +28,14 @@
         >{{column.label}}</td>
       </tr>
 
-      <tr v-if="tableData.length == 0 && !is_loading">
+      <tr v-if="tableData.length == 0 && !is_loading && emptyMessage">
         <td align="justify" :colspan="columns.length"
         style="padding: 0;">
           <div class="empty">
             <div class="empty-icon">
               <i class="icon icon-people"></i>
             </div>
-            <p class="empty-title h6">此活动暂时无学生选择</p>
+            <p class="empty-title h6">{{ emptyMessage }}</p>
           </div>
         </td>
       </tr>
@@ -62,7 +62,7 @@ export default {
     columns: Array,
     tableData: {
       type: Array,
-      default: []
+      default: () => []
     },
     width: {
       type: [Number, String],
@@ -72,6 +72,7 @@ export default {
     hoverable: Boolean,
     title: Boolean,
     navbar: String,
+    emptyMessage: String,
   },
   data: () => ({
     is_loading: true,

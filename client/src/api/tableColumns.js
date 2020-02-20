@@ -51,3 +51,9 @@ export let user_columns = [
   { label: '班级', field: 'class' },
   { label: '操作', field: 'action' }
 ]
+
+export let forced_user_columns = [
+  { label: '学号', field: 'id', search: true },
+  { label: '中文姓名', field: 'cn_name' },
+  { label: '班级', field: 'class' },
+]

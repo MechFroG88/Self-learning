@@ -25,7 +25,7 @@
             <div class="card">
               <div class="card-body">
                 <span class="delete mb-2" @click="openDelete">
-                  <i class="feather icon-trash mr-2"></i>删除
+                  <i class="feather icon-trash- mr-2"></i>删除
                 </span>
                 <span class="logout mt-2" @click="logout"
                 :class="{'loading': logoutLoad}">
@@ -169,7 +169,7 @@
           </label>
         </div>
       </template>
-      <template slot="footer">
+      <template slot="footer" v-if="toDelete.name.length">
         <div class="btn btn-error float-right" :class="{'loading': deleteLoad}"
         @click="deleteLessons">
           删除
@@ -309,6 +309,8 @@ export default {
         })
 
         this.isPageLoading = false;
+      }).catch((err) => {
+        this.logout();
       })
     },
     checkId(lessons, forced=false) {
