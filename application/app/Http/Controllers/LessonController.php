@@ -26,6 +26,11 @@ class LessonController extends Controller
         "year.*" => "required|integer",
     ];
 
+    private $submit_rules = [
+        "students" => "required|array",
+        "students.*" => "integer"
+    ];
+
     public function recount()
     {
         $lesson_users = DB::table('lesson_user')->get();
@@ -154,6 +159,7 @@ class LessonController extends Controller
                 'location' => $data->location,
                 'subject' => $data->subject,
                 'limit' => $data->limit,
+                'description' => $data->description
             ]);
         Year::where('lesson_id',$id)->delete();
         Period::where('lesson_id',$id)->delete();
@@ -177,6 +183,76 @@ class LessonController extends Controller
         Lesson::where('id', $id)->delete();
         // User::flushCache();
         Lesson::flushCache();
+        return $this->ok();
+    }
+
+    public function add_force(Request $data,$id)
+    {
+        $validator = Validator::make($data->all(),$this->submit_rules);
+        if ($validator->fails()) return $this->fail();
+        $students = $data->students;
+        $add_period = DB::table('lessons')->find($id)->period;
+        foreach($students as $student){
+            $lesson_user = DB::table('lesson_user')
+                                ->where('user_id',$student)->select('lesson_id')->get();
+            $lesson_user_force = DB::table('lesson_user_force')
+                                    ->where('user_id',$student)->select('lesson_id')->get();
+            foreach ($lesson_user as $single){
+                $period = DB::table('lessons')->find($single->lesson_id)->period;
+                if (array_intersect($add_period, $period)){
+                    if(DB::table('lesson_user')->where([
+                        'user_id' => $student,
+                        'lesson_id' => $single->lesson_id
+                    ])->count()){
+                        DB::table('lesson_user')->where([
+                            'user_id' => $student,
+                            'lesson_id' => $single->lesson_id
+                        ])->delete();
+                        DB::table('lessons')->where('id',$single->lesson_id)->decrement('current');
+                    }
+                }
+            }
+            foreach ($lesson_user_force as $single){
+                $period = DB::table('lessons')->find($single->lesson_id)->period;
+                if (array_intersect($add_period, $period)){
+                    if(DB::table('lesson_user_force')->where([
+                        'user_id' => $student,
+                        'lesson_id' => $single->lesson_id
+                    ])->count()){
+                        DB::table('lesson_user_force')->where([
+                            'user_id' => $student,
+                            'lesson_id' => $single->lesson_id
+                        ])->delete();
+                    }
+                }
+            }
+            if(DB::table('lesson_user_force')->where(
+                ['user_id' => $student, 'lesson_id' => $id]
+            )->count() == 0){
+                DB::table('lesson_user_force')->insert(
+                    ['user_id' => $student, 'lesson_id' => $id]
+                );
+            }
+        }
+        return $this->ok();
+    }
+
+    public function remove_force(Request $data,$id)
+    {
+        $validator = Validator::make($data->all(),$this->submit_rules);
+        if ($validator->fails()) return $this->fail();
+        $students = $data->students;
+        foreach($students as $student){
+            if(DB::table('lesson_user_force')->where([
+                'user_id' => $student,
+                'lesson_id' => $id
+            ])->count()){
+                DB::table('lesson_user_force')->where([
+                    'user_id' => $student,
+                    'lesson_id' => $id
+                ])->delete();
+            }
+        }
         return $this->ok();
     }
 
