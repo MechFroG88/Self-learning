@@ -182,6 +182,7 @@ class LessonController extends Controller
     {
         Lesson::where('id', $id)->delete();
         DB::table('periods')->where('lesson_id',$id)->delete();
+        DB::table('years')->where('lesson_id',$id)->delete();
         DB::table('lesson_user')->where('lesson_id',$id)->delete();
         DB::table('lesson_user_force')->where('lesson_id',$id)->delete();
         // User::flushCache();
