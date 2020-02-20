@@ -191,15 +191,23 @@ class LessonController extends Controller
         $validator = Validator::make($data->all(),$this->submit_rules);
         if ($validator->fails()) return $this->fail();
         $students = $data->students;
-        $add_period = DB::table('lessons')->find($id)->period;
+        $periods = DB::table('periods')->where('lesson_id',$id)->get();
+        $add_period = [];
+        foreach ($periods as $period){
+            array_push($add_period,$period->period);
+        }
         foreach($students as $student){
             $lesson_user = DB::table('lesson_user')
                                 ->where('user_id',$student)->select('lesson_id')->get();
             $lesson_user_force = DB::table('lesson_user_force')
                                     ->where('user_id',$student)->select('lesson_id')->get();
             foreach ($lesson_user as $single){
-                $period = DB::table('lessons')->find($single->lesson_id)->period;
-                if (array_intersect($add_period, $period)){
+                $periods = DB::table('periods')->where('lesson_id',$single->lesson_id)->get();
+                $used_period = [];
+                foreach ($periods as $period){
+                    array_push($used_period,$period->period);
+                }
+                if (array_intersect($add_period, $used_period)){
                     if(DB::table('lesson_user')->where([
                         'user_id' => $student,
                         'lesson_id' => $single->lesson_id
@@ -213,8 +221,12 @@ class LessonController extends Controller
                 }
             }
             foreach ($lesson_user_force as $single){
-                $period = DB::table('lessons')->find($single->lesson_id)->period;
-                if (array_intersect($add_period, $period)){
+                $periods = DB::table('periods')->where('lesson_id',$single->lesson_id)->get();
+                $used_period = [];
+                foreach ($periods as $period){
+                    array_push($used_period,$period->period);
+                }
+                if (array_intersect($add_period, $used_period)){
                     if(DB::table('lesson_user_force')->where([
                         'user_id' => $student,
                         'lesson_id' => $single->lesson_id

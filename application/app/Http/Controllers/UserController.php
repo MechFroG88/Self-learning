@@ -269,10 +269,14 @@ class UserController extends Controller
         if(!$slot) return response("Bad Request",400);
         User::where('id',Auth::id())->update(['is_submit' => 1]);
         foreach ($data->lessons as $lesson){
-            DB::table('lesson_user')->insert(
+            if(DB::table('lesson_user')->where(
                 ['user_id' => Auth::id(), 'lesson_id' => $lesson]
-            );
-            DB::table('lessons')->where('id',$lesson)->increment('current');
+            )->count() == 0){
+                DB::table('lesson_user')->insert(
+                    ['user_id' => Auth::id(), 'lesson_id' => $lesson]
+                );
+                DB::table('lessons')->where('id',$lesson)->increment('current');
+            }
         }
         $this->flush_cache();
         return $this->get_current();
@@ -298,11 +302,17 @@ class UserController extends Controller
         $unique_lesson = array_unique($unique_lesson);
         foreach ($unique_lesson as $lesson){
             if (in_array($lesson,$lessons_delete)){
-                DB::table('lesson_user')->where([
+                if (DB::table('lesson_user')->where([
                     'user_id' => Auth::id(),
                     'lesson_id' => $lesson
-                ])->delete();
-                 DB::table('lessons')->where('id',$lesson)->decrement('current');
+                ])->count()){
+                    DB::table('lesson_user')->where([
+                        'user_id' => Auth::id(),
+                        'lesson_id' => $lesson
+                    ])->delete();
+                    DB::table('lessons')->where('id',$lesson)->decrement('current');
+                }
+                 
             }
         }
         $this->flush_cache();
