@@ -113,6 +113,13 @@ export default {
         })
         return ;
       }
+      if (!this.table_data) {
+        this.$notify({
+          type: 'warn',
+          title: '请选择输入学生'
+        })
+        return ;
+      }
       this.addLoad = true;
       addForcedLesson(
         this.selected_lessons
@@ -127,7 +134,16 @@ export default {
             title: '成功加入保留活动中'
           });
         }
-      }).finally(() => this.addLoad = false)
+      })
+      .catch((err) => {
+        this.table_data = [];
+        this.student_id = "";
+        this.$notify({
+          type: 'error',
+          title: '资料更改失败，请稍后再试。'
+        });
+      })
+      .finally(() => this.addLoad = false)
     },
     remove() {
       if (!this.selected_name) {
@@ -154,7 +170,16 @@ export default {
           this.table_data = [];
           this.student_id = "";
         }
-      }).finally(() => this.removeLoad = false)
+      })
+      .catch((err) => {
+        this.table_data = [];
+        this.student_id = "";
+        this.$notify({
+          type: 'error',
+          title: '资料更改失败，请稍后再试。'
+        });
+      })
+      .finally(() => this.removeLoad = false)
     }
   },
   computed: {
