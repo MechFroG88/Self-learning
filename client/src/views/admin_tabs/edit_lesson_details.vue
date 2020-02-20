@@ -33,6 +33,11 @@
 
       <div class="form-group-row columns">
         <div class="form-group column col-4">
+          <label class="form-label" for="limit">限制人数</label>
+          <input class="form-input" type="text" id="limit" placeholder="负责单位"
+          v-model="lesson_data.limit">
+        </div>
+        <div class="form-group column col-2">
           <label class="form-label" for="gender">性别</label>
           <select class="form-select" id="gender" v-model="lesson_data.gender">
             <option value="无">无</option>
@@ -40,7 +45,7 @@
             <option value="女">女</option>
           </select>
         </div>
-        <div class="form-group column col-4">
+        <div class="form-group column col-2">
           <label class="form-label" for="stream">文理科</label>
           <select class="form-select" id="stream" v-model="lesson_data.stream">
             <option value="无">无</option>
@@ -61,7 +66,7 @@
 
       <div class="form-group">
         <label class="form-label col-12" style="margin-right: 1rem">年级</label>
-        <div class="col-6 col-sm-12">
+        <div class="col-6 col-md-12">
           <label class="form-checkbox form-inline" v-for="(year, id) in years" :key="id">
             <input type="checkbox" v-model="year_check[id]">
             <i class="form-icon"></i> {{year}}

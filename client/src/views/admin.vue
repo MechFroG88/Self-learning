@@ -14,6 +14,10 @@
         :class="{'active': $route.name == 'adminEditUser'}">
           学生列表
         </router-link>
+        <router-link :to="{ name: 'adminEditForced' }"
+        :class="{'active': $route.name == 'adminEditForced'}">
+          保留活动
+        </router-link>
       </section>
       <section class="navbar-section">
         <div class="btn btn-link mt-2" 
@@ -42,6 +46,12 @@ export default {
   mounted() {
     getAllLessons().then(({data}) => { this.setLessons(data); });
     getAllUsers()  .then(({data}) => { this.setUsers(data); });
+
+    // if (window.innerWidth < 400) this.smallScreen = true;
+    // window.addEventListener('resize', () => {
+    //   if (window.innerWidth < 400) this.smallScreen = true;
+    //   else this.smallScreen = false;
+    // })
   },
   methods: {
     ...mapMutations('admin_data', {

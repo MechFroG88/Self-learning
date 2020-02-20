@@ -33,6 +33,7 @@ service.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   app.$Progress.fail();
+  console.log(JSON.stringify(error));
   if (error.response.status == 401 && router.app._route.fullPath != '/') {
     localStorage.clear();
     router.push('/');

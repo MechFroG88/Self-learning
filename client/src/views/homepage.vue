@@ -408,9 +408,11 @@ export default {
         id: [],
         data: []
       };
+      
       this.$refs.delete.active = true;
+
       this.id.forEach((el, ind) => {
-        if (this.chosenId.indexOf(el) != -1) {
+        if (this.user.lessons.map(elem => Object.values(elem)[0]).indexOf(el) != -1) {
           this.toDelete.id.push(el);
           this.toDelete.name.push(this.name[ind]);
           this.toDelete.data.push(false);
