@@ -106,7 +106,7 @@ class UserController extends Controller
             foreach($lessons_force as $lesson_force){
                 $periods = $lesson_force->periods;
                 foreach($periods as $period){
-                    array_push($single_data->lessons,[$period->period => $lesson_force->id]);
+                    array_push($single_data->forced_lessons,[$period->period => $lesson_force->id]);
                 }
             }
             array_push($data,$single_data);
