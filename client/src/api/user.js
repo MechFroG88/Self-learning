@@ -53,11 +53,11 @@ export function submitUser(data) {
 }
 
 export function removeUserLessons(data) {
-return request({
-  url: '/user/reselect',
-  method: 'POST',
-  data
-})
+  return request({
+    url: '/user/reselect',
+    method: 'POST',
+    data
+  })
 }
 
 export function editUser(id, data) {
@@ -72,5 +72,15 @@ export function deleteUser(id) {
   return request({
     url: `/user/${id}`,
     method: 'DELETE'
+  })
+}
+
+export function changeUserPassword(id, { ic }) {
+  return request({
+    url: `/user/edit_ic/${id}`,
+    method: 'POST',
+    data: {
+      ic
+    }
   })
 }

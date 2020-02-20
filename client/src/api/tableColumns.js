@@ -42,4 +42,12 @@ export let lesson_list_columns = [
   { label: '现有人数', field: 'current' },
   { label: '限制人数', field: 'limit' },
   { label: '操作', field: 'action' }
+];
+
+export let user_columns = [
+  { label: '学号', field: 'id', search: true },
+  { label: '中文姓名', field: 'cn_name' },
+  { label: '英文姓名', field: 'en_name' },
+  { label: '班级', field: 'class' },
+  { label: '操作', field: 'action' }
 ]

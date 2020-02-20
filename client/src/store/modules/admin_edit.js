@@ -1,7 +1,7 @@
 export default {
   namespaced: true,
   state: {
-    lesson: {}
+    lesson: {},
   },
   mutations: {
     SET_LESSON(state, lesson) {
@@ -9,6 +9,6 @@ export default {
     },
     RESET_LESSON(state) {
       state.lesson = {};
-    }
+    },
   }
 }

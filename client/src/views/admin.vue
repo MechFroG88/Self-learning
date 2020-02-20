@@ -10,6 +10,14 @@
         :class="{'active': $route.name == 'adminEditLesson'}">
           更改活动
         </router-link>
+        <router-link :to="{ name: 'adminEditUser' }"
+        :class="{'active': $route.name == 'adminEditUser'}">
+          学生列表
+        </router-link>
+        <router-link :to="{ name: 'adminEditForced' }"
+        :class="{'active': $route.name == 'adminEditForced'}">
+          保留活动
+        </router-link>
       </section>
       <section class="navbar-section">
         <div class="btn btn-link mt-2" 
@@ -27,6 +35,7 @@
 
 <script>
 import { userLogout } from '@/api/user';
+import { getAllUsers } from '@/api/user';
 import { getAllLessons } from '@/api/lesson';
 import { mapMutations, mapState } from 'vuex';
 
@@ -35,14 +44,21 @@ export default {
     logout_load: false,
   }),
   mounted() {
-    getAllLessons().then(({data}) => {
-      this.setLessons(data);
-    })
+    getAllLessons().then(({data}) => { this.setLessons(data); });
+    getAllUsers()  .then(({data}) => { this.setUsers(data); });
+
+    // if (window.innerWidth < 400) this.smallScreen = true;
+    // window.addEventListener('resize', () => {
+    //   if (window.innerWidth < 400) this.smallScreen = true;
+    //   else this.smallScreen = false;
+    // })
   },
   methods: {
-    ...mapMutations('admin_lessons', {
+    ...mapMutations('admin_data', {
       setLessons: 'SET_LESSONS',
-      resetLessons: 'RESET_LESSONS'
+      resetLessons: 'RESET_LESSONS',
+      setUsers: 'SET_USERS',
+      resetUsers: 'RESET_USERS'
     }),
     ...mapMutations('user', {
       logoutUser: 'LOGOUT'
