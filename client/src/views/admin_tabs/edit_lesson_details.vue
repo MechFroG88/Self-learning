@@ -89,7 +89,7 @@
 
 <script>
 import { mapState, mapMutations  } from 'vuex';
-import { editLesson } from '@/api/lesson';
+import { editLesson, getAllLessons } from '@/api/lesson';
 
 export default {
   data: () => ({
@@ -108,12 +108,18 @@ export default {
     ...mapMutations('admin_edit', {
       reset: 'RESET_LESSON'
     }),
+    ...mapMutations('admin_data', {
+      setLessons: 'SET_LESSONS'
+    }),
     submit() {
       editLesson(this.lesson.id, this.lesson_data)
         .then((data) => {
           if (data.status == 200) {
             this.reset();
-            this.$router.push('/admin/edit_lesson');
+            getAllLessons().then(({data}) => { 
+              this.setLessons(data); 
+              this.$router.push('/admin/edit_lesson');
+            });
           }
         });
     }
