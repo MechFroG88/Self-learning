@@ -112,7 +112,6 @@ export default {
       setLessons: 'SET_LESSONS'
     }),
     submit() {
-      console.log(this.lesson_data)
       editLesson(this.lesson.id, this.lesson_data)
         .then((data) => {
           if (data.status == 200) {
