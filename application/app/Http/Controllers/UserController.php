@@ -106,7 +106,7 @@ class UserController extends Controller
             foreach($lessons_force as $lesson_force){
                 $periods = $lesson_force->periods;
                 foreach($periods as $period){
-                    array_push($single_data->lessons,[$period->period => $lesson_force->id]);
+                    array_push($single_data->forced_lessons,[$period->period => $lesson_force->id]);
                 }
             }
             array_push($data,$single_data);
@@ -253,7 +253,7 @@ class UserController extends Controller
             $current_year = (int)(($user->classes->en_name)[0]);
             $not_allowed = true;
             if ($lesson->stream == '理' && $stream != '理') $not_allowed = false;
-            if ($lesson->stream == '文' && $stream != '文' && $stream != '商') $not_allowed = false;
+            if ($lesson->stream == '文' && ($stream == '文' || $stream == '商')) $not_allowed = false;
             if ($lesson->gender == '男' && $gender != '男') $not_allowed = false;
             if ($lesson->gender == '女' && $gender != '女') $not_allowed = false;
             foreach ($lesson->years as $year){
