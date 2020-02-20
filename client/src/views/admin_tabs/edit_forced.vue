@@ -46,11 +46,11 @@
             清空列表 <i class="feather icon-trash-"></i>
           </button>
           <button class="btn btn-success" :class="{'loading': addLoad}"
-          @click="add" :disabled="!afterImport">
+          @click="add">
             加入保留 <i class="feather icon-edit"></i>
           </button>
           <button class="btn btn-error" :class="{'loading': removeLoad}"
-          @click="remove" :disabled="!afterImport">
+          @click="remove">
             删除保留 <i class="feather icon-delete"></i>
           </button>
         </div>
@@ -88,7 +88,7 @@ export default {
 
     addLoad: false,
     removeLoad: false,
-    afterImport: false,
+    afterImport: false, // enable button only when after import
   }),
   methods: {
     dataImport() {
