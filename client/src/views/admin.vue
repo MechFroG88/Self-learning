@@ -6,13 +6,13 @@
         :class="{'active': $route.name == 'adminSearch'}">
           查询名单
         </router-link>
-        <router-link :to="{ name: 'adminEditLesson' }"
-        :class="{'active': $route.name == 'adminEditLesson'}">
-          更改活动
-        </router-link>
         <router-link :to="{ name: 'adminEditForced' }"
         :class="{'active': $route.name == 'adminEditForced'}">
           保留活动
+        </router-link>
+        <router-link :to="{ name: 'adminEditLesson' }"
+        :class="{'active': $route.name == 'adminEditLesson'}">
+          活动列表
         </router-link>
         <router-link :to="{ name: 'adminEditUser' }"
         :class="{'active': $route.name == 'adminEditUser'}">

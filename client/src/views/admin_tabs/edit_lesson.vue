@@ -6,6 +6,10 @@
         <option v-for="(session, id) in titles" :key="id"
         :value="id">{{session}}</option>
       </select>
+      <div class="btn btn-primary" style="float: right;"
+      @click="$router.push('/admin/details/add')">
+        <i class="feather icon-file-plus"></i> 添加活动
+      </div>
     </div>
     <lesson-table ref=table title
     navbar="活动名称"
@@ -45,7 +49,7 @@ export default {
     }),
     edit(lesson) {
       this.set(lesson);
-      this.$router.push('/admin/edit_lesson/details');
+      this.$router.push('/admin/details/edit');
     }
   },
   computed: {

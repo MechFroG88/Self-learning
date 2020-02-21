@@ -29,6 +29,7 @@ export function getLessonUsers(id) {
   })
 }
 
+// add array of students to a forced lesson
 export function addForcedLesson(id, data) {
   return request({
     url: `/lesson/force/add/${id}`,
@@ -37,6 +38,7 @@ export function addForcedLesson(id, data) {
   })  
 }
 
+// remove array of students from forced lesson
 export function removeForcedLesson(id, data) {
   return request({
     url: `/lesson/force/remove/${id}`,

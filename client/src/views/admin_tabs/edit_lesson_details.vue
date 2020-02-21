@@ -81,6 +81,13 @@
       </div>
     </form>
 
+    <div class="form-group" v-if="$route.params.type == 'add'">
+      <label class="form-switch">
+        <input type="checkbox" v-model="isForced">
+        <i class="form-icon"></i> 将此活动设定为保留活动
+      </label>
+    </div>
+
     <div class="btn btn-primary mt-2" @click="submit">
       提交 <i class="feather icon-check"></i>
     </div>
@@ -89,19 +96,33 @@
 
 <script>
 import { mapState, mapMutations  } from 'vuex';
-import { editLesson, getAllLessons } from '@/api/lesson';
+import { createLesson, editLesson, getAllLessons } from '@/api/lesson';
 
 export default {
   data: () => ({
-    lesson_data: {},
+    lesson_data: {
+      name: '',
+      location: '',
+      subject: '',
+      limit: 0,
+      current: 0,
+      stream: '无',
+      gender: '无',
+      description: '',
+      period: [],
+      year: [],
+    },
+    isForced: false,
     titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节', '第 1 - 7 节'],
     sessions: [[1,2,3], [4,5], [6,7], [4,5,6,7], [1,2,3,4,5,6,7]],
     years: ['初一', '初二', '初三', '高一', '高二', '高三'],
     year_check: new Array(6).fill(false),
   }),
   mounted() {
-    this.lesson_data = Object.assign({}, this.lesson);
-    delete this.lesson_data.id;
+    if (this.$route.params.type == 'edit') {
+      this.lesson_data = Object.assign({}, this.lesson);
+      delete this.lesson_data.id;
+    }
     this.lesson_data.year.forEach(el => this.year_check[el-1] = true);
   },
   methods: {
@@ -112,6 +133,7 @@ export default {
       setLessons: 'SET_LESSONS'
     }),
     submit() {
+      if (this.$route.params.type == 'edit') {
       editLesson(this.lesson.id, this.lesson_data)
         .then((data) => {
           if (data.status == 200) {
@@ -122,6 +144,20 @@ export default {
             });
           }
         });
+      }
+      else {
+        if (this.isForced) this.lesson_data.current = this.lesson_data.limit;
+        createLesson(this.lesson_data)
+          .then((data) => {
+            if (data.status == 200) {
+              this.reset();
+              getAllLessons().then(({data}) => { 
+                this.setLessons(data); 
+                this.$router.push('/admin/edit_lesson');
+              });
+            }
+          });
+      }
     }
   },
   computed: {

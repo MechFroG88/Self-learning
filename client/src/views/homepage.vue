@@ -74,7 +74,7 @@
                   :pax="lesson.limit"
                   :num="lesson.current"
                   :classroom="lesson.location"
-                  :disable="dis[ind] || invalidSelect(ind) || locked[ind] || lesson.current == lesson.limit"
+                  :disable="dis[ind] || invalidSelect(ind) || locked[ind] || lesson.current >= lesson.limit"
                   :disableMsg="locked[ind] ? '此阶段已有保留的活动'
                       : invalidSelect(ind) ? '无法选择此时间段内的活动' 
                                 : dis[ind] ? '此时间段内已呈交活动' 
