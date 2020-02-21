@@ -47,7 +47,9 @@ class LessonController extends Controller
     {
         $validator = Validator::make($data->all(), $this->rules);
         if ($validator->fails()) return $this->fail();
-        $id = Lesson::create($data->all())->id;
+        $temp = $data->all();
+        if (!isset($temp->description)) $temp->description = "";
+        $id = Lesson::create($temp)->id;
         foreach ($data->period as $period){
             DB::table('periods')->insert(
                 ['lesson_id' => $id, 'period' => $period]
