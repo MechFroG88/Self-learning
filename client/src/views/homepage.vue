@@ -1,6 +1,6 @@
 <template>
   <div id="_homepage" :class="{'loading loading-lg': isPageLoading}">
-    <div v-if="!disableSubmit && new Date().getTime() <= new Date(periodEnd).getTime()">
+    <div v-if="new Date().getTime() <= new Date(periodEnd).getTime()">
       <header-layout 
       :cn_name="user.cn_name"
       :id="user.id"></header-layout>
@@ -97,6 +97,10 @@
           v-if="!disableSubmit" @click="tempDisableSubmit ? () => {} : $refs.confirm.active = true">
             提交 <i class="feather icon-arrow-right"></i>
           </button>
+          <button class="btn btn-lg btn-secondary submit"
+          v-else @click="$refs.list.active = true">
+            查阅 <i class="feather icon-check"></i>
+          </button>
         </div>
       </div>
 
@@ -122,6 +126,19 @@
         <template v-slot:footer>
           <div class="btn btn-primary" :class="{'loading': isSubmitLoading}" 
           @click="submit">确认</div>
+        </template>
+      </modal>
+
+      <modal title="已呈交选择以下活动" ref="list" v-if="disableSubmit"
+      :bodyData="[name]">
+        <template v-slot:body="{ data }">
+          <ul>
+            <li v-for="name in data[0].filter(el => el.replace(/\s/g, '').length != 0)" :key="name">
+              <template>
+                {{ name }}
+              </template>
+            </li>
+          </ul>
         </template>
       </modal>
 
@@ -313,7 +330,7 @@ export default {
         })
 
         this.isPageLoading = false;
-        if (this.disableSubmit || new Date().getTime() > new Date(this.periodEnd).getTime()) {
+        if (new Date().getTime() > new Date(this.periodEnd).getTime()) {
           this.$confetti.start({
             particles: [
               {
