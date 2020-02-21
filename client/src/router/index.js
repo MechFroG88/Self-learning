@@ -51,8 +51,8 @@ const router = new VueRouter({
           component: () => import('@/views/admin_tabs/edit_forced')
         },
         {
-          path: 'edit_lesson/details',
-          name: 'adminEditLessonDetails',
+          path: 'details/:type',
+          name: 'adminLessonDetails',
           component: () => import('@/views/admin_tabs/edit_lesson_details')
         }
       ]

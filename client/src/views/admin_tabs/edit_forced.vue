@@ -35,6 +35,7 @@
       <!-- <pre>{{table_data}}</pre> -->
       <div class="column col-6 col-md-12">
         <textarea class="form-input" rows="5"
+        :placeholder="'输入学生学号...\nXXXXXX\nXXXXXX\nXXXXXX'"
         v-model="student_id"></textarea>
         <div class="btn-group btn-group-block mt-2">
           <button class="btn btn-primary"

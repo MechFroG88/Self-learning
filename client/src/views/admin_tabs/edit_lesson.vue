@@ -45,7 +45,7 @@ export default {
     }),
     edit(lesson) {
       this.set(lesson);
-      this.$router.push('/admin/edit_lesson/details');
+      this.$router.push('/admin/details/edit');
     }
   },
   computed: {
