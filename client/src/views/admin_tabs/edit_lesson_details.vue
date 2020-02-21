@@ -146,7 +146,7 @@ export default {
         });
       }
       else {
-        if (isForced) this.lesson_data.current = this.lesson_data.limit;
+        if (this.isForced) this.lesson_data.current = this.lesson_data.limit;
         createLesson(this.lesson_data)
           .then((data) => {
             if (data.status == 200) {

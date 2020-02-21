@@ -33,7 +33,7 @@ service.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   app.$Progress.fail();
-  console.log(JSON.parse(JSON.stringify(error)));
+  // console.log(JSON.parse(JSON.stringify(error)));
   if (error.message == 'Network Error') 
     app.$notify({
       type: 'error',
