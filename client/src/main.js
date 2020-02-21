@@ -34,6 +34,10 @@ Vue.use(Notifications);
 import VueExcelXlsx from 'vue-excel-xlsx';
 Vue.use(VueExcelXlsx);
 
+// confetti for disabled submission
+import VueConfetti from 'vue-confetti';
+Vue.use(VueConfetti);
+
 Vue.config.productionTip = false
 
 export default new Vue({

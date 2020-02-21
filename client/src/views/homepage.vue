@@ -1,181 +1,181 @@
 <template>
   <div id="_homepage" :class="{'loading loading-lg': isPageLoading}">
-    <header-layout 
-    :cn_name="user.cn_name"
-    :id="user.id"></header-layout>
+    <div v-if="!disableSubmit && new Date().getTime() <= new Date(periodEnd).getTime()">
+      <header-layout 
+      :cn_name="user.cn_name"
+      :id="user.id"></header-layout>
 
-    <div class="body columns">
-      <div class="sidebar col-2 col-xs-3">
-        <div class="period-counter" v-if="!isPageLoading">
-          <h4 style="text-align: center; margin-bottom: 1rem;">节数</h4>
-          <div class="cell" v-for="i in 7" :key="i" 
-          :class="{
-            'active': actives[i-1],
-            'chosen': chosen[i-1],
-          }">
-            <div class="period">{{i}}</div>
-            <div class="progress-bar"></div>
-          </div>
-        </div>
-        <div class="popover popover-right">
-          <div class="settings">
-            <i class="feather icon-settings mr-1"></i>设置
-          </div>
-          <div class="popover-container">
-            <div class="card">
-              <div class="card-body">
-                <span class="delete mb-2" @click="openDelete">
-                  <i class="feather icon-trash- mr-2"></i>删除
-                </span>
-                <span class="logout mt-2" @click="logout"
-                :class="{'loading': logoutLoad}">
-                  <i class="feather icon-log-out mr-2"></i>登出
-                </span>
-              </div>
+      <div class="body columns">
+        <div class="sidebar col-2 col-xs-3">
+          <div class="period-counter" v-if="!isPageLoading">
+            <h4 style="text-align: center; margin-bottom: 1rem;">节数</h4>
+            <div class="cell" v-for="i in 7" :key="i" 
+            :class="{
+              'active': actives[i-1],
+              'chosen': chosen[i-1],
+            }">
+              <div class="period">{{i}}</div>
+              <div class="progress-bar"></div>
             </div>
           </div>
-        </div>
-      </div>
-      
-      <div class="content column col-10 col-xs-9">
-        <div class="accordion-container" v-if="!isPageLoading">
-          <div class="accordion" :class="{'disabled': dis[ind]}"
-          v-for="(section, ind) in titles" :key="section">
-            <!-- Accordion header -->
-            <input type="checkbox" :id="section" name="accordion-checkbox" hidden v-model="accordions[ind]">
-            <label class="accordion-header" :for="section">
-              <div class="accordion-header-section">
-                <i class="icon icon-arrow-right mr-1"></i>
-                {{ section }}
-              </div>
-              <transition name="fade">
-                <small class="label label-rounded label-success"
-                v-if="locked[ind]">已保留：{{ name[ind] }}</small>
-                <small class="label label-rounded label-success"
-                v-else-if="dis[ind]">已呈交：{{ name[ind] }}</small>
-                <small class="label label-rounded label-primary"
-                v-else-if="id[ind]">已选：{{ name[ind] }}</small>
-              </transition>
-            </label>
-            <!-- Accordion header -->
-
-            <!-- Accordion body -->
-            <div class="accordion-body">
-              <div class="empty-lesson text-gray ml-2 mt-2 text-italic"
-              v-if="lessons[ind].length == 0">
-                你的年级于此时间段无活动
-              </div>
-              <div class="lesson-row">
-                <div class="lesson-col" v-for="c in Math.ceil(lessons[ind].length/rowSize)" :key="c">
-                  <card
-                  v-for="lesson in lessons[ind].slice((c-1)*rowSize, c*rowSize)" :key="lesson.id"
-                  :title="lesson.name"
-                  :initials="lesson.subject[0]"
-                  :pax="lesson.limit"
-                  :num="lesson.current"
-                  :classroom="lesson.location"
-                  :disable="dis[ind] || invalidSelect(ind) || locked[ind] || lesson.current >= lesson.limit"
-                  :disableMsg="locked[ind] ? '此阶段已有保留的活动'
-                      : invalidSelect(ind) ? '无法选择此时间段内的活动' 
-                                : dis[ind] ? '此时间段内已呈交活动' 
-                                           : '此活动人数已满，请选择其他活动'"
-                  :bg-color="color[lesson.subject]"
-                  :active="id[ind] == lesson.id"
-                  class="c-hand"
-                  @clicked="choose(ind, lesson.id, lesson.name)"
-                  @action="details(ind, lesson)"></card>
+          <div class="popover popover-right">
+            <div class="settings">
+              <i class="feather icon-settings mr-1"></i>设置
+            </div>
+            <div class="popover-container">
+              <div class="card">
+                <div class="card-body">
+                  <span class="delete mb-2" @click="openDelete">
+                    <i class="feather icon-trash- mr-2"></i>删除
+                  </span>
+                  <span class="logout mt-2" @click="logout"
+                  :class="{'loading': logoutLoad}">
+                    <i class="feather icon-log-out mr-2"></i>登出
+                  </span>
                 </div>
               </div>
             </div>
-            <!-- Accordion body -->
           </div>
         </div>
+        
+        <div class="content column col-10 col-xs-9">
+          <div class="accordion-container" v-if="!isPageLoading">
+            <div class="accordion" :class="{'disabled': dis[ind]}"
+            v-for="(section, ind) in titles" :key="section">
+              <!-- Accordion header -->
+              <input type="checkbox" :id="section" name="accordion-checkbox" hidden v-model="accordions[ind]">
+              <label class="accordion-header" :for="section">
+                <div class="accordion-header-section">
+                  <i class="icon icon-arrow-right mr-1"></i>
+                  {{ section }}
+                </div>
+                <transition name="fade">
+                  <small class="label label-rounded label-success"
+                  v-if="locked[ind]">已保留：{{ name[ind] }}</small>
+                  <small class="label label-rounded label-success"
+                  v-else-if="dis[ind]">已呈交：{{ name[ind] }}</small>
+                  <small class="label label-rounded label-primary"
+                  v-else-if="id[ind]">已选：{{ name[ind] }}</small>
+                </transition>
+              </label>
+              <!-- Accordion header -->
 
-        <button class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading, 'tooltip tooltip-left': tempDisableSubmit}"
-        :data-tooltip="`还未开放提交！ \n 提交开放时段： \n 18/2 20:00 - 21/2 20:00`"
-        v-if="!disableSubmit" @click="tempDisableSubmit ? () => {} : $refs.confirm.active = true">
-          提交 <i class="feather icon-arrow-right"></i>
-        </button>
-        <button class="btn btn-lg btn-secondary submit"
-        v-else @click="$refs.list.active = true">
-          查阅 <i class="feather icon-check"></i>
-        </button>
+              <!-- Accordion body -->
+              <div class="accordion-body">
+                <div class="empty-lesson text-gray ml-2 mt-2 text-italic"
+                v-if="lessons[ind].length == 0">
+                  你的年级于此时间段无活动
+                </div>
+                <div class="lesson-row">
+                  <div class="lesson-col" v-for="c in Math.ceil(lessons[ind].length/rowSize)" :key="c">
+                    <card
+                    v-for="lesson in lessons[ind].slice((c-1)*rowSize, c*rowSize)" :key="lesson.id"
+                    :title="lesson.name"
+                    :initials="lesson.subject[0]"
+                    :pax="lesson.limit"
+                    :num="lesson.current"
+                    :classroom="lesson.location"
+                    :disable="dis[ind] || invalidSelect(ind) || locked[ind] || lesson.current >= lesson.limit"
+                    :disableMsg="locked[ind] ? '此阶段已有保留的活动'
+                        : invalidSelect(ind) ? '无法选择此时间段内的活动' 
+                                  : dis[ind] ? '此时间段内已呈交活动' 
+                                            : '此活动人数已满，请选择其他活动'"
+                    :bg-color="color[lesson.subject]"
+                    :active="id[ind] == lesson.id"
+                    class="c-hand"
+                    @clicked="choose(ind, lesson.id, lesson.name)"
+                    @action="details(ind, lesson)"></card>
+                  </div>
+                </div>
+              </div>
+              <!-- Accordion body -->
+            </div>
+          </div>
+
+          <button class="btn btn-lg btn-secondary submit" :class="{'loading': isSubmitLoading, 'tooltip tooltip-left': tempDisableSubmit}"
+          :data-tooltip="`还未开放提交！ \n 提交开放时段： \n 18/2 20:00 - 21/2 20:00`"
+          v-if="!disableSubmit" @click="tempDisableSubmit ? () => {} : $refs.confirm.active = true">
+            提交 <i class="feather icon-arrow-right"></i>
+          </button>
+        </div>
       </div>
+
+      <modal title="确认选择以下活动" ref="confirm"
+      :bodyData="[lessonArr, id, chosenId]">
+        <template v-slot:body="{ data }">
+          <ul v-if="data[1].filter(el => el != 0 && data[2].indexOf(el) == -1).length">
+            <li v-for="single_id in data[1].filter(el => el != 0 && data[2].indexOf(el) == -1)" :key="single_id">
+              <template v-if="data[0].filter(el => el.id == single_id).length">
+                {{ data[0].filter(el => el.id == single_id)[0].name }}
+              </template>
+            </li>
+            <div class="text-small text-gray text-italic text-bold" style="margin-top: 1rem; margin-left: -.8rem;">
+              <span>
+                点击选择栏的 
+                </span><i class="icon icon-more-vert text-primary"></i><span>
+                可查阅活动详情与须知。
+              </span>
+            </div>
+          </ul>
+          <div v-else>还未选择任何活动</div>
+        </template>
+        <template v-slot:footer>
+          <div class="btn btn-primary" :class="{'loading': isSubmitLoading}" 
+          @click="submit">确认</div>
+        </template>
+      </modal>
+
+      <modal :title="detailLesson.name" ref="detail" :bodyData="detailLesson">
+        <template v-slot:body="{ data }">
+          <h6 v-if="data.description"><b>
+            {{ data.description }}
+          </b></h6>
+          <h6>
+            人数：{{ `${data.current}/${data.limit}` }}
+          </h6>
+          <h6>{{ data.location }}</h6>
+          <h6>
+            {{ data.subject }}
+            <em>（{{ titles[data.ind] }}）</em>
+          </h6>
+        </template>
+      </modal>
+
+      <modal title="删除已呈交的活动" ref="delete"
+      :bodyData="[toDelete]">
+        <template v-slot:body="{ data }">
+          <div class="form-group"
+          v-for="(name, ind) in data[0].name" :key="ind">
+            <label class="form-checkbox">
+              <input type="checkbox" class="form-input" 
+              v-model="data[0].data[ind]">
+              <i class="form-icon"></i> {{ name }}
+            </label>
+          </div>
+        </template>
+        <template slot="footer" v-if="toDelete.name.length">
+          <div class="btn btn-error float-right" :class="{'loading': deleteLoad}"
+          @click="deleteLessons">
+            删除
+          </div>
+        </template>
+      </modal>
     </div>
 
-    <modal title="确认选择以下活动" ref="confirm"
-    :bodyData="[lessonArr, id, chosenId]">
-      <template v-slot:body="{ data }">
-        <ul v-if="data[1].filter(el => el != 0 && data[2].indexOf(el) == -1).length">
-          <li v-for="single_id in data[1].filter(el => el != 0 && data[2].indexOf(el) == -1)" :key="single_id">
-            <template v-if="data[0].filter(el => el.id == single_id).length">
-              {{ data[0].filter(el => el.id == single_id)[0].name }}
-            </template>
-          </li>
-          <div class="text-small text-gray text-italic text-bold" style="margin-top: 1rem; margin-left: -.8rem;">
-            <span>
-              点击选择栏的 
-              </span><i class="icon icon-more-vert text-primary"></i><span>
-              可查阅活动详情与须知。
-            </span>
-          </div>
-        </ul>
-        <div v-else>还未选择任何活动</div>
-      </template>
-      <template v-slot:footer>
-        <div class="btn btn-primary" :class="{'loading': isSubmitLoading}" 
-        @click="submit">确认</div>
-      </template>
-    </modal>
-
-    <modal title="已呈交选择以下活动" ref="list" v-if="disableSubmit"
-    :bodyData="[name]">
-      <template v-slot:body="{ data }">
+    <div class="thanks" v-else>
+      <div class="text-primary text-bold h1 title">呈交已结束</div>
+      <div class="h4 content">
+        <p>
+          非常感谢您使用此网站进行开放学习日的活动选择。
+          倘若在选择或呈交活动期间对您造成任何不便，还请多多见谅！
+        </p>
+        <div>您已选择：</div>
         <ul>
-          <li v-for="name in data[0].filter(el => el.replace(/\s/g, '').length != 0)" :key="name">
-            <template>
-              {{ name }}
-            </template>
-          </li>
+          <li v-for="(n, ind) in name.filter(el => el.replace(/\s/g, '').length != 0)" 
+            :key="ind">{{n}}</li>
         </ul>
-      </template>
-    </modal>
-
-    <modal :title="detailLesson.name" ref="detail" :bodyData="detailLesson">
-      <template v-slot:body="{ data }">
-        <h6 v-if="data.description"><b>
-          {{ data.description }}
-        </b></h6>
-        <h6>
-          人数：{{ `${data.current}/${data.limit}` }}
-        </h6>
-        <h6>{{ data.location }}</h6>
-        <h6>
-          {{ data.subject }}
-          <em>（{{ titles[data.ind] }}）</em>
-        </h6>
-      </template>
-    </modal>
-
-    <modal title="删除已呈交的活动" ref="delete"
-    :bodyData="[toDelete]">
-      <template v-slot:body="{ data }">
-        <div class="form-group"
-        v-for="(name, ind) in data[0].name" :key="ind">
-          <label class="form-checkbox">
-            <input type="checkbox" class="form-input" 
-            v-model="data[0].data[ind]">
-            <i class="form-icon"></i> {{ name }}
-          </label>
-        </div>
-      </template>
-      <template slot="footer" v-if="toDelete.name.length">
-        <div class="btn btn-error float-right" :class="{'loading': deleteLoad}"
-        @click="deleteLessons">
-          删除
-        </div>
-      </template>
-    </modal>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -198,8 +198,11 @@ export default {
   },
   mounted() {
     this.init();
-    let now = new Date().getTime(), start = new Date(this.periodStart).getTime();
-    this.tempDisableSubmit &= now < start;
+    let now = new Date().getTime(), 
+      start = new Date(this.periodStart).getTime(), 
+        end = new Date(this.periodEnd).getTime();
+
+    this.tempDisableSubmit &= now < start || now > end;
 
     if (start-now > 0) {
       setTimeout(() => {
@@ -217,6 +220,7 @@ export default {
   },
   data: () => ({
     periodStart: '2020-02-18T20:00:00', // YYYY-MM-DDTHh:Mm:Ss
+    periodEnd: '2020-02-21T20:00:00',
     tempDisableSubmit: process.env.NODE_ENV == 'production', // temporarily disable button for non-submitting periods
     defaultRowSize: 2, // row size for phone/small window mode
     rowSize: null,
@@ -309,6 +313,45 @@ export default {
         })
 
         this.isPageLoading = false;
+        if (this.disableSubmit || new Date().getTime() > new Date(this.periodEnd).getTime()) {
+          this.$confetti.start({
+            particles: [
+              {
+                type: 'heart',
+                colors: [
+                  'red',
+                  'pink',
+                  'yellow',
+                  'blue',
+                  '#ba0000',
+                ]
+              },
+              {
+                type: 'circle',
+                colors: [
+                  '#ba0000',
+                  'blue',
+                  'yellow',
+                  'green',
+                  'purple'
+                ],
+              },
+              {
+                type: 'rect',
+                colors: [
+                  '#ba0000',
+                  'blue',
+                  'yellow',
+                  'green',
+                  'purple'
+                ],
+              },
+            ],
+            particlesPerFrame: 0.8,
+            defaultDropRate: 6,
+            defaultSize: 5,
+          });
+        }
       })
       .catch((err) => {
         if (err.status) this.logout();
