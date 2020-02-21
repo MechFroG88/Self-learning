@@ -134,16 +134,16 @@ export default {
     }),
     submit() {
       if (this.$route.params.type == 'edit') {
-      editLesson(this.lesson.id, this.lesson_data)
-        .then((data) => {
-          if (data.status == 200) {
-            this.reset();
-            getAllLessons().then(({data}) => { 
-              this.setLessons(data); 
-              this.$router.push('/admin/edit_lesson');
-            });
-          }
-        });
+        editLesson(this.lesson.id, this.lesson_data)
+          .then((data) => {
+            if (data.status == 200) {
+              this.reset();
+              getAllLessons().then(({data}) => { 
+                this.setLessons(data); 
+                this.$router.push('/admin/edit_lesson');
+              });
+            }
+          });
       }
       else {
         if (this.isForced) this.lesson_data.current = this.lesson_data.limit;

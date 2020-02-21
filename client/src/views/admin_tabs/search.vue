@@ -240,6 +240,7 @@ export default {
     selected_session(val) {
       if (this.data_type != 1) return ;
       this.showTable = false;
+      this.selected_name = "";
       if (val < 0) this.selected_lessons = this.lessons;
       else {
         let ss = JSON.stringify(this.sessions[val]);
@@ -249,7 +250,9 @@ export default {
       this.selected_lessons_id = this.selected_lessons.map(el => el.id);
     },
     selected_year(val) {
+      if (this.data_type != 2) return ;
       this.showTable = false;
+      this.selected_class = "";
       if (val == '' || !val) this.classnames = [];
       else this.classnames = this.classes
                               .filter(el => el.cn_name.includes(val))
