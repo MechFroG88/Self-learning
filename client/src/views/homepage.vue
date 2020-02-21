@@ -192,6 +192,9 @@
             :key="ind">{{n}}</li>
         </ul>
       </div>
+      <div class="btn btn-primary logout" @click="logout">
+        <i class="feather icon-log-out"></i> 登出
+      </div>
     </div>
   </div>
 </template>
@@ -517,6 +520,7 @@ export default {
     },
     logout() {
       this.logoutLoad = true;
+      this.$confetti.stop();
       userLogout().then((data) => {
         if (data.status == 200) {
           this.reset();
