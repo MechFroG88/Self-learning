@@ -194,6 +194,50 @@ class LessonController extends Controller
         return $this->ok();
     }
 
+    public function add(Request $data,$id)
+    {
+        $validator = Validator::make($data->all(),$this->submit_rules);
+        if ($validator->fails()) return $this->fail();
+        $students = $data->students;
+        $periods = DB::table('periods')->where('lesson_id',$id)->get();
+        $add_period = [];
+        foreach ($periods as $period){
+            array_push($add_period,$period->period);
+        }
+        foreach($students as $student){
+            $lesson_user = DB::table('lesson_user')
+                                ->where('user_id',$student)->select('lesson_id')->get();
+            foreach ($lesson_user as $single){
+                $periods = DB::table('periods')->where('lesson_id',$single->lesson_id)->get();
+                $used_period = [];
+                foreach ($periods as $period){
+                    array_push($used_period,$period->period);
+                }
+                if (array_intersect($add_period, $used_period)){
+                    if(DB::table('lesson_user')->where([
+                        'user_id' => $student,
+                        'lesson_id' => $single->lesson_id
+                    ])->count()){
+                        DB::table('lesson_user')->where([
+                            'user_id' => $student,
+                            'lesson_id' => $single->lesson_id
+                        ])->delete();
+                        DB::table('lessons')->where('id',$single->lesson_id)->decrement('current');
+                    }
+                }
+            }
+            if(DB::table('lesson_user')->where(
+                ['user_id' => $student, 'lesson_id' => $id]
+            )->count() == 0){
+                DB::table('lesson_user')->insert(
+                    ['user_id' => $student, 'lesson_id' => $id]
+                );
+                DB::table('lessons')->where('id',$id)->increment('current');
+            }
+        }
+        return $this->ok();
+    }
+
     public function add_force(Request $data,$id)
     {
         $validator = Validator::make($data->all(),$this->submit_rules);
