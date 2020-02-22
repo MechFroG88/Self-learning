@@ -1,6 +1,6 @@
 <template>
   <div id="_homepage" :class="{'loading loading-lg': isPageLoading}">
-    <div v-if="!masterPeriod && new Date().getTime() <= new Date(periodEnd).getTime()">
+    <div v-if="masterPeriod || new Date().getTime() <= new Date(periodEnd).getTime()">
       <header-layout 
       :cn_name="user.cn_name"
       :id="user.id"></header-layout>
@@ -223,6 +223,7 @@ export default {
         end = new Date(this.periodEnd).getTime();
 
     this.tempDisableSubmit &= now < start || now > end;
+    if (this.masterPeriod) this.tempDisableSubmit = false;
 
     if (start-now > 0) {
       setTimeout(() => {
@@ -239,7 +240,7 @@ export default {
     })
   },
   data: () => ({
-    masterPeriod: false, // force the period to be ignored and always allow submission page to show
+    masterPeriod: true, // force the period to be ignored and always allow submission page to show
     periodStart: '2020-02-18T20:00:00', // YYYY-MM-DDTHh:Mm:Ss
     periodEnd: '2020-02-21T20:00:00',
     tempDisableSubmit: process.env.NODE_ENV == 'production', // temporarily disable button for non-submitting periods
@@ -334,7 +335,7 @@ export default {
         })
 
         this.isPageLoading = false;
-        if (this.masterPeriod || new Date().getTime() > new Date(this.periodEnd).getTime()) {
+        if (!this.masterPeriod && new Date().getTime() > new Date(this.periodEnd).getTime()) {
           this.$confetti.start({
             particles: [
               {
