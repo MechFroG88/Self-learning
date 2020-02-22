@@ -223,6 +223,7 @@ export default {
         end = new Date(this.periodEnd).getTime();
 
     this.tempDisableSubmit &= now < start || now > end;
+    if (this.masterPeriod) this.tempDisableSubmit = false;
 
     if (start-now > 0) {
       setTimeout(() => {
