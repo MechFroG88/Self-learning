@@ -49,7 +49,7 @@ class LessonController extends Controller
         if ($validator->fails()) return $this->fail();
         $temp = $data->all();
         var_dump($temp);
-        if (!isset($temp->description)) $temp->description = "";
+        if (!isset($temp['description'])) $temp['description'] = "";
         $id = Lesson::create($temp)->id;
         foreach ($data->period as $period){
             DB::table('periods')->insert(
