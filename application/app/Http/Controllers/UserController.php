@@ -208,13 +208,13 @@ class UserController extends Controller
 
     public function submit(Request $data)
     {
-        if (env('APP_ENV') != 'local'){
-            $now = new \DateTime();
-            $start = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-18 20:00:00');   
-            $end = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-21 20:00:00');
-            if ($now < $start) return $this->fail();            
-            if ($now > $end) return $this->fail();
-        }
+        // if (env('APP_ENV') != 'local'){
+        //     $now = new \DateTime();
+        //     $start = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-18 20:00:00');   
+        //     $end = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-21 20:00:00');
+        //     if ($now < $start) return $this->fail();            
+        //     if ($now > $end) return $this->fail();
+        // }
         
         $validator = Validator::make($data->all(), $this->submit_rules);
         if ($validator->fails()) return $this->fail();
@@ -284,13 +284,13 @@ class UserController extends Controller
 
     public function reselect(Request $data)
     {
-        if (env('APP_ENV') != 'local'){
-            $now = new \DateTime();
-            $start = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-18 20:00:00');   
-            $end = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-21 20:00:00');
-            if ($now < $start) return $this->fail();            
-            if ($now > $end) return $this->fail();
-        }
+        // if (env('APP_ENV') != 'local'){
+        //     $now = new \DateTime();
+        //     $start = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-18 20:00:00');   
+        //     $end = \DateTime::createFromFormat('Y-m-d H:i:s', '2020-02-21 20:00:00');
+        //     if ($now < $start) return $this->fail();            
+        //     if ($now > $end) return $this->fail();
+        // }
         $validator = Validator::make($data->all(), $this->submit_rules);
         if ($validator->fails()) return $this->fail();
         $lessons_delete = $data->lessons;
