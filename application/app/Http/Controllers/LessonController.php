@@ -48,6 +48,7 @@ class LessonController extends Controller
         $validator = Validator::make($data->all(), $this->rules);
         if ($validator->fails()) return $this->fail();
         $temp = $data->all();
+        var_dump($temp);
         if (!isset($temp->description)) $temp->description = "";
         $id = Lesson::create($temp)->id;
         foreach ($data->period as $period){
