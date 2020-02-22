@@ -1,6 +1,6 @@
 <template>
   <div id="_homepage" :class="{'loading loading-lg': isPageLoading}">
-    <div v-if="!masterPeriod && new Date().getTime() <= new Date(periodEnd).getTime()">
+    <div v-if="masterPeriod || new Date().getTime() <= new Date(periodEnd).getTime()">
       <header-layout 
       :cn_name="user.cn_name"
       :id="user.id"></header-layout>
@@ -334,7 +334,7 @@ export default {
         })
 
         this.isPageLoading = false;
-        if (this.masterPeriod || new Date().getTime() > new Date(this.periodEnd).getTime()) {
+        if (!this.masterPeriod && new Date().getTime() > new Date(this.periodEnd).getTime()) {
           this.$confetti.start({
             particles: [
               {
