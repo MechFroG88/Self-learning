@@ -239,7 +239,7 @@ export default {
     })
   },
   data: () => ({
-    masterPeriod: true, // force the period to be ignored and always allow submission page to show
+    masterPeriod: false, // force the period to be ignored and always allow submission page to show
     periodStart: '2020-02-18T20:00:00', // YYYY-MM-DDTHh:Mm:Ss
     periodEnd: '2020-02-21T20:00:00',
     tempDisableSubmit: process.env.NODE_ENV == 'production', // temporarily disable button for non-submitting periods
