@@ -55,5 +55,6 @@ Route::middleware('admin')->get('lessons','LessonController@get_all');
 Route::middleware('admin')->get('lesson/{id}','LessonController@get_single');
 Route::middleware('admin')->post('lesson/edit/{id}','LessonController@edit');
 Route::middleware('admin')->delete('lesson/{id}','LessonController@delete');
+Route::middleware('admin')->post('lesson/add/{id}','LessonController@add');
 Route::middleware('admin')->post('lesson/force/add/{id}','LessonController@add_force');
 Route::middleware('admin')->post('lesson/force/remove/{id}','LessonController@remove_force');

@@ -48,7 +48,8 @@ class LessonController extends Controller
         $validator = Validator::make($data->all(), $this->rules);
         if ($validator->fails()) return $this->fail();
         $temp = $data->all();
-        if (!isset($temp->description)) $temp->description = "";
+        var_dump($temp);
+        if (!isset($temp['description'])) $temp['description'] = "";
         $id = Lesson::create($temp)->id;
         foreach ($data->period as $period){
             DB::table('periods')->insert(
@@ -190,6 +191,50 @@ class LessonController extends Controller
         DB::table('lesson_user_force')->where('lesson_id',$id)->delete();
         // User::flushCache();
         Lesson::flushCache();
+        return $this->ok();
+    }
+
+    public function add(Request $data,$id)
+    {
+        $validator = Validator::make($data->all(),$this->submit_rules);
+        if ($validator->fails()) return $this->fail();
+        $students = $data->students;
+        $periods = DB::table('periods')->where('lesson_id',$id)->get();
+        $add_period = [];
+        foreach ($periods as $period){
+            array_push($add_period,$period->period);
+        }
+        foreach($students as $student){
+            $lesson_user = DB::table('lesson_user')
+                                ->where('user_id',$student)->select('lesson_id')->get();
+            foreach ($lesson_user as $single){
+                $periods = DB::table('periods')->where('lesson_id',$single->lesson_id)->get();
+                $used_period = [];
+                foreach ($periods as $period){
+                    array_push($used_period,$period->period);
+                }
+                if (array_intersect($add_period, $used_period)){
+                    if(DB::table('lesson_user')->where([
+                        'user_id' => $student,
+                        'lesson_id' => $single->lesson_id
+                    ])->count()){
+                        DB::table('lesson_user')->where([
+                            'user_id' => $student,
+                            'lesson_id' => $single->lesson_id
+                        ])->delete();
+                        DB::table('lessons')->where('id',$single->lesson_id)->decrement('current');
+                    }
+                }
+            }
+            if(DB::table('lesson_user')->where(
+                ['user_id' => $student, 'lesson_id' => $id]
+            )->count() == 0){
+                DB::table('lesson_user')->insert(
+                    ['user_id' => $student, 'lesson_id' => $id]
+                );
+                DB::table('lessons')->where('id',$id)->increment('current');
+            }
+        }
         return $this->ok();
     }
 
