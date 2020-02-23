@@ -8,7 +8,7 @@
         </router-link>
         <router-link :to="{ name: 'adminEditForced' }"
         :class="{'active': $route.name == 'adminEditForced'}">
-          保留活动
+          选择活动
         </router-link>
         <router-link :to="{ name: 'adminEditLesson' }"
         :class="{'active': $route.name == 'adminEditLesson'}">

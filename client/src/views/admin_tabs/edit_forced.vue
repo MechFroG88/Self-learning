@@ -32,22 +32,21 @@
           保留{{ session_names[selected_session] }}（{{selected_name}}）
         </template>
       </cp-table>
-      <!-- <pre>{{table_data}}</pre> -->
       <div class="column col-6 col-md-12">
         <textarea class="form-input" rows="5"
         :placeholder="'输入学生学号...\nXXXXXX\nXXXXXX\nXXXXXX'"
         v-model="student_id"></textarea>
         <div class="btn-group btn-group-block mt-2">
-          <button class="btn btn-primary"
+          <button class="btn btn-secondary"
           @click="dataImport">
             输入学生 <i class="feather icon-clipboard"></i>
           </button>
-          <button class="btn btn-secondary"
-          @click="table_data = []">
-            清空列表 <i class="feather icon-trash-"></i>
+          <button class="btn btn-primary" :class="{'loading': addLoad}"
+          @click="add()">
+            加入活动 <i class="feather icon-edit"></i>
           </button>
-          <button class="btn btn-success" :class="{'loading': addLoad}"
-          @click="add">
+          <button class="btn btn-success" :class="{'loading': addForcedLoad}"
+          @click="add(true)">
             加入保留 <i class="feather icon-edit"></i>
           </button>
           <button class="btn btn-error" :class="{'loading': removeLoad}"
@@ -64,7 +63,7 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-import { addForcedLesson, removeForcedLesson } from '@/api/lesson';
+import { addForcedLesson, removeForcedLesson, addStudentToLessons } from '@/api/lesson';
 import { forced_user_columns } from '@/api/tableColumns';
 
 import cpTable from '@/components/table';
@@ -88,6 +87,7 @@ export default {
     student_id: "",
 
     addLoad: false,
+    addForcedLoad: false,
     removeLoad: false,
     afterImport: false, // enable button only when after import
   }),
@@ -104,7 +104,7 @@ export default {
       this.student_id = ids.join("\n");
       this.afterImport = true;
     },
-    add() {
+    add(forced=false) {
       if (!this.selected_name) {
         this.$notify({
           type: 'warn',
@@ -119,8 +119,10 @@ export default {
         })
         return ;
       }
-      this.addLoad = true;
-      addForcedLesson(
+      if (forced) this.addForcedLoad = true;
+      else this.addLoad = true;
+      let func = forced ? addForcedLesson : addStudentToLessons;
+      func(
         this.selected_lessons
           .filter(el => el.name == this.selected_name)[0].id,
         { students: this.table_data.map(el => el.id) }
@@ -142,7 +144,10 @@ export default {
           title: '资料更改失败，请稍后再试。'
         });
       })
-      .finally(() => this.addLoad = false)
+      .finally(() => {
+        this.addForcedLoad = false;
+        this.addLoad = false;
+      })
     },
     remove() {
       if (!this.selected_name) {

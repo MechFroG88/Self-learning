@@ -47,6 +47,15 @@ export function removeForcedLesson(id, data) {
   })  
 }
 
+// add array of students to a lesson
+export function addStudentToLessons(id, data) {
+  return request({
+    url: `/lesson/add/${id}`,
+    method: 'POST',
+    data
+  })
+}
+
 export function editLesson(id, data) {
   return request({
     url: `/lesson/edit/${id}`,

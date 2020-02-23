@@ -88,7 +88,8 @@
       </label>
     </div>
 
-    <div class="btn btn-primary mt-2" @click="submit">
+    <div class="btn btn-primary mt-2" :class="{'loading': btnLoading}"
+    @click="submit">
       提交 <i class="feather icon-check"></i>
     </div>
   </div>
@@ -111,6 +112,7 @@ export default {
       description: '',
       period: [],
       year: [],
+      btnLoading: false,
     },
     isForced: false,
     titles: ['第 1 - 3 节', '第 4 - 5 节', '第 6 - 7 节', '第 4 - 7 节', '第 1 - 7 节'],
@@ -133,6 +135,7 @@ export default {
       setLessons: 'SET_LESSONS'
     }),
     submit() {
+      this.btnLoading = true;
       if (this.$route.params.type == 'edit') {
         editLesson(this.lesson.id, this.lesson_data)
           .then((data) => {
@@ -141,9 +144,9 @@ export default {
               getAllLessons().then(({data}) => { 
                 this.setLessons(data); 
                 this.$router.push('/admin/edit_lesson');
-              });
+              }).finally(() => this.btnLoading = false);
             }
-          });
+          }).finally(() => this.btnLoading = false);
       }
       else {
         if (this.isForced) this.lesson_data.current = this.lesson_data.limit;
@@ -154,9 +157,9 @@ export default {
               getAllLessons().then(({data}) => { 
                 this.setLessons(data); 
                 this.$router.push('/admin/edit_lesson');
-              });
+              }).finally(() => this.btnLoading = false);
             }
-          });
+          }).finally(() => this.btnLoading = false);
       }
     }
   },
